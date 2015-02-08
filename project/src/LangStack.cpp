@@ -21,18 +21,20 @@ SOFTWARE.
 ******************************************************************************/
 
 #include "LangStack.h"
-#include "Rpc/RpcCore.h"
+#include "LangStackImpl.h"
 
 namespace ls {
 
 ///\brief       启动协议栈
 void CLangStack::startJniMode()
 {
+    CLangStackImpl::instance()->startJniMode();
 }
 
 ///\brief       启动协议栈
 void CLangStack::startTcpMode(uint16_t port)
 {
+    CLangStackImpl::instance()->startTcpMode(port);
 }
 
 }
