@@ -20,27 +20,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+#ifndef _LANGUAGE_STACK_LSTACK_H_
+#define _LANGUAGE_STACK_LSTACK_H_
+
+#include "inttypes.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+class CLangStack
 {
-    return ++ITransSession::s_sessionId;
-}
+public:
+    ///\brief       启动协议栈,Jni传输
+    static void startJniMode();
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
-{
-
-}
-
-ITransSession::~ITransSession()
-{
+    ///\brief       启动协议栈,Tcp环回传输
+    ///\param[in]   port        tcp端口
+    static void startTcpMode(uint16_t port);
+};
 
 }
 
-}
-
-
+#endif /* _LANGUAGE_STACK_LSTACK_H_ */

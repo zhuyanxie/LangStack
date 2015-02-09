@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "JniSession.h"
+#include "Transport/JniSession.h"
 
 namespace ls {
 
@@ -35,7 +35,8 @@ CJniSession::~CJniSession()
 ///\brief       消息发送
 bool CJniSession::send(RpcCallPtr call, RpcType type)
 {
-    ///TODO return true;
+    ///TODO 
+    return true;
 }
 
 }

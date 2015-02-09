@@ -20,27 +20,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+
+#ifndef _LANGUAGE_STACK_SERIAL_H_
+#define _LANGUAGE_STACK_SERIAL_H_
+
+#include "Serializion.h"
+#include "Deserializion.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+///\brief 序列化函数
+template<class T> bool serial(T obj, std::ostream &os)
 {
-    return ++ITransSession::s_sessionId;
+    return Serializion<T>()(obj, os);
 }
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
+///\brief 反序列化函数
+template<class T> bool deserial(const char *buf, T &val)
 {
-
-}
-
-ITransSession::~ITransSession()
-{
-
+    return Deserializion<T>()(buf, val);
 }
 
 }
 
-
+#endif /* SERIAL_H_ */

@@ -20,27 +20,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+
+#ifndef _LANGUAGE_STACK_RPC_CONSTANT_H_
+#define _LANGUAGE_STACK_RPC_CONSTANT_H_
+
+#include <inttypes.h>
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
-{
-    return ++ITransSession::s_sessionId;
-}
-
-ITransSession::ITransSession()
-    : m_id(createSessionId())
-{
-
-}
-
-ITransSession::~ITransSession()
-{
-
-}
+extern const char RPC_MESSAGE_TAG[];                    ///< RPC消息头标识:
+extern const uint32_t RPC_HEADER_LENGTH;                ///< RPC消息头长度
 
 }
 
 
+#endif /* RPCCONSTANT_H_ */

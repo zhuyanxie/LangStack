@@ -24,7 +24,7 @@ SOFTWARE.
 
 namespace ls {
 
-CRpcResponse::CRpcResponse(RpcCallPtr call, RpcSessionPtr session)
+CRpcResponse::CRpcResponse(RpcCallPtr call, SessionPtr session)
     : m_return(new CRpcCall(call->m_callId))
     , m_session(session)
 {

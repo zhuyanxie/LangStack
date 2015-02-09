@@ -24,8 +24,8 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_THREAD_TASK_H_
 #define _LANGUAGE_STACK_THREAD_TASK_H_
 
-#include "ITask.h"
-#include "TaskThread.h"
+#include "Task/ITask.h"
+#include "Task/TaskThread.h"
 
 namespace ls {
 

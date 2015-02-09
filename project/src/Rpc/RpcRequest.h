@@ -28,7 +28,7 @@ SOFTWARE.
 #include <condition_variable>
 
 #include "Transport/TransSession.h"
-#include "RpcCall.h"
+#include "Rpc/RpcCall.h"
 
 namespace ls {
 

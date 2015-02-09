@@ -20,27 +20,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+#ifndef _LANGUAGE_STACK_RPC_TASK_H_
+#define _LANGUAGE_STACK_RPC_TASK_H_
+
+#include "Task/ITask.h"
+#include "Task/TaskThreadPool.h"
+
+#include "Rpc/RpcCore.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+class CRpcCallTask : public ITask
 {
-    return ++ITransSession::s_sessionId;
+public:
+    CRpcCallTask(RpcCallPtr rpcCall, uint32_t sessionId)
+        : m_call(rpcCall), m_session(sessionId)
+    {
+        char buf[128];
+        sprintf(buf, "%d - %d", m_call->m_callId, sessionId);
+        m_taskId = buf;
+    }
+    virtual ~CRpcCallTask() {}
+    virtual TaskType getTaskType()
+    {
+        return TaskTypeRpcCall;
+    }
+    virtual void execute()
+    {
+        CRpcCore::instance()->onRpcCall(m_call);
+    }
+    virtual std::string getTaskQueueIdentify()
+    {
+        return m_taskId;
+    }
+
+private:
+    RpcCallPtr          m_call;
+    uint32_t            m_session;
+    std::string         m_taskId;
+};
+
+
 }
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
-{
 
-}
-
-ITransSession::~ITransSession()
-{
-
-}
-
-}
-
-
+#endif /* _LANGUAGE_STACK_RPC_TASK_H_ */

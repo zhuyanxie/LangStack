@@ -20,27 +20,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+#include "com_langstack_LangStack.h"
 
-namespace ls {
+#include "LangStack.h"
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+JavaVM *g_jvm = 0;
+
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+  (JNIEnv * env, jclass cls)
 {
-    return ++ITransSession::s_sessionId;
+    ls::CLangStack::startJniMode();
 }
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+  (JNIEnv * env, jclass cls, jint port)
+{
+    ls::CLangStack::startTcpMode((uint16_t)port);
+}
+
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    g_jvm = vm;
+    return JNI_VERSION_1_6;
+}
+
+JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved)
 {
 
 }
-
-ITransSession::~ITransSession()
-{
-
-}
-
-}
-
-
