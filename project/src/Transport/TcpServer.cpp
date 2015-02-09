@@ -20,43 +20,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TcpServer.h"
+#include "TcpServer.h"
+
 #include "Base/SocketHeader.h"
 #include "Rpc/RpcCore.h"
-#include "Transport/TcpSession.h"
+#include "TcpSession.h"
 
 namespace ls {
-
-static bool bindSocket(int fd, int port)
-{
-#ifdef WIN32
-    SOCKADDR_IN addr;  
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_port = htons(port);  
-    addr.sin_family = AF_INET;  
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-    return bind(fd, (LPSOCKADDR)&addr, sizeof(addr)) != -1;
-#else
-    struct sockaddr_in addr;
-    addr.sin_len = sizeof(struct sockaddr_in);
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    bzero(&(addr.sin_zero), 8);
-    return bind(fd, (struct sockaddr *)&addr, sizeof(addr)) != -1;
-#endif
-}
 
 CTcpServer::CTcpServer(uint16_t port)
     : m_fd(-1)
     , m_loop(true)
     , m_thread(nullptr)
 {
+    struct sockaddr_in addr;
+    addr.sin_len = sizeof(struct sockaddr_in);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    bzero(&(addr.sin_zero),8);
+    //创建socket
     m_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (m_fd != -1)
     {
-        if (bindSocket(m_fd, port))
+        if (bind(m_fd, (struct sockaddr *)&addr, sizeof(addr)) != -1)
         {
             if (listen(m_fd, 32) != -1)
             {
@@ -69,11 +56,7 @@ CTcpServer::CTcpServer(uint16_t port)
 
 CTcpServer::~CTcpServer()
 {
-#ifdef WIN32
-    ::closesocket(m_fd);
-#else
     ::close(m_fd);
-#endif
 
     if (nullptr != m_thread)
     {

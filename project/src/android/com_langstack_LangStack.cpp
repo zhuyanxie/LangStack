@@ -20,29 +20,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#include "com_langstack_LangStack.h"
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
+#include "LangStack.h"
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+JavaVM *g_jvm = 0;
 
-namespace ls {
-
-class CRpcResponse
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+  (JNIEnv * env, jclass cls)
 {
-public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
-
-    RpcCallPtr &getReturn();
-
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
-};
-
+    ls::CLangStack::startJniMode();
 }
 
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+  (JNIEnv * env, jclass cls, jint port)
+{
+    ls::CLangStack::startTcpMode((uint16_t)port);
+}
 
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    g_jvm = vm;
+    return JNI_VERSION_1_6;
+}
+
+JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved)
+{
+
+}

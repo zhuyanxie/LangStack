@@ -21,28 +21,39 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
+#ifndef _LANGUAGE_STACK_DESERIAL_TYPE_H_
+#define _LANGUAGE_STACK_DESERIAL_TYPE_H_
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include "Deserializion.h"
 
 namespace ls {
 
-class CRpcResponse
+MetaDataType deserialMetaType(const char *buf)
 {
-public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
-
-    RpcCallPtr &getReturn();
-
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
-};
+    if (deserialCStringMatch(buf, TAG_INT))
+        return MetaDataTypeInt;
+    else if (deserialCStringMatch(buf, TAG_LONGLONG))
+        return MetaDataTypeLonglong;
+    else if (deserialCStringMatch(buf, TAG_DOUBLE))
+        return MetaDataTypeDouble;
+    else if (deserialCStringMatch(buf, TAG_STRING))
+        return MetaDataTypeString;
+    else if (deserialCStringMatch(buf, TAG_CLASS))
+        return MetaDataTypeClass;
+    else if (deserialCStringMatch(buf, "List:Int:"))
+        return MetaDataTypeIntList;
+    else if (deserialCStringMatch(buf, "List:LLong:"))
+        return MetaDataTypeLonglongList;
+    else if (deserialCStringMatch(buf, "List:Double:"))
+        return MetaDataTypeDoubleList;
+    else if (deserialCStringMatch(buf, "List:String:"))
+        return MetaDataTypeStringList;
+    else if (deserialCStringMatch(buf, "List:Class:"))
+        return MetaDataTypeClassList;
+    return MetaDataTypeUnkown;
+}
 
 }
 
 
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* _LANGUAGE_STACK_DESERIAL_TYPE_H_ */

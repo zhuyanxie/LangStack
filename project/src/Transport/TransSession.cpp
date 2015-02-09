@@ -20,14 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+#include "TransSession.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+
+std::atomic<uint32_t> CRpcSession::s_sessionId(0);
+uint32_t CRpcSession::createSessionId()
 {
-    return ++ITransSession::s_sessionId;
+    return ++CRpcSession::s_sessionId;
 }
 
 ITransSession::ITransSession()

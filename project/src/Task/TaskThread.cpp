@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Task/TaskThread.h"
-#include "Task/TaskThreadPool.h"
+#include "TaskThread.h"
+#include "TaskThreadPool.h"
 
 namespace ls {
 

@@ -21,28 +21,17 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
+#ifndef _LANGUAGE_STACK_RPC_CONSTANT_H_
+#define _LANGUAGE_STACK_RPC_CONSTANT_H_
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include <inttypes.h>
 
 namespace ls {
 
-class CRpcResponse
-{
-public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
-
-    RpcCallPtr &getReturn();
-
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
-};
+extern const char RPC_MESSAGE_TAG[];                    ///< RPC消息头标识:
+extern const uint32_t RPC_HEADER_LENGTH;                ///< RPC消息头长度
 
 }
 
 
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* RPCCONSTANT_H_ */

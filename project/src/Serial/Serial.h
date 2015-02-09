@@ -21,28 +21,26 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
+#ifndef _LANGUAGE_STACK_SERIAL_H_
+#define _LANGUAGE_STACK_SERIAL_H_
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include "Serializion.h"
+#include "Deserializion.h"
 
 namespace ls {
 
-class CRpcResponse
+///\brief 序列化函数
+template<class T> bool serial(T obj, std::ostream &os)
 {
-public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
+    return Serializion<T>()(obj, os);
+}
 
-    RpcCallPtr &getReturn();
-
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
-};
+///\brief 反序列化函数
+template<class T> bool deserial(const char *buf, T &val)
+{
+    return Deserializion<T>()(buf, val);
+}
 
 }
 
-
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* SERIAL_H_ */

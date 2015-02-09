@@ -20,29 +20,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#ifndef _LANGUAGE_STACK_LSTACK_H_
+#define _LANGUAGE_STACK_LSTACK_H_
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
-
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include "inttypes.h"
 
 namespace ls {
 
-class CRpcResponse
+class CLangStack
 {
 public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
+    ///\brief       启动协议栈,Jni传输
+    static void startJniMode();
 
-    RpcCallPtr &getReturn();
-
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
+    ///\brief       启动协议栈,Tcp环回传输
+    ///\param[in]   port        tcp端口
+    static void startTcpMode(uint16_t port);
 };
 
 }
 
-
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* _LANGUAGE_STACK_LSTACK_H_ */

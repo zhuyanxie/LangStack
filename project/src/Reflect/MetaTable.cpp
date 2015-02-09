@@ -21,7 +21,7 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#include "Reflect/MetaTable.h"
+#include "MetaTable.h"
 
 namespace ls {
 

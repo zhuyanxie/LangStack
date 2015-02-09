@@ -20,29 +20,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#ifndef _LANGUAGE_STACK_RPC_TASK_H_
+#define _LANGUAGE_STACK_RPC_TASK_H_
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
+#include "Task/ITask.h"
+#include "Task/TaskThreadPool.h"
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include "RpcCore.h"
 
 namespace ls {
 
-class CRpcResponse
+class CRpcCallTask : public ITask
 {
 public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
-
-    RpcCallPtr &getReturn();
+    CRpcCallTask(RpcCallPtr rpcCall, uint32_t sessionId)
+        : m_call(rpcCall), m_session(sessionId)
+    {
+        char buf[128];
+        sprintf(buf, "%d - %d", m_call->m_callId, sessionId);
+        m_taskId = buf;
+    }
+    virtual ~CRpcCallTask() {}
+    virtual TaskType getTaskType()
+    {
+        return TaskTypeRpcCall;
+    }
+    virtual void execute()
+    {
+        CRpcCore::instance()->onRpcCall(m_call, m_session);
+    }
+    virtual std::string getTaskQueueIdentify()
+    {
+        return m_taskId;
+    }
 
 private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
+    RpcCallPtr          m_call;
+    uint32_t            m_session;
+    std::string         m_taskId;
 };
+
 
 }
 
 
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* _LANGUAGE_STACK_RPC_TASK_H_ */

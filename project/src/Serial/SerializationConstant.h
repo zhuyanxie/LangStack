@@ -20,29 +20,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#ifndef _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_
+#define _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_
 
-#ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
-#define _LANGUAGE_STACK_RPC_RESPONSE_H_
-
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include <string>
+#include "Reflect/MetaDataTraits.h"
 
 namespace ls {
 
-class CRpcResponse
-{
-public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
-    ~CRpcResponse();
+extern const char TAG_INT[];									///< Int:
+extern const char TAG_LONGLONG[];								///< LLong:
+extern const char TAG_DOUBLE[];									///< Double:
+extern const char TAG_STRING[];									///< String:
+extern const char TAG_LIST[];									///< List:
+extern const char TAG_CLASS[];									///< Class
+extern const char TAG_END[];									///< :
+extern const char TAG_PARAM_SPLIT[];							///< &
+extern const char DETAIL_END[];                                 ///< ;
 
-    RpcCallPtr &getReturn();
+extern const char TAG_EMPTY_CLASS[];                            ///< NULL
+extern const char TAG_EMPTY_LIST[];                             ///< 空List
 
-private:
-    RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
-};
+extern const std::string META_TYPE_STRING[];		            ///< 元数据字符串描述
 
 }
 
 
-#endif /* _LANGUAGE_STACK_RPC_RESPONSE_H_ */
+#endif /* _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_ */

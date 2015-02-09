@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Reflect/MetaFactory.h"
+#include "MetaFactory.h"
 
 namespace ls {
 

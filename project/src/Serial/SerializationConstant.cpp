@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Serial/SerializationConstant.h"
+#include "SerializationConstant.h"
 
 namespace ls {
 
