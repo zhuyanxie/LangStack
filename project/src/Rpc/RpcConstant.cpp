@@ -21,7 +21,7 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#include "RpcConstant.h"
+#include "Rpc/RpcConstant.h"
 
 namespace ls {
 

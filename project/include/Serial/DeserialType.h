@@ -20,27 +20,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+
+#ifndef _LANGUAGE_STACK_DESERIAL_TYPE_H_
+#define _LANGUAGE_STACK_DESERIAL_TYPE_H_
+
+#include "Deserializion.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
+MetaDataType deserialMetaType(const char *buf)
 {
-    return ++ITransSession::s_sessionId;
+    if (deserialCStringMatch(buf, TAG_INT))
+        return MetaDataTypeInt;
+    else if (deserialCStringMatch(buf, TAG_LONGLONG))
+        return MetaDataTypeLonglong;
+    else if (deserialCStringMatch(buf, TAG_DOUBLE))
+        return MetaDataTypeDouble;
+    else if (deserialCStringMatch(buf, TAG_STRING))
+        return MetaDataTypeString;
+    else if (deserialCStringMatch(buf, TAG_CLASS))
+        return MetaDataTypeClass;
+    else if (deserialCStringMatch(buf, "List:Int:"))
+        return MetaDataTypeIntList;
+    else if (deserialCStringMatch(buf, "List:LLong:"))
+        return MetaDataTypeLonglongList;
+    else if (deserialCStringMatch(buf, "List:Double:"))
+        return MetaDataTypeDoubleList;
+    else if (deserialCStringMatch(buf, "List:String:"))
+        return MetaDataTypeStringList;
+    else if (deserialCStringMatch(buf, "List:Class:"))
+        return MetaDataTypeClassList;
+    return MetaDataTypeUnkown;
 }
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
-{
-
-}
-
-ITransSession::~ITransSession()
-{
-
-}
-
 }
 
 
+#endif /* _LANGUAGE_STACK_DESERIAL_TYPE_H_ */

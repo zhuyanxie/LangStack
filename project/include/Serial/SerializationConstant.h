@@ -20,27 +20,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "Transport/TransSession.h"
+#ifndef _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_
+#define _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_
+
+#include <string>
+#include "Reflect/MetaDataTraits.h"
 
 namespace ls {
 
-std::atomic<uint32_t> ITransSession::s_sessionId(0);
-uint32_t ITransSession::createSessionId()
-{
-    return ++ITransSession::s_sessionId;
-}
+extern const char TAG_INT[];									///< Int:
+extern const char TAG_LONGLONG[];								///< LLong:
+extern const char TAG_DOUBLE[];									///< Double:
+extern const char TAG_STRING[];									///< String:
+extern const char TAG_LIST[];									///< List:
+extern const char TAG_CLASS[];									///< Class
+extern const char TAG_END[];									///< :
+extern const char TAG_PARAM_SPLIT[];							///< &
+extern const char DETAIL_END[];                                 ///< ;
 
-ITransSession::ITransSession()
-    : m_id(createSessionId())
-{
+extern const char TAG_EMPTY_CLASS[];                            ///< NULL
+extern const char TAG_EMPTY_LIST[];                             ///< 空List
 
-}
-
-ITransSession::~ITransSession()
-{
-
-}
+extern const std::string META_TYPE_STRING[];		            ///< 元数据字符串描述
 
 }
 
 
+#endif /* _LANGUAGE_STACK_SERIALIZATION_CONSTANT_H_ */

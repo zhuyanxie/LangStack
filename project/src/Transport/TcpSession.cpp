@@ -20,9 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "TcpSession.h"
+#include "Transport/TcpSession.h"
 
+#include <iostream>
 #include "Base/MemoryStream.h"
+#include "Rpc/RpcTask.h"
+#include "Rpc/RpcCore.h"
+#include "TcpMessage.h"
 
 namespace ls {
 
@@ -30,7 +34,7 @@ CTcpSession::CTcpSession(int fd)
     : m_fd(fd)
     , m_buf(1*1024*1024)
     , m_loop(true)
-    , m_thread(std::bind(&CTcpSession::readTcpMessage(), this))
+    , m_thread(std::bind(&CTcpSession::readTcpMessage, this))
 {
 }
 
@@ -125,14 +129,15 @@ void CTcpSession::dealMessage()
             {
                 std::cout << buf << std::endl;
                 CTaskThreadPool::instance()->addTask(
-                        new CRpcCallTask(rpcCall, getSessionId()));
+                    new CRpcCallTask(rpcCall, getSessionId()));
             }
             else
             {
-                CRpcCore::instance()->onRpcReturn(rpcCall, getSessionId());
+                CRpcCore::instance()->onRpcReturn(rpcCall);
             }
         }
         m_buf.popBuffer(length + RPC_HEADER_LENGTH);
+    }
 }
 
 }

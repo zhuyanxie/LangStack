@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "MetaMethod.h"
+#include "Reflect/MetaMethod.h"
 
 namespace ls {
 
@@ -32,7 +32,7 @@ CMetaMethod::CMetaMethod(const char *methodName)
 
 CMetaMethod::~CMetaMethod()
 {
-    /// FIXME howto recv the function's memory
+    /// FIXME howto release the function's memory
 }
 
 ///\brief       增加方法

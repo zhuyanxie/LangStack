@@ -24,22 +24,22 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_RPC_RESPONSE_H_
 #define _LANGUAGE_STACK_RPC_RESPONSE_H_
 
-#include "RpcCall.h"
-#include "RpcSession.h"
+#include "Rpc/RpcCall.h"
+#include "Transport/TransSession.h"
 
 namespace ls {
 
 class CRpcResponse
 {
 public:
-    CRpcResponse(RpcCallPtr call, RpcSessionPtr session);
+    CRpcResponse(RpcCallPtr call, SessionPtr session);
     ~CRpcResponse();
 
     RpcCallPtr &getReturn();
 
 private:
     RpcCallPtr          m_return;       ///< 待发送的响应
-    RpcSessionPtr       m_session;      ///< 待发送的session
+    SessionPtr          m_session;      ///< 待发送的session
 };
 
 }
