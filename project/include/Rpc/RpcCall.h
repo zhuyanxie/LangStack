@@ -188,7 +188,7 @@ public:
 
         while (true)
         {
-            int next = deserialGetDetailLength(buf + offset);
+            size_t next = deserialGetDetailLength(buf + offset);
             if (next <= 1) break;
             val->m_values.push_back(std::string(buf + offset, next + 1));
             offset += next + strlen(DETAIL_END);
@@ -199,7 +199,7 @@ public:
 private:
     template <class T> bool deserial(const char *buf, int &offset, T &val) const
     {
-        int next = deserialGetDetailLength(buf + offset);
+        size_t next = deserialGetDetailLength(buf + offset);
         if (!ls::deserial(buf + offset, val))
         {
             return false;

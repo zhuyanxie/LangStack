@@ -57,7 +57,7 @@ bool CTcpSession::send(RpcCallPtr call, RpcType type)
 
     /// 本次未发送完,环回不做处理
     uint32_t len = uint32_t(sizeof(RpcHeader)+mos.charsWritten());
-    int res = ::send(m_fd, sendBuffer, len, 0);
+    size_t res = ::send(m_fd, sendBuffer, len, 0);
     std::cout << "send :" << res << " fd : " << m_fd << std::endl;
 
     return true;
@@ -68,13 +68,13 @@ void CTcpSession::readTcpMessage()
 {
     while (m_loop)
     {
-        int len = ::recv(m_fd, m_buf.getBufferEnd(), m_buf.getIdleSize(), 0);
+        ssize_t len = ::recv(m_fd, m_buf.getBufferEnd(), m_buf.getIdleSize(), 0);
         if (len == 0 || (len < 0 && !IS_RECV_IGNORABLE(GET_NET_ERROR())))
         {
             break;
         }
-        printf("do read : %d\n", len);
-        m_buf.addSize(len);
+        printf("do read : %ld\n", len);
+        m_buf.addSize((uint32_t)len);
 
         dealMessage();
     }

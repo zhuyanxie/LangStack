@@ -44,7 +44,7 @@ typedef std::vector<MetaDataType>               ParamTypes;     ///< 方法参�
 struct MetaMethodData
 {
     ParamTypes              params;                             ///< 参数类型列表
-    uint32_t                paramsCount;                        ///< 参数个数
+    size_t                  paramsCount;                        ///< 参数个数
     void*                   method;                             ///< 执行function
 
     MetaMethodData(const ParamTypes &p, void* m)

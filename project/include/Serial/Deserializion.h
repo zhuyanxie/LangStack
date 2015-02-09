@@ -59,7 +59,7 @@ static const char* deserialFindCString(const char *buf, const char *tag)
     return *buf ? buf : NULL;
 }
 
-static int deserialGetDetailLength(const char *buf)
+static size_t deserialGetDetailLength(const char *buf)
 {
     int endflag = 0;
 
@@ -89,7 +89,7 @@ static bool deserialSampleValueFromString(const char *buf, const char *checkTag,
     {
         return false;
     }
-    int offset = strlen(checkTag);
+    size_t offset = strlen(checkTag);
     sscanf(buf + offset, fmt, val);
     return true;
 }
@@ -143,7 +143,7 @@ public:
 };
 
 ///\brief   字符串关键字符解码
-static std::string serializionDecode(const char *buf, int len)
+static std::string serializionDecode(const char *buf, size_t len)
 {
     std::string res;
     for (int i = 0; i < len; ++i)
@@ -178,7 +178,7 @@ public:
         {
             return false;
         }
-        int offset = strlen(TAG_STRING);
+        size_t offset = strlen(TAG_STRING);
 
         const char *stringEnd = deserialFindCString(buf + offset, DETAIL_END);
         if (NULL == stringEnd)
@@ -212,10 +212,10 @@ public:
         {
             return false;
         }
-        int offset = strlen(TAG_LIST);
+        size_t offset = strlen(TAG_LIST);
         while (true)
         {
-            int next = deserialGetDetailLength(buf + offset);
+            size_t next = deserialGetDetailLength(buf + offset);
             if (next <= 1) break;
             T temp;
             Deserializion<T>()(buf + offset, temp);
@@ -263,7 +263,7 @@ public:
         {
             return false;
         }
-        int offset = strlen(TAG_CLASS);
+        size_t offset = strlen(TAG_CLASS);
 
         /// 获取类名
         const char *className = buf + offset;
@@ -296,9 +296,9 @@ public:
         bool ret = true;
         while (ret)
         {
-            int next = deserialGetDetailLength(buf + offset);
+            size_t next = deserialGetDetailLength(buf + offset);
             if (next <= 1) break;
-            int metaOffset = offset;
+            size_t metaOffset = offset;
             offset += next + strlen(DETAIL_END);
 
             /// 获取成员名
