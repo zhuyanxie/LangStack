@@ -118,23 +118,6 @@ template <> struct Type2MetaDataType<std::list<IReflection*> >
     MetaDataType operator()() const { return MetaDataTypeClassList; }
 };
 
-///\brief		获取参数数据类型集合
-template<class R>
-static std::vector<MetaDataType> types2MetaDataTypes()
-{
-	std::vector<MetaDataType> types;
-	types.push_back(Type2MetaDataType<R>()());
-	return types;
-}
-
-template<class R, class... Args>
-static std::vector<MetaDataType> types2MetaDataTypes()
-{
-	std::vector<MetaDataType> types;
-	types.push_back(Type2MetaDataType<R>()());
-	return types;
-}
-
 ///\brief       获取数据类型
 template<MetaDataType T> struct MetaType2RealType
 {

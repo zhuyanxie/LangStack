@@ -68,7 +68,7 @@ void CTcpSession::readTcpMessage()
 {
     while (m_loop)
     {
-        ssize_t len = ::recv(m_fd, m_buf.getBufferEnd(), m_buf.getIdleSize(), 0);
+        long len = (long)::recv(m_fd, m_buf.getBufferEnd(), m_buf.getIdleSize(), 0);
         if (len == 0 || (len < 0 && !IS_RECV_IGNORABLE(GET_NET_ERROR())))
         {
             break;

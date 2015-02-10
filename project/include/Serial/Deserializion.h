@@ -146,7 +146,7 @@ public:
 static std::string serializionDecode(const char *buf, size_t len)
 {
     std::string res;
-    for (int i = 0; i < len; ++i)
+    for (size_t i = 0; i < len; ++i)
     {
         if (buf[i] == '%' && i + 1 < len)
         {
