@@ -26,13 +26,13 @@ SOFTWARE.
 
 JavaVM *g_jvm = 0;
 
-JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniMode
   (JNIEnv * env, jclass cls)
 {
     ls::CLangStack::startJniMode();
 }
 
-JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniServer
+JNIEXPORT void JNICALL Java_com_langstack_LangStack_startTcpMode
   (JNIEnv * env, jclass cls, jint port)
 {
     ls::CLangStack::startTcpMode((uint16_t)port);

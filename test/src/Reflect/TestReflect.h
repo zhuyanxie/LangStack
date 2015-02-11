@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include "gtest.h"
 
-class CTestSerial : public testing::Test
+class CTestReflect : public testing::Test
 {
 public:
     void SetUp(){}

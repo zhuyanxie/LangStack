@@ -1,4 +1,5 @@
 /Debug/
+/bin
 # eclipse
 /.metadata
 # vs
@@ -12,3 +13,6 @@
 *.ilk
 *.sdf
 *.opensdf
+
+#java
+*.class

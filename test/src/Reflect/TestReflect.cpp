@@ -31,7 +31,7 @@ SOFTWARE.
 #include "EasyTypeClass.h"
 
 /// 类创建反射
-TEST_F(CTestSerial, EasyClassReflect)
+TEST_F(CTestReflect, EasyClassReflect)
 {
     CMetaTable *table = nullptr;
     CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
@@ -44,7 +44,7 @@ TEST_F(CTestSerial, EasyClassReflect)
 }
 
 /// 成员反射
-TEST_F(CTestSerial, EasyMemberReflect)
+TEST_F(CTestReflect, EasyMemberReflect)
 {
     CMetaTable *table = nullptr;
     CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
@@ -99,7 +99,7 @@ TEST_F(CTestSerial, EasyMemberReflect)
 }
 
 /// 最直接的函数反射调用
-TEST_F(CTestSerial, EasyFunctionReflectTest)
+TEST_F(CTestReflect, EasyFunctionReflectTest)
 {
     CEasyTypeClass easy;
     easy.m_int = 1024;
@@ -136,7 +136,7 @@ TEST_F(CTestSerial, EasyFunctionReflectTest)
 
 }
 
-TEST_F(CTestSerial, Dead)
+TEST_F(CTestReflect, Dead)
 {
 }
 
