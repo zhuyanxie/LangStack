@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\EasyTypeClass.cpp" />
     <ClCompile Include="..\..\..\src\Reflect\TestReflect.cpp" />
+    <ClCompile Include="..\..\..\src\Reflect\TestReflectMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\EasyTypeClass.h" />

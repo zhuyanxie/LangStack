@@ -33,8 +33,6 @@ SOFTWARE.
 /// 类创建反射
 TEST_F(CTestSerial, EasyClassReflect)
 {
-    std::stringstream ss;
-
     CMetaTable *table = nullptr;
     CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
     auto foo = CMetaFactory::instance()->createClassByName("CEasyTypeClass");
@@ -48,14 +46,54 @@ TEST_F(CTestSerial, EasyClassReflect)
 /// 成员反射
 TEST_F(CTestSerial, EasyMemberReflect)
 {
-    std::stringstream ss;
-
     CMetaTable *table = nullptr;
     CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
     auto foo = CMetaFactory::instance()->createClassByName("CEasyTypeClass");
     auto etc = dynamic_cast<CEasyTypeClass*>(foo);
     ASSERT_TRUE(etc != nullptr);
     ASSERT_DOUBLE_EQ(etc->foo(1), 0.01);
+
+    /// 成员值设置
+    MetaData *md = nullptr;
+    if (table->getMetaData("m_int", md))
+    {
+        int val = 100;
+        ASSERT_TRUE(etc->m_int != 100);
+        md->setMetaData(foo, &val);
+        ASSERT_TRUE(etc->m_int == 100);
+    }
+
+    if (table->getMetaData("m_longlong", md))
+    {
+        long long val = 1000100010001000LL;
+        ASSERT_TRUE(etc->m_longlong != 1000100010001000LL);
+        md->setMetaData(foo, &val);
+        ASSERT_TRUE(etc->m_longlong == 1000100010001000LL);
+    }
+
+    if (table->getMetaData("m_double", md))
+    {
+        double val = 100.101;
+        ASSERT_TRUE(etc->m_double < 100);
+        md->setMetaData(foo, &val);
+        ASSERT_DOUBLE_EQ(etc->m_double, val);
+    }
+
+    if (table->getMetaData("m_normal", md))
+    {
+        std::string val = "test";
+        ASSERT_TRUE(etc->m_normal != "test");
+        md->setMetaData(foo, &val);
+        ASSERT_TRUE(etc->m_normal == "test");
+    }
+
+    if (table->getMetaData("m_special", md))
+    {
+        std::string val = "test2";
+        ASSERT_TRUE(etc->m_special != "test2");
+        md->setMetaData(foo, &val);
+        ASSERT_TRUE(etc->m_special == "test2");
+    }
 
     delete foo;
 }
@@ -102,25 +140,3 @@ TEST_F(CTestSerial, Dead)
 {
 }
 
-// The following lines pull in the real gtest *.cc files.
-#include "src/gtest.cc"
-#include "src/gtest-death-test.cc"
-#include "src/gtest-filepath.cc"
-#include "src/gtest-port.cc"
-#include "src/gtest-printers.cc"
-#include "src/gtest-test-part.cc"
-#include "src/gtest-typed-test.cc"
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    RUN_ALL_TESTS();
-
-    char inputchar;
-    while ((inputchar = getchar()) != 'q')
-    {
-        break;
-    }
-
-    return 0;
-}

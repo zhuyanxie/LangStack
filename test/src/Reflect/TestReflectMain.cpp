@@ -11,7 +11,7 @@ to do so, subject to the following conditions:
 　　The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -20,40 +20,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "EasyTypeClass.h"
+// The following lines pull in the real gtest *.cc files.
+#include "src/gtest.cc"
+#include "src/gtest-death-test.cc"
+#include "src/gtest-filepath.cc"
+#include "src/gtest-port.cc"
+#include "src/gtest-printers.cc"
+#include "src/gtest-test-part.cc"
+#include "src/gtest-typed-test.cc"
 
-#include <iostream>
+#include "TestReflect.h"
 
-CEasyTypeClass::CEasyTypeClass() : m_int(0), m_longlong(0), m_double(0) {}
-CEasyTypeClass::~CEasyTypeClass() {}
-
-void CEasyTypeClass::dump()
+int main(int argc, char **argv)
 {
-    std::cout << "\tm_int:\t\t\t" << m_int << std::endl;
-    std::cout << "\tm_longlong:\t\t" << m_longlong << std::endl;
-    std::cout << "\tm_double:\t\t" << m_double << std::endl;
-    std::cout << "\tm_normal:\t\t" << m_normal << std::endl;
-    std::cout << "\tm_special:\t\t" << m_special << std::endl;
+    testing::InitGoogleTest(&argc, argv);
+    RUN_ALL_TESTS();
+
+    char inputchar;
+    while ((inputchar = getchar()) != 'q')
+    {
+        break;
+    }
+
+    return 0;
 }
 
-double CEasyTypeClass::foo(int arg)
-{
-    return 0.01;
-}
-
-bool CEasyTypeClass::operator==(const CEasyTypeClass &rhs) const
-{
-    return m_int        == rhs.m_int &&
-            m_longlong  == rhs.m_longlong &&
-            m_double    == rhs.m_double &&
-            m_normal    == rhs.m_normal &&
-            m_special   == rhs.m_special;
-}
-
-std::list<int> foo(std::list<double> dl, IReflection* obj)
-{
-    CEasyTypeClass *easy = dynamic_cast<CEasyTypeClass*>(obj);
-    easy->dump();
-    for (auto d : dl) std::cout << "\tdouble:\t\t" << d << std::endl;
-    return { 1, 2, 3 };
-}

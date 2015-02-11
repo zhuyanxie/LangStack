@@ -1,2 +1,14 @@
 /Debug/
+# eclipse
 /.metadata
+# vs
+*.lib
+*.log
+*.tlog
+*.obj
+*.pdb
+*.idb
+*.exe
+*.ilk
+*.sdf
+*.opensdf
