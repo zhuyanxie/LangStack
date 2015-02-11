@@ -23,7 +23,7 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_LSTACK_H_
 #define _LANGUAGE_STACK_LSTACK_H_
 
-#include "inttypes.h"
+#include <inttypes.h>
 
 namespace ls {
 
