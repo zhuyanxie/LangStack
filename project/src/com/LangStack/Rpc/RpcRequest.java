@@ -66,7 +66,7 @@ public class RpcRequest
 
     public Integer getCallId()
     {
-        return mCall.mCallId;
+        return mCall.getCallId();
     }
     
     

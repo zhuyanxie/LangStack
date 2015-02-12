@@ -33,11 +33,11 @@ namespace ls {
 class CRpcCallTask : public ITask
 {
 public:
-    CRpcCallTask(RpcCallPtr rpcCall, uint32_t sessionId)
-        : m_call(rpcCall), m_session(sessionId)
+    CRpcCallTask(RpcCallPtr rpcCall)
+        : m_call(rpcCall)
     {
         char buf[128];
-        sprintf(buf, "%d - %d", m_call->m_callId, sessionId);
+        sprintf(buf, "java call : %d", m_call->m_callId);
         m_taskId = buf;
     }
     virtual ~CRpcCallTask() {}
@@ -56,7 +56,6 @@ public:
 
 private:
     RpcCallPtr          m_call;
-    uint32_t            m_session;
     std::string         m_taskId;
 };
 

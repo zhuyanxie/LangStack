@@ -15,7 +15,7 @@ public class RpcResponse
      */
     public RpcResponse(RpcCall call, TransSession session)
     {
-        mCall = new RpcCall(call.mCallId);
+        mCall = new RpcCall(call.getCallId());
         mSession = session;
     }
 

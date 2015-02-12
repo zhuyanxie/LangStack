@@ -22,6 +22,11 @@ SOFTWARE.
 
 #include "Transport/JniSession.h"
 
+#include "jni/com_LangStack_LangStack.h"
+#include "Rpc/RpcTask.h"
+#include "Rpc/RpcCore.h"
+#include "Task/TaskThreadPool.h"
+
 namespace ls {
 
 CJniSession::CJniSession()
@@ -35,8 +40,43 @@ CJniSession::~CJniSession()
 ///\brief       消息发送
 bool CJniSession::send(RpcCallPtr call, RpcType type)
 {
-    ///TODO 
+    char buffer[64 * 1024];
+    MemoryOutputStream mos(buffer, 64 * 1024);
+    Serializion<RpcCallPtr>()(call, mos);
+    buffer[mos.charsWritten()] = 0;
+
+    if (type == rpcTypeCall)
+    {
+        sendCall2Java(buffer);
+    }
+    else
+    {
+        sendReturn2Java(buffer);
+    }
     return true;
+}
+
+
+///\brief		接收到java的调用
+void CJniSession::onJavaCall(const char *str)
+{
+	CRpcCall *call;
+    if (ls::deserial(str, call))
+    {
+        RpcCallPtr rpcCall(call);
+		CTaskThreadPool::instance()->addTask(new CRpcCallTask(rpcCall));
+    }
+}
+
+///\brief		接收到java的返回
+void CJniSession::onJavaReturn(const char *str)
+{
+	CRpcCall *call;
+    if (ls::deserial(str, call))
+    {
+        RpcCallPtr rpcCall(call);
+        CRpcCore::instance()->onRpcReturn(rpcCall);
+    }
 }
 
 }

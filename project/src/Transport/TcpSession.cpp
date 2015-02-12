@@ -26,6 +26,7 @@ SOFTWARE.
 #include "Base/MemoryStream.h"
 #include "Rpc/RpcTask.h"
 #include "Rpc/RpcCore.h"
+#include "Task/TaskThreadPool.h"
 #include "TcpMessage.h"
 
 namespace ls {
@@ -128,8 +129,7 @@ void CTcpSession::dealMessage()
             if (type == rpcTypeCall)
             {
                 std::cout << buf << std::endl;
-                CTaskThreadPool::instance()->addTask(
-                    new CRpcCallTask(rpcCall, getSessionId()));
+                CTaskThreadPool::instance()->addTask(new CRpcCallTask(rpcCall));
             }
             else
             {

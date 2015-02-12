@@ -1,16 +1,15 @@
 package com.LangStack.Rpc;
 
-import com.LangStack.MetaTable;
 import com.LangStack.Serial.Deserial;
 import com.LangStack.Serial.Serial;
 
 public class IRpcApi
 {    
-    /// RPC调用超时时间
+    ///< RPC调用超时时间
     public static final int          RPC_CALL_TIMEOUT    = 3000;
-    /// 远程调用对象ID
+    ///< 远程调用对象ID
     private long                     mRpcObjectId        = 0;      
-    /// 静态ID生成器
+    ///< 静态ID生成器
     private static long              sRpcObjectIdCreator = 0;                          
 
     public IRpcApi()
@@ -53,10 +52,9 @@ public class IRpcApi
     public static Object call(String method, String className, IRpcApi rpcObject, 
             Object... os)
     {
-        String cls = MetaTable.instance().getRpcClassName(className);
         RpcCall rpcCall = rpcObject != null ? 
-                new RpcCall(method, cls, rpcObject.toId()) :
-                new RpcCall(method, cls, 0);
+                new RpcCall(method, className, rpcObject.toId()) :
+                new RpcCall(method, className, 0);
                 
         for (Object o : os)
         {
@@ -67,9 +65,9 @@ public class IRpcApi
                 rpcCall, RPC_CALL_TIMEOUT, rpcObject);
         
         Object  res = null;
-        if (rpcReturn != null && !rpcReturn.mValues.isEmpty())
+        if (rpcReturn != null && !rpcReturn.getValues().isEmpty())
         {
-            return Deserial.deserial(rpcReturn.mValues.get(0));
+            return Deserial.deserial(rpcReturn.getValues().get(0));
         }
         return res;
     }
@@ -84,10 +82,9 @@ public class IRpcApi
     public static void callbackSetting(String method, String className, 
             IRpcApi rpcObject, IRpcApi callbackObject)
     {
-        String cls = MetaTable.instance().getRpcClassName(className);
         RpcCall rpcCall = rpcObject != null ? 
-                new RpcCall(method, cls, rpcObject.toId()) :
-                new RpcCall(method, cls, 0);
+                new RpcCall(method, className, rpcObject.toId()) :
+                new RpcCall(method, className, 0);
                 
         rpcCall.pushParam(Serial.serial(callbackObject.toId()));
         RpcCore.instance().call(rpcCall, RPC_CALL_TIMEOUT, callbackObject);

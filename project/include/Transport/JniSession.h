@@ -23,6 +23,8 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_JNI_SESSION_H_
 #define _LANGUAGE_STACK_JNI_SESSION_H_
 
+#include <jni.h>
+
 #include "TransSession.h"
 
 namespace ls {
@@ -36,6 +38,12 @@ public:
 
     ///\brief       消息发送
     virtual bool send(RpcCallPtr call, RpcType type);
+
+    ///\brief		接收到java的调用
+    static void onJavaCall(const char *str);
+
+    ///\brief		接收到java的返回
+    static void onJavaReturn(const char *str);
 };
 
 }

@@ -23,21 +23,98 @@ SOFTWARE.
 #include "com_langstack_LangStack.h"
 
 #include "LangStack.h"
+#include "Transport/JniSession.h"
 
 JavaVM *g_jvm = 0;
 
-JNIEXPORT void JNICALL Java_com_langstack_LangStack_startJniMode
-  (JNIEnv * env, jclass cls)
+////////////////////////////////////////////////////////////////////////////////
+/// for LangStack
+JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startJniMode
+  (JNIEnv *env, jclass cls)
 {
     ls::CLangStack::startJniMode();
 }
 
-JNIEXPORT void JNICALL Java_com_langstack_LangStack_startTcpMode
-  (JNIEnv * env, jclass cls, jint port)
+JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
+  (JNIEnv *env, jclass cls, jint port)
 {
     ls::CLangStack::startTcpMode((uint16_t)port);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// for Transport java Jnisession
+JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
+  (JNIEnv *env, jclass cls, jstring str)
+{
+	const char* buf = env->GetStringUTFChars(str, NULL);
+	ls::CJniSession::onJavaCall(buf);
+	env->ReleaseStringUTFChars(str, buf);
+}
+
+JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
+ (JNIEnv *env, jclass cls, jstring str)
+{
+	const char* buf = env->GetStringUTFChars(str, NULL);
+	ls::CJniSession::onJavaReturn(buf);
+	env->ReleaseStringUTFChars(str, buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// for Transport cpp Jnisession
+void sendCall2Java(const char *str)
+{
+	JNIEnv *env = nullptr;
+    g_jvm->AttachCurrentThread((void **)&env, NULL);
+    do
+    {
+		if (env == nullptr)
+		{
+			break;
+		}
+		jstring jstr = env->NewStringUTF(str);
+		jclass cls = env->FindClass("com/LangStack/Transport/JniSession");
+		if (cls == nullptr)
+		{
+			break;
+		}
+		jmethodID mid = env->GetStaticMethodID(cls, "onCppCall", "(Ljava/lang/String;)V");
+		if (mid == nullptr)
+		{
+			break;
+		}
+		env->CallStaticVoidMethod(cls, mid, jstr);
+    } while(0);
+	g_jvm->DetachCurrentThread();
+}
+
+void sendReturn2Java(const char *str)
+{
+	JNIEnv *env = nullptr;
+    g_jvm->AttachCurrentThread((void **)&env, NULL);
+    do
+    {
+		if (env == nullptr)
+		{
+			break;
+		}
+		jstring jstr = env->NewStringUTF(str);
+		jclass cls = env->FindClass("com/LangStack/Transport/JniSession");
+		if (cls == nullptr)
+		{
+			break;
+		}
+		jmethodID mid = env->GetStaticMethodID(cls, "onCppReturn", "(Ljava/lang/String;)V");
+		if (mid == nullptr)
+		{
+			break;
+		}
+		env->CallStaticVoidMethod(cls, mid, jstr);
+    } while(0);
+	g_jvm->DetachCurrentThread();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// for jni
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     g_jvm = vm;
