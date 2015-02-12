@@ -61,19 +61,19 @@ public class RpcCore
         }
 
         RpcCall retCall = req.getCallReturn();
-        if (call.mMethod.equals("attach"))
+        if (call.getMethod().equals("attach"))
         {
             mObjects.addObject(
-                    (Long)Deserial.deserial(retCall.mValues.get(0)), o);
+                    (Long)Deserial.deserial(retCall.getValues().get(0)), o);
             
-            System.out.println("attach : " + (Long)Deserial.deserial(retCall.mValues.get(0)));
+            System.out.println("attach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
         }
-        else if (call.mMethod.equals("detach"))
+        else if (call.getMethod().equals("detach"))
         {
             mObjects.delObject(
-                    (Long)Deserial.deserial(retCall.mValues.get(0)));
+                    (Long)Deserial.deserial(retCall.getValues().get(0)));
             
-            System.out.println("detach : " + (Long)Deserial.deserial(retCall.mValues.get(0)));
+            System.out.println("detach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
         }
 
         deleteRequest(req);
@@ -101,16 +101,16 @@ public class RpcCore
         RpcResponse resp = new RpcResponse(call, mSession);
         do {
             /// 对象创建销毁特殊处理
-            if (call.mMethod.equals("new") || 
-                    call.mMethod.equals("delete"))
+            if (call.getMethod().equals("new") || 
+                    call.getMethod().equals("delete"))
             {
                 createObject(call, resp);
                 break;
             }
             
             /// 回调特殊处理
-            if (call.mMethod.equals("attach") ||
-                    call.mMethod.equals("detach"))
+            if (call.getMethod().equals("attach") ||
+                    call.getMethod().equals("detach"))
             {
                 /// TODO c++一般不会需要java回调
                 break;
@@ -119,7 +119,7 @@ public class RpcCore
             /// 获取类
             Class<?> c = null;
             try {
-                c = Class.forName(call.mClass);
+                c = Class.forName(call.getClassName());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 break;
@@ -147,9 +147,9 @@ public class RpcCore
     {
         try
         {
-            Method method = c.getDeclaredMethod(call.mMethod, 
+            Method method = c.getDeclaredMethod(call.getMethod(), 
                     call.getValueClassTypes());
-            Object o = mObjects.getObject(call.mObject);
+            Object o = mObjects.getObject(call.getObject());
             
             try
             {
@@ -181,13 +181,13 @@ public class RpcCore
      */
     private void createObject(RpcCall call, RpcResponse resp)
     {
-        long id = call.mObject;
+        long id = call.getObject();
         Object o = null;
         
-        if (call.mMethod.equals("new"))
+        if (call.getMethod().equals("new"))
         {
             try {
-                o = Class.forName(call.mClass).newInstance();
+                o = Class.forName(call.getClassName()).newInstance();
                 mObjects.addObject(id, o);
             } catch (InstantiationException e1) {
                 e1.printStackTrace();
@@ -209,7 +209,7 @@ public class RpcCore
      */
     public void onRpcReturn(RpcCall retCall)
     {
-        RpcRequest req = getRequest(retCall.mCallId);
+        RpcRequest req = getRequest(retCall.getCallId());
         if (req != null)
         {
             req.onReturn(retCall);

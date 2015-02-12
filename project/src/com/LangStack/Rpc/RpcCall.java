@@ -8,19 +8,19 @@ import com.LangStack.Serial.Serial;
 public class RpcCall
 {
     ///< 远程对象方法
-    public String            mMethod = new String();
+    private String            mMethod    = new String();
     ///< 类名
-    public String            mClass  = new String();
+    private String            mClassName = new String();
     ///< callID标记本次call
-    public int               mCallId = 0;
+    private int               mCallId    = 0;
     ///< 远程对象句柄,句柄为空调用函数
-    public long              mObject = 0;
+    private long              mObject    = 0;
     ///< 入参、出参(return)列表
-    public ArrayList<String> mValues = new ArrayList<String>();
+    private ArrayList<String> mValues    = new ArrayList<String>();
 
     ///< callId生成器
-    private static int       id      = 0;       
-    
+    private static int       id         = 0;       
+       
     /**
      * @brief   默认构造
      */
@@ -46,7 +46,7 @@ public class RpcCall
     public RpcCall(String method, String cls, long obj)
     {
         mMethod = method;
-        mClass  = cls;
+        mClassName  = cls;
         mObject = obj;
         mCallId = createCallId();
     }
@@ -78,7 +78,7 @@ public class RpcCall
     {
         StringBuffer sb = new StringBuffer("RpcCall:");
         sb.append(Serial.serial(mMethod));
-        sb.append(Serial.serial(mClass));
+        sb.append(Serial.serial(mClassName));
         sb.append(Serial.serial(mCallId));
         sb.append(Serial.serial(mObject));
         for (String s : mValues)
@@ -141,7 +141,7 @@ public class RpcCall
         /// class
         next = Deserial.getDetailLength(str);
         value = Deserial.deserial(str.substring(0, next + 1));
-        call.mClass = (String)value;
+        call.mClassName = (String)value;
         str = str.substring(next + 1, str.length());        
         
         /// callId
@@ -166,5 +166,55 @@ public class RpcCall
         } ;
 
         return call;
+    }
+    
+    public String getMethod()
+    {
+        return mMethod;
+    }
+
+    public void setMethod(String mMethod)
+    {
+        this.mMethod = mMethod;
+    }
+
+    public String getClassName()
+    {
+        return mClassName;
+    }
+
+    public void setClassName(String mClass)
+    {
+        this.mClassName = mClass;
+    }
+
+    public int getCallId()
+    {
+        return mCallId;
+    }
+
+    public void setCallId(int mCallId)
+    {
+        this.mCallId = mCallId;
+    }
+
+    public long getObject()
+    {
+        return mObject;
+    }
+
+    public void setObject(long mObject)
+    {
+        this.mObject = mObject;
+    }
+
+    public ArrayList<String> getValues()
+    {
+        return mValues;
+    }
+
+    public void setValues(ArrayList<String> mValues)
+    {
+        this.mValues = mValues;
     }
 }
