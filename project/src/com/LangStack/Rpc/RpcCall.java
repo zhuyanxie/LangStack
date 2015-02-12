@@ -2,8 +2,8 @@ package com.LangStack.Rpc;
 
 import java.util.ArrayList;
 
-import com.LangStack.Deserial;
-import com.LangStack.Serial;
+import com.LangStack.Serial.Deserial;
+import com.LangStack.Serial.Serial;
 
 public class RpcCall
 {

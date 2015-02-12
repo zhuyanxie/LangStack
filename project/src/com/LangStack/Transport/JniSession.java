@@ -6,7 +6,15 @@ public class JniSession extends TransSession
 {
     @Override public boolean send(RpcCall call, int type)
     {
-        // TODO Auto-generated method stub
+        String str = call.serial();
+        if (type == TcpMessage.rpcTypeCall)
+        {
+            sendCall2Cpp(str);
+        }
+        else
+        {
+            sendReturn2Cpp(str);
+        }
         return true;
     }
 

@@ -73,8 +73,7 @@ private:
 
     ///\brief           获取下次执行任务
     ///\param[in,out]   vec         任务列表
-    ///\param[in]       getAll      获取全部
-    void getExcuteTasks(std::vector<ITask*> &vec, bool getAll = false);
+    void getExcuteTasks(std::vector<ITask*> &vec);
 
     ///\brief           清空所有待执行任务
     void clearTasks();
@@ -84,7 +83,7 @@ private:
     CTaskThreadPool                 *m_parent;              ///< threadpool
     int                             m_idleTick;             ///< 空闲tick数
     int                             m_maxTick;              ///< 最多空闲tick数
-    int                             m_taskCounts;           ///< 任务数量
+    int                             m_taskCount;            ///< 任务数量
     std::mutex                      m_taskLock;             ///< 任务锁
     TaskLists                       m_taskLists;            ///< 任务列表
     bool                            m_loop;                 ///< 线程循环标记

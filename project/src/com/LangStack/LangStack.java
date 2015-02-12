@@ -1,6 +1,8 @@
 package com.LangStack;
 
 import com.LangStack.Rpc.RpcCore;
+import com.LangStack.Transport.JniSession;
+import com.LangStack.Transport.TcpSession;
 
 public class LangStack
 {
@@ -11,6 +13,7 @@ public class LangStack
     public static void startJniTransMode(int transPort, int port)
     {
         startJniMode();
+        RpcCore.instance().bindSession(new JniSession());
     }
     
     /**
@@ -20,6 +23,7 @@ public class LangStack
     public static void startTcpTransMode(int port)
     {
         startTcpMode(port);
+        RpcCore.instance().bindSession(new TcpSession(port));
     }
 
     private native static void startJniMode();

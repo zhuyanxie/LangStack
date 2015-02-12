@@ -68,14 +68,8 @@ void TaskThread::threadProc()
             {
                 /// 线程空闲处理
                 m_parent->onThreadIdle(m_index);
-                /// 获取全部剩余任务，全部执行
-                getExcuteTasks(tempVec, true);
             }
-            else
-            {
-                /// 线程未空闲，且无任务，重新获取任务
-                continue;
-            }
+            continue;
         }
 
         /// 非空线程
@@ -99,14 +93,14 @@ void TaskThread::addTask(ITask *task)
     std::lock_guard<std::mutex> lck(m_taskLock);
     adjuestTask(task);
     m_taskLists[task->getTaskQueueIdentify()].push_back(task);
-    ++m_taskCounts;
+    ++m_taskCount;
 }
 
 ///\brief           获取当前线程权重
 int TaskThread::getWeight()
 {
     std::lock_guard<std::mutex> lck(m_taskLock);
-    return m_taskCounts;
+    return m_taskCount;
 }
 
 ///\brief           获取当前线程ID
@@ -122,22 +116,20 @@ void TaskThread::adjuestTask(ITask *task)
 }
 
 ///\brief           获取下次执行任务
-void TaskThread::getExcuteTasks(std::vector<ITask*> &vec, bool getAll)
+void TaskThread::getExcuteTasks(std::vector<ITask*> &vec)
 {
     /// 拷贝任务，防止线程执行时加锁
     std::lock_guard<std::mutex> lck(m_taskLock);
     for (TaskLists::iterator it = m_taskLists.begin();
             it != m_taskLists.end(); ++it)
     {
-        do {
-            if (it->second.empty())
-            {
-                break;
-            }
-            vec.push_back(it->second.front());
-            it->second.pop_front();
-            --m_taskCounts;
-        } while (getAll);
+        if (it->second.empty())
+        {
+            continue;
+        }
+        vec.push_back(it->second.front());
+        it->second.pop_front();
+        --m_taskCount;
     }
 }
 

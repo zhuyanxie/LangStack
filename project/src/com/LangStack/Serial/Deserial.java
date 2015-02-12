@@ -1,4 +1,4 @@
-package com.LangStack;
+package com.LangStack.Serial;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -116,9 +116,8 @@ public class Deserial {
             return o;
         }
 
-        String clsName = MetaTable.instance().getJavaClassName(
-                str.substring(Serial.TAG_CLASS.length(),
-                        str.indexOf(Serial.TAG_END)));
+        String clsName = str.substring(Serial.TAG_CLASS.length(),
+                str.indexOf(Serial.TAG_END));
 
         str = str.substring(str.indexOf(Serial.TAG_END) + 1, str.length() - 1);
         try {
@@ -138,8 +137,7 @@ public class Deserial {
             {
                 break;
             }
-            String serialName = str.substring(0, paramSplit);
-            String memberName = MetaTable.instance().getJavaMemberName(serialName);
+            String memberName = str.substring(0, paramSplit);
 
             int next = getDetailLength(str);
             Object value = deserial(str.substring(
@@ -166,9 +164,8 @@ public class Deserial {
 
     /**
      * @brief 解析字符串，注意%%1等串
-     * @param str
-     *            序列化后的串
-     * @return 原串
+     * @param   str       序列化后的串
+     * @return  原串
      */
     private static String DecodeString(String str)
     {

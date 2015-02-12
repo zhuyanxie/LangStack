@@ -67,7 +67,7 @@ private:
     int                             m_idleTime;         ///< 单个线程空闲时间
     std::mutex                      m_threadLock;       ///< 线程锁
     std::map<int, TaskThreadPtr>    m_taskThreads;      ///< 线程池
-    std::map<std::string, int>      m_identifyMapping;  ///< 任务-线程索引表
+    std::map<std::string, int>      mIdentifyMap;       ///< 任务-线程索引表
 
 private:
     ///\brief           构造

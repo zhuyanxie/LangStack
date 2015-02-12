@@ -72,8 +72,8 @@ void CTaskThreadPool::addTask(ITask* task)
 ///\brief           获取负载较轻的线程
 TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
 {
-    std::map<std::string, int>::iterator itmap = m_identifyMapping.find(id);
-    if (m_identifyMapping.end() != itmap && m_taskThreads.count(itmap->second))
+    std::map<std::string, int>::iterator itmap = mIdentifyMap.find(id);
+    if (mIdentifyMap.end() != itmap && m_taskThreads.count(itmap->second))
     {
         return m_taskThreads[itmap->second];
     }
@@ -100,7 +100,7 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
         res = m_taskThreads.find(index);
     }
 
-    m_identifyMapping[id] = res->first;
+    mIdentifyMap[id] = res->first;
     return res->second;
 }
 
@@ -129,10 +129,10 @@ void CTaskThreadPool::onThreadIdle(int index)
 void CTaskThreadPool::onTaskIdle(const std::string &taskId, int index)
 {
     std::lock_guard<std::mutex> lck(m_threadLock);
-    auto it = m_identifyMapping.find(taskId);
+    auto it = mIdentifyMap.find(taskId);
     if (it->second == index)
     {
-        m_identifyMapping.erase(it);
+        mIdentifyMap.erase(it);
     }
 }
 

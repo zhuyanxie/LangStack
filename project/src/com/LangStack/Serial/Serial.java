@@ -1,7 +1,7 @@
-package com.LangStack;
+package com.LangStack.Serial;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.lang.reflect.Field;
 
 /**
  * 序列化 API
@@ -100,21 +100,19 @@ public class Serial {
             return TAG_EMPTY_CLASS;
         }
 
-        String serialName = MetaTable.instance().getRpcClassName(
-                o.getClass().getName());
+        String serialName = o.getClass().getName();
         if (null == serialName)
         {
             return null;
         }
         String str = TAG_CLASS + serialName + TAG_END;
 
-        // / 获取所有属性域
+        /// 获取所有属性域
         Field[] fields = o.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; ++i)
         {
-            // / 获取类型、属性名、值
-            String varName = MetaTable.instance().getRpcMemberName(
-                    fields[i].getName()) + TAG_PARAM_SPLIT;
+            /// 获取类型、属性名、值
+            String varName = fields[i].getName() + TAG_PARAM_SPLIT;
 
             fields[i].setAccessible(true);
             String valueSerialString = null;

@@ -1,8 +1,8 @@
 package com.LangStack.Rpc;
 
-import com.LangStack.Deserial;
 import com.LangStack.MetaTable;
-import com.LangStack.Serial;
+import com.LangStack.Serial.Deserial;
+import com.LangStack.Serial.Serial;
 
 public class IRpcApi
 {    

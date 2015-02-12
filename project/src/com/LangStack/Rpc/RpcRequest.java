@@ -1,22 +1,21 @@
 package com.LangStack.Rpc;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.LangStack.Transport.TcpMessage;
-import com.LangStack.Transport.TcpSession;
+import com.LangStack.Transport.TransSession;
 
 public class RpcRequest
 {
-    private RpcCall    mCall    = null;     ///< 调用
-    private RpcCall    mReturn  = null;     ///< 返回
-    private TcpSession mSession = null;     ///< 会话
-    private Lock       mLock    = null;     ///< 条件变量锁     
-    private Condition  mCon     = null;     ///< 条件变量
+    private RpcCall      mCall    = null; ///< 调用
+    private RpcCall      mReturn  = null; ///< 返回
+    private TransSession mSession = null; ///< 会话
+    private Lock         mLock    = null; ///< 条件变量锁
+    private Condition    mCon     = null; ///< 条件变量
     
-    public RpcRequest(RpcCall call, TcpSession session)
+    public RpcRequest(RpcCall call, TransSession session)
     {
         mCall = call;
         mSession = session;

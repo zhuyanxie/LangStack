@@ -7,15 +7,14 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.LangStack.Deserial;
-import com.LangStack.MetaTable;
-import com.LangStack.Serial;
-import com.LangStack.Transport.TcpSession;
+import com.LangStack.Serial.Deserial;
+import com.LangStack.Serial.Serial;
+import com.LangStack.Transport.TransSession;
 
 public class RpcCore
 {
     private static RpcCore           sCore        = null;
-    private TcpSession               mSession     = null;
+    private TransSession             mSession     = null;
     private Map<Integer, RpcRequest> mRequestPool = null;
     private Lock                     mLock        = null;
     private RpcObjectPool            mObjects     = null;
@@ -33,17 +32,13 @@ public class RpcCore
     }
 
     /**
-     * @brief   启动RPCCore， java端作为客户端
-     * @param   port  远程端口
+     * @brief   绑定传输会话
+     * @param   session     传输会话
      * @return  true/false是否已经启动
      */
-    public synchronized boolean start(int port)
+    public synchronized boolean bindSession(TransSession session)
     {
-        if (null != mSession)
-        {
-            return false;
-        }
-        mSession = new TcpSession(port);
+        mSession = session;
         return true;
     }
 
@@ -105,14 +100,6 @@ public class RpcCore
     {
         RpcResponse resp = new RpcResponse(call, mSession);
         do {
-            String clsName = MetaTable.instance().getJavaClassName(call.mClass);
-            if (null == clsName)
-            {
-                /// TODO error info
-                break;
-            }
-            call.mClass = clsName;
-            
             /// 对象创建销毁特殊处理
             if (call.mMethod.equals("new") || 
                     call.mMethod.equals("delete"))
@@ -132,7 +119,7 @@ public class RpcCore
             /// 获取类
             Class<?> c = null;
             try {
-                c = Class.forName(clsName);
+                c = Class.forName(call.mClass);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 break;
