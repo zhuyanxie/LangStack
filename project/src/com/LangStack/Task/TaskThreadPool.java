@@ -9,7 +9,7 @@ public class TaskThreadPool
 {
     private static final int         MIN_THREAD_COUNT = 4;      ///< 线程池最少线程
     private static final int         MAX_THREAD_COUNT = 64;     ///< 线程池最大线程
-    private static final int         THREAD_IDLE_TIME = 30000;  ///< 线程最大空闲时间
+    private static final int         THREAD_IDLE_TIME = 15000;  ///< 线程最大空闲时间
 
     private static TaskThreadPool    sTaskThreadPool  = null;   ///< 单例
     
@@ -80,6 +80,14 @@ public class TaskThreadPool
         mLock.unlock();     
     }
     
+    public int getThreadCount()
+    {
+        mLock.lock();
+        int res = mThreadPool.size();
+        mLock.unlock();  
+        return res;
+    }
+    
     /**
      * @brief       获取负载最轻的线程
      * @param       taskId          任务ID(相同任务ID会分配同一个线程)
@@ -106,7 +114,7 @@ public class TaskThreadPool
                 lightThread = thread;
                 if (weight == 0)
                 {
-                    return thread;
+                	break;
                 }
                 
             }
@@ -136,8 +144,8 @@ public class TaskThreadPool
         mLock = new ReentrantLock();
         for (int i = 0; i < MIN_THREAD_COUNT; ++i)
         {
-            mThreadPool.put(mIndex, new TaskThread(
-                    this, THREAD_IDLE_TIME, mIndex));
+        	/// 最低线程永不超时
+            mThreadPool.put(mIndex, new TaskThread(this, -1, mIndex));
             while (mThreadPool.containsKey(mIndex)) 
             {
                 ++mIndex;

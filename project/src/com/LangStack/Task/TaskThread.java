@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,6 +33,7 @@ public class TaskThread extends Thread
         mMaxTick = maxIdleTime == -1 ? -1 : maxIdleTime / THREAD_SLEEP_SPACE;
         mTaskLists = new HashMap<String, Queue<ITask>>();
         mLock = new ReentrantLock();
+        start();
     }
     
     /**
@@ -41,7 +43,12 @@ public class TaskThread extends Thread
     public void addTask(ITask task)
     {
         mLock.lock();
-        mTaskLists.get(task.getTaskId()).offer(task);
+        String key = task.getTaskId();
+        if (!mTaskLists.containsKey(key))
+        {
+        	mTaskLists.put(key, new LinkedBlockingQueue<ITask>());
+        }
+        mTaskLists.get(key).offer(task);
         ++mTaskCount;
         mLock.unlock();
     }
