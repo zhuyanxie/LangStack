@@ -23,6 +23,7 @@ SOFTWARE.
 #include "com_langstack_LangStack.h"
 
 #include "LangStack.h"
+#include "Log/Log.h"
 #include "Transport/JniSession.h"
 
 JavaVM *g_jvm = 0;
@@ -40,13 +41,24 @@ JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
 {
     ls::CLangStack::startTcpMode((uint16_t)port);
 }
+////////////////////////////////////////////////////////////////////////////////
+/// for Log
+JNIEXPORT void JNICALL Java_com_LangStack_Log_Logger_log
+  (JNIEnv *env, jclass cls, jint lev, jstring tag, jstring detail)
+{
+	const char* ctag = env->GetStringUTFChars(tag, nullptr);
+	const char* cdetail = env->GetStringUTFChars(detail, nullptr);
+	langstackLogPrintFull(LogLevel(lev), "java", 0, ctag, "%s", cdetail);
+	env->ReleaseStringUTFChars(tag, ctag);
+	env->ReleaseStringUTFChars(detail, cdetail);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport java Jnisession
 JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
   (JNIEnv *env, jclass cls, jstring str)
 {
-	const char* buf = env->GetStringUTFChars(str, NULL);
+	const char* buf = env->GetStringUTFChars(str, nullptr);
 	ls::CJniSession::onJavaCall(buf);
 	env->ReleaseStringUTFChars(str, buf);
 }
@@ -54,7 +66,7 @@ JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
 JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
  (JNIEnv *env, jclass cls, jstring str)
 {
-	const char* buf = env->GetStringUTFChars(str, NULL);
+	const char* buf = env->GetStringUTFChars(str, nullptr);
 	ls::CJniSession::onJavaReturn(buf);
 	env->ReleaseStringUTFChars(str, buf);
 }
@@ -64,7 +76,7 @@ JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
 void sendCall2Java(const char *str)
 {
 	JNIEnv *env = nullptr;
-    g_jvm->AttachCurrentThread((void **)&env, NULL);
+    g_jvm->AttachCurrentThread(&env, nullptr);
     do
     {
 		if (env == nullptr)
@@ -90,7 +102,7 @@ void sendCall2Java(const char *str)
 void sendReturn2Java(const char *str)
 {
 	JNIEnv *env = nullptr;
-    g_jvm->AttachCurrentThread((void **)&env, NULL);
+    g_jvm->AttachCurrentThread(&env, nullptr);
     do
     {
 		if (env == nullptr)

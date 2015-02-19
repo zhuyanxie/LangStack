@@ -148,17 +148,17 @@ public:
     }
 };
 
-/// TODO实现失败。
-/////\brief   反射方法注册到元表
-//#define REFLECTION_METHOD_ARGS(CLASS, NAME, R, ...)                         \
-//    namespace {                                                             \
-//    static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-//                #CLASS,                                                     \
-//                #NAME,                                                      \
-//                Types2MetaDataTypes<R(##__VA_ARGS__)>()(),                  \
-//                new ::ls::ReflectFunciton<R>(                               \
-//                        &CLASS::reflect_wrap_##NAME, (CLASS*)0));}
-
+#if 0 /// TODO实现失败。
+///\brief   反射方法注册到元表
+#define REFLECTION_METHOD_ARGS(CLASS, NAME, R, ...)                         \
+    namespace {                                                             \
+    static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
+                #CLASS,                                                     \
+                #NAME,                                                      \
+                Types2MetaDataTypes<R(##__VA_ARGS__)>()(),                  \
+                new ::ls::ReflectFunciton<R>(                               \
+                        &CLASS::reflect_wrap_##NAME, (CLASS*)0));}
+#endif
 ///\brief   反射方法注册到元表
 #define REFLECTION_METHOD_ARGS0(CLASS, NAME, R)                             \
     namespace {                                                             \

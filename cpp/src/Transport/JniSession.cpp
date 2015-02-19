@@ -22,7 +22,8 @@ SOFTWARE.
 
 #include "Transport/JniSession.h"
 
-#include "jni/com_LangStack_LangStack.h"
+#include "Jni/com_LangStack_LangStack.h"
+#include "Base/MemoryStream.h"
 #include "Rpc/RpcTask.h"
 #include "Rpc/RpcCore.h"
 #include "Task/TaskThreadPool.h"

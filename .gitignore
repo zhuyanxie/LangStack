@@ -16,3 +16,9 @@
 
 #java
 *.class
+
+#cpp
+*.a
+*.o
+*.d
+*.so

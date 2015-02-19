@@ -21,6 +21,7 @@ SOFTWARE.
 ******************************************************************************/
 
 #include "Transport/TcpServer.h"
+#include <cstring>
 #include "Base/SocketHeader.h"
 #include "Rpc/RpcCore.h"
 #include "Transport/TcpSession.h"
@@ -39,11 +40,10 @@ static bool bindSocket(int fd, int port)
     return bind(fd, (LPSOCKADDR)&addr, sizeof(addr)) != -1;
 #else
     struct sockaddr_in addr;
-    addr.sin_len = sizeof(struct sockaddr_in);
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    bzero(&(addr.sin_zero), 8);
+    memset(&(addr.sin_zero), 8, 0);
     return bind(fd, (struct sockaddr *)&addr, sizeof(addr)) != -1;
 #endif
 }

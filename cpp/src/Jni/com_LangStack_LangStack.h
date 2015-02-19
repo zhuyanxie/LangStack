@@ -16,6 +16,11 @@ JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
   (JNIEnv *, jclass, jint);
 
 ////////////////////////////////////////////////////////////////////////////////
+/// for Log
+JNIEXPORT void JNICALL Java_com_LangStack_Log_Logger_log
+  (JNIEnv *, jclass, jint, jstring, jstring);
+
+////////////////////////////////////////////////////////////////////////////////
 /// for Transport java Jnisession
 JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
   (JNIEnv *, jclass, jstring);
