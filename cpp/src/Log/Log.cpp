@@ -40,7 +40,7 @@ void setLangStackLogLevel(LogLevel limitLevel)
 static const char* getFileName(const char *file)
 {
 	const char *p = file;
-	for (; file; ++file)
+	for (; file && *file; ++file)
 		if (*file == '/' || *file == '\\') p = file;
 	return p;
 }
@@ -61,7 +61,7 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 	va_start(args, fmt);
 	switch (lev)
 	{
-	case LogLevelFATAl:
+	case LogLevelFATAL:
 		__android_log_print(ANDROID_LOG_FATAL, tag, format,
 				getFileName(file), line, args);
 		break;

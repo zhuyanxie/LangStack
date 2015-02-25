@@ -29,7 +29,7 @@ extern "C" {
 
 typedef enum
 {
-	LogLevelFATAl,		///< 不输出任何日志
+	LogLevelFATAL,		///< 不输出任何日志
 	LogLevelERROR,		///< 只输出fatal等级日志
 	LogLevelWARN,		///< 输出error以上等级日志
 	LogLevelINFO,		///< 输出info以上等级日志
@@ -57,7 +57,7 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 #define ERRORF(TAG, FORMAT, ...) \
 		langstackLogPrintFull(LogLevelERROR, __FILE__, __LINE__,  TAG, FORMAT, ##__VA_ARGS__)
 #define FATALF(TAG, FORMAT, ...) \
-		langstackLogPrintFull(LogLevelFATAl, __FILE__, __LINE__,  TAG, FORMAT, ##__VA_ARGS__)
+		langstackLogPrintFull(LogLevelFATAL, __FILE__, __LINE__,  TAG, FORMAT, ##__VA_ARGS__)
 
 #ifdef __cplusplus
 }

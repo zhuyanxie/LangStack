@@ -11,7 +11,7 @@ to do so, subject to the following conditions:
 　　The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -20,12 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#ifndef TESTSERIAL_H_
-#define TESTSERIAL_H_
+
+
+#ifndef TESTLOG_H_
+#define TESTLOG_H_
+
 
 #include "gtest.h"
 
-class CTestReflect : public testing::Test
+class CTestLog : public testing::Test
 {
 public:
     void SetUp(){}
@@ -35,4 +38,4 @@ public:
 
 
 
-#endif /* TESTSERIAL_H_ */
+#endif /* TESTLOG_H_ */

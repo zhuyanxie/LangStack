@@ -62,11 +62,17 @@ CTaskThreadPool::~CTaskThreadPool()
     m_taskThreads.clear();
 }
 
+///\brief			设置新创建的线程的空闲超时时间
+void CTaskThreadPool::setThreadIdleTime(int idleTime)
+{
+	m_idleTime = idleTime <= 0 ? 5000 : idleTime;
+}
+
 ///\brief           添加一个任务到线程池
 void CTaskThreadPool::addTask(ITask* task)
 {
     std::lock_guard<std::mutex> lck(m_threadLock);
-    getTheLightThread(task->getTaskQueueIdentify())->addTask(task);
+    getTheLightThread(task->getTaskId())->addTask(task);
 }
 
 ///\brief           获取负载较轻的线程
@@ -121,7 +127,7 @@ void CTaskThreadPool::onThreadIdle(int index)
     {
         ITask *task = new CDeleteThreadTask(it->second);
         m_taskThreads.erase(index);
-        getTheLightThread(task->getTaskQueueIdentify())->addTask(task);
+        getTheLightThread(task->getTaskId())->addTask(task);
     }
 }
 

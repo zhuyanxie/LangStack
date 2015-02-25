@@ -20,32 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#include "TestSerial.h"
 
-#ifndef _LANGUAGE_STACK_TITASK_H_
-#define _LANGUAGE_STACK_TITASK_H_
+#include "Serial/Serial.h"
 
-#include <string>
-
-namespace ls {
-
-enum TaskType
+TEST_F(CTestSerial, EasyClass)
 {
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
-class ITask
-{
-public:
-    ITask(){}
-    virtual ~ITask(){}
-
-    virtual void execute() = 0;
-    virtual std::string getTaskId() = 0;
-};
 
 }
 
-#endif //_LANGUAGE_STACK_TITASK_H_
+TEST_F(CTestSerial, Dead)
+{
+
+}
+
+
+

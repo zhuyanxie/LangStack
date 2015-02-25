@@ -26,8 +26,6 @@ SOFTWARE.
 #include <sstream>
 #include <iostream>
 
-#include "Serial/Serial.h"
-
 #include "EasyTypeClass.h"
 
 /// 类创建反射

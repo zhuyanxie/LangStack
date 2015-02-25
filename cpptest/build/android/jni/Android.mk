@@ -24,34 +24,27 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := testLangStack
 
 #头文件路径声明
+LOCAL_C_INCLUDES += $(TEST_SRC_PATH)
 LOCAL_C_INCLUDES += $(TEST_SRC_PATH)/gtest
 LOCAL_C_INCLUDES += $(TEST_SRC_PATH)/src
 LOCAL_C_INCLUDES += $(CPP_SRC_PATH)/include
 
-##shell find ../../../../cpp/src -maxdepth 2 -type d
-
 #源文件路径声明
-CPP_DIRS := $(shell find $(CPP_SRC_PATH)/src -maxdepth 2 -type d)
-TEST_DIRS :=  $(shell find $(TEST_SRC_PATH)/src -maxdepth 2 -type d)
+CPP_DIRS := $(shell find $(TEST_SRC_PATH)/src -maxdepth 2 -type d)
 
 #查找cpp源文件
 LOCAL_SRC_FILES := $(foreach dir, ${CPP_DIRS}, $(wildcard $(dir)/*.cpp))
 
-##LOCAL_TEST_PATH := $(patsubst %, $(TEST_DIRS)/src/%, ${CPP_DIRS})
-##LOCAL_SRC_FILES += $(foreach dir, ${LOCAL_TEST_PATH}, $(wildcard $(dir)/*.cpp))
+LOCAL_LDFLAGS   += -L../../../../cpp/obj/local/armeabi
 
-##@echo $(LOCAL_SRC_FILES)
-
-##LOCAL_LDFLAGS   += -L../../Lib/android
-
-LOCAL_LDLIBS	:= -L$(SYSROOT)/usr/lib -llog
-##LOCAL_LDLIBS	+= -lpthread
+LOCAL_LDLIBS	:= -L$(SYSROOT)/usr/lib -llog 
+LOCAL_LDLIBS	+=  -lLangStack
 
 LOCAL_SHARED_LIBRARIES := -lstdc++ -lstlport
 
 LOCAL_STATIC_LIBRARIES += libc
 
-LOCAL_CPPFLAGS	:= -std=c++11 -pthread -fexceptions -frtti
+LOCAL_CPPFLAGS	:= -std=c++11 -pthread -fexceptions -frtti -Dandroid
 LOCAL_CPPFLAGS	+= -g -Wall
 LOCAL_CFLAGS	+= -g -Wall
 

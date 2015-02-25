@@ -36,6 +36,10 @@ public:
     ///\brief           单例
     static CTaskThreadPool* instance();
 
+    ///\brief			设置新创建的线程的空闲超时时间
+    ///\param[in]		idleTime		空闲时间
+    void setThreadIdleTime(int idleTime);
+
     ///\brief           添加一个任务到线程池
     void addTask(ITask* task);
 

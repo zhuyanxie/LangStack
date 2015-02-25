@@ -43,7 +43,7 @@ public:
     {
         m_thread.reset();
     }
-    virtual std::string getTaskQueueIdentify()
+    virtual std::string getTaskId()
     {
         return m_id;
     }

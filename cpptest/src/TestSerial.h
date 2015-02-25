@@ -21,31 +21,21 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_TITASK_H_
-#define _LANGUAGE_STACK_TITASK_H_
 
-#include <string>
+#ifndef TESTSERIAL_H_
+#define TESTSERIAL_H_
 
-namespace ls {
+#include "gtest.h"
 
-enum TaskType
-{
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
-class ITask
+class CTestSerial : public testing::Test
 {
 public:
-    ITask(){}
-    virtual ~ITask(){}
+    void SetUp(){}
 
-    virtual void execute() = 0;
-    virtual std::string getTaskId() = 0;
+    void TearDown(){}
 };
 
-}
 
-#endif //_LANGUAGE_STACK_TITASK_H_
+
+
+#endif /* TESTSERIAL_H_ */

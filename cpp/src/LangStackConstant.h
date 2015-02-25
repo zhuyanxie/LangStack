@@ -21,31 +21,16 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_TITASK_H_
-#define _LANGUAGE_STACK_TITASK_H_
 
-#include <string>
+#ifndef _LANGUAGE_STACK_CONSTANT_H_
+#define _LANGUAGE_STACK_CONSTANT_H_
+
+#include <inttypes.h>
 
 namespace ls {
 
-enum TaskType
-{
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
-class ITask
-{
-public:
-    ITask(){}
-    virtual ~ITask(){}
-
-    virtual void execute() = 0;
-    virtual std::string getTaskId() = 0;
-};
+extern const char LS_TAG[];
 
 }
 
-#endif //_LANGUAGE_STACK_TITASK_H_
+#endif /* _LANGUAGE_STACK_CONSTANT_H_ */

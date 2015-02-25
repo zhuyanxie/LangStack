@@ -49,7 +49,7 @@ public:
     {
         CRpcCore::instance()->onRpcCall(m_call);
     }
-    virtual std::string getTaskQueueIdentify()
+    virtual std::string getTaskId()
     {
         return m_taskId;
     }

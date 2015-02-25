@@ -11,7 +11,7 @@ to do so, subject to the following conditions:
 　　The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -20,32 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#ifndef TESTREFLECT_H_
+#define TESTREFLECT_H_
 
-#ifndef _LANGUAGE_STACK_TITASK_H_
-#define _LANGUAGE_STACK_TITASK_H_
+#include "gtest.h"
 
-#include <string>
-
-namespace ls {
-
-enum TaskType
-{
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
-class ITask
+class CTestReflect : public testing::Test
 {
 public:
-    ITask(){}
-    virtual ~ITask(){}
+    void SetUp(){}
 
-    virtual void execute() = 0;
-    virtual std::string getTaskId() = 0;
+    void TearDown(){}
 };
 
-}
 
-#endif //_LANGUAGE_STACK_TITASK_H_
+
+#endif /* TESTREFLECT_H_ */

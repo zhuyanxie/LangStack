@@ -38,7 +38,7 @@ public:
     IReflection(){}
     virtual ~IReflection(){}
 
-    ///\return      序列化类签名，使用C++类名
+    ///\return      序列化类签名，使用java的反射类名
     virtual const char* getClassName() = 0;
 
     ///\brief       回调设置相关，必须从此接口实现
@@ -47,13 +47,13 @@ public:
 };
 
 ///\brief   声明反射类
-#define REFLECTION_CLASS_DECLEAR(CLASS)                                     \
+#define REFLECTION_CLASS_DECLEAR(CLASS, JAVANAME)                           \
     public:                                                                 \
     inline static ::ls::IReflection* create##CLASS()      					\
     {                                                                       \
         return new CLASS();                                                 \
     }                                                                       \
-    virtual const char* getClassName() {return #CLASS;}                     \
+    virtual const char* getClassName() {return JAVANAME;}                   \
 
 ///\brief   注册反射类信息到元表
 #define REFLECTION_CLASS_IMPLEMENT(CLASS)                                   \

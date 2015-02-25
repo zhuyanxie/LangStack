@@ -20,32 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#include "LangStackConstant.h"
 
-#ifndef _LANGUAGE_STACK_TITASK_H_
-#define _LANGUAGE_STACK_TITASK_H_
-
-#include <string>
 
 namespace ls {
 
-enum TaskType
-{
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
-class ITask
-{
-public:
-    ITask(){}
-    virtual ~ITask(){}
-
-    virtual void execute() = 0;
-    virtual std::string getTaskId() = 0;
-};
+const char LS_TAG[]                = "LangStatckCpp";
 
 }
 
-#endif //_LANGUAGE_STACK_TITASK_H_
+

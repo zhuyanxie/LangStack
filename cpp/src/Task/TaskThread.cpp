@@ -23,6 +23,9 @@ SOFTWARE.
 #include "Task/TaskThread.h"
 #include "Task/TaskThreadPool.h"
 
+#include "Log/Log.h"
+#include "LangStackConstant.h"
+
 namespace ls {
 
 ///\brief           构造
@@ -92,7 +95,7 @@ void TaskThread::addTask(ITask *task)
 {
     std::lock_guard<std::mutex> lck(m_taskLock);
     adjuestTask(task);
-    m_taskLists[task->getTaskQueueIdentify()].push_back(task);
+    m_taskLists[task->getTaskId()].push_back(task);
     ++m_taskCount;
 }
 
@@ -145,7 +148,7 @@ void TaskThread::clearTasks()
         {
             if (*itx != nullptr)
             {
-                /// FIXME error此处进入证明有任务未执行，异常!!!
+            	ERRORF(LS_TAG, "clear undone task[%s]\n", (*itx)->getTaskId().c_str());
                 delete *itx;
                 *itx = nullptr;
             }
