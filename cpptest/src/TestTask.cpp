@@ -23,6 +23,7 @@ SOFTWARE.
 #include "TestTask.h"
 #include <thread>
 #include "Task/TaskThreadPool.h"
+#include "Log/Log.h"
 
 static int g_delayTaskId = 0;
 class CDelayTask : public ls::ITask
@@ -30,15 +31,16 @@ class CDelayTask : public ls::ITask
 public:
 	CDelayTask(int id)
 	{
-		m_id = id == 0 ? g_delayTaskId++ : id;
-
+		m_id = (id == 0) ? g_delayTaskId++ : id;
     	char buf[1024];
-    	sprintf(buf, "thread:%d", m_id);
+    	snprintf(buf, 1024, "thread:%d", m_id);
     	m_sid = buf;
+    	DEBUGF("DelayTask", "CREATE %s\n", m_sid.c_str());
 	}
 
 	virtual ~CDelayTask()
 	{
+    	DEBUGF("DelayTask", "RELEASE %s\n", m_sid.c_str());
 	}
 
 
@@ -49,6 +51,7 @@ public:
 
     virtual std::string getTaskId()
     {
+    	DEBUGF("DelayTask", "%s\n", m_sid.c_str());
     	return m_sid;
     }
 
@@ -60,33 +63,46 @@ private:
 
 TEST_F(CTestTask, testSameThreadId)
 {
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 4);
+	DEBUGF("TaskTest", "\n");
+
 	ls::CTaskThreadPool::instance()->setThreadIdleTime(5000);
+	DEBUGF("TaskTest", "\n");
+
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
+	DEBUGF("TaskTest", "\n");
 
 	for (int i = 0; i < 28; ++i)
 	{
-		ls::CTaskThreadPool::instance()->addTask(new CDelayTask(i%4 + 1));
+		ls::CTaskThreadPool::instance()->addTask(new CDelayTask((i%4) + 1));
 	}
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 4);
+	DEBUGF("TaskTest", "\n");
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
+	DEBUGF("TaskTest", "\n");
 
 
     std::this_thread::sleep_for(std::chrono::milliseconds(15 * 1000));
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 4);
+	DEBUGF("TaskTest", "\n");
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
+	DEBUGF("TaskTest", "\n");
 }
 
 TEST_F(CTestTask, testDiffThreadId)
 {
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 4);
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
+	DEBUGF("TaskTest", "\n");
 	ls::CTaskThreadPool::instance()->setThreadIdleTime(5000);
+	DEBUGF("TaskTest", "\n");
 
 	for (int i = 0; i < 256; ++i)
 	{
 		ls::CTaskThreadPool::instance()->addTask(new CDelayTask(0));
 	}
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 64);
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 64);
+	DEBUGF("TaskTest", "\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(15 * 1000));
 
-	ASSERT_TRUE(ls::CTaskThreadPool::instance()->getThreadCount() == 4);
+	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
+	DEBUGF("TaskTest", "\n");
 }
 
 TEST_F(CTestTask, Dead)

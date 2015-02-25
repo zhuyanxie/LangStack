@@ -41,7 +41,7 @@ static const char* getFileName(const char *file)
 {
 	const char *p = file;
 	for (; file && *file; ++file)
-		if (*file == '/' || *file == '\\') p = file;
+		if (*file == '/' || *file == '\\') p = file + 1;
 	return p;
 }
 
@@ -55,35 +55,31 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		return;
 	}
 
-	char format[1024];
-	snprintf(format, sizeof(format), "%s%s", "<%s:%d>", fmt);
+	char format[256];
+	snprintf(format, sizeof(format), "<%s:%d>%s", getFileName(file), line, fmt);
     va_list args;
 	va_start(args, fmt);
+
+	char buf[256*1024];
+	vsnprintf(buf, sizeof(buf), format, args);
 	switch (lev)
 	{
 	case LogLevelFATAL:
-		__android_log_print(ANDROID_LOG_FATAL, tag, format,
-				getFileName(file), line, args);
+		__android_log_print(ANDROID_LOG_FATAL, tag, "%s", buf);
 		break;
 	case LogLevelERROR:
-		__android_log_print(ANDROID_LOG_ERROR, tag, format,
-				getFileName(file), line, args);
+		__android_log_print(ANDROID_LOG_ERROR, tag, "%s", buf);
 		break;
 	case LogLevelWARN:
-		__android_log_print(ANDROID_LOG_WARN, tag, format,
-				getFileName(file), line, args);
+		__android_log_print(ANDROID_LOG_WARN, tag, "%s", buf);
 		break;
 	case LogLevelINFO:
-		__android_log_print(ANDROID_LOG_INFO, tag, format,
-				getFileName(file), line, args);
+		__android_log_print(ANDROID_LOG_INFO, tag, "%s", buf);
 		break;
 	case LogLevelDEBUG:
-		__android_log_print(ANDROID_LOG_DEBUG, tag, format,
-				getFileName(file), line, args);
-		break;
+		__android_log_print(ANDROID_LOG_DEBUG, tag, "%s", buf);
 	case LogLevelVERBOSE:
-		__android_log_print(ANDROID_LOG_VERBOSE, tag, format,
-				getFileName(file), line, args);
+		__android_log_print(ANDROID_LOG_VERBOSE, tag, "%s", buf);
 		break;
 	default:
 		break;
@@ -103,17 +99,15 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		return;
 	}
 
-	char format[1024];
 	auto now = system_clock::to_time_t(system_clock::now());
 	tm *date = std::localtime(&now);
-	snprintf(format, sizeof(format), "%s%02d-%02d %02d:%02d:%02d%s%s",
-			"%s|%s|",  date->tm_mon, date->tm_mday,
-			date->tm_hour, date->tm_min, date->tm_sec, "<%s:%d>", fmt);
-
     va_list args;
 	va_start(args, fmt);
 	s_lock.lock();
-	printf(format, tag, s_logLevelStrings[lev], getFileName(file), line, args);
+	printf("%s|%s|%02d-%02d %02d:%02d:%02d<%s:%d>",
+			tag, s_logLevelStrings[lev], date->tm_mon, date->tm_mday,
+			date->tm_hour, date->tm_min, date->tm_sec, getFileName(file), line);
+	vfprintf(stdout, fmt, args);
 	s_lock.unlock();
 	va_end(args);
 	fflush(stdout);

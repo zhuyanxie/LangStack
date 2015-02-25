@@ -34,6 +34,7 @@ TaskThread::TaskThread(CTaskThreadPool *parent, int maxIdleTime, int index)
     , m_parent(parent)
     , m_idleTick(0)
     , m_maxTick(maxIdleTime == -1 ? -1 : maxIdleTime / s_idleTickSpace)
+	, m_taskCount(0)
     , m_loop(true)
 {
     m_thread = std::unique_ptr<std::thread>(new std::thread(

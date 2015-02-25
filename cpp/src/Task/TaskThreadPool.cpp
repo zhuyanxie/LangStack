@@ -24,6 +24,8 @@ SOFTWARE.
 #include "Task/TaskThreadPool.h"
 
 #include "DeleteThreadTask.h"
+#include "Log/Log.h"
+#include "LangStackConstant.h"
 
 namespace ls {
 
@@ -78,16 +80,23 @@ void CTaskThreadPool::addTask(ITask* task)
 ///\brief           获取负载较轻的线程
 TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
 {
+	VERBOSEF(LS_TAG, "id [%s]\n", id.c_str());
     std::map<std::string, int>::iterator itmap = mIdentifyMap.find(id);
     if (mIdentifyMap.end() != itmap && m_taskThreads.count(itmap->second))
     {
+    	VERBOSEF(LS_TAG, "get thread sucess repeat id [%s->%d]\n",
+    			id.c_str(), itmap->second);
         return m_taskThreads[itmap->second];
     }
 
-    std::map<int, TaskThreadPtr>::iterator res = m_taskThreads.begin();
+    for (auto it = m_taskThreads.begin(); it != m_taskThreads.end(); ++it)
+    {
+    	DEBUGF(LS_TAG, "thread weight info dump [%d->%d]\n",
+    			it->second->getIndex(), it->second->getWeight());
+    }
+    auto res = m_taskThreads.begin();
     int weight = res->second->getWeight();
-    for (std::map<int, TaskThreadPtr>::iterator it = m_taskThreads.begin();
-            it != m_taskThreads.end(); ++it)
+    for (auto it = m_taskThreads.begin(); it != m_taskThreads.end(); ++it)
     {
         if (weight == 0)
         {
@@ -105,7 +114,7 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
         int index = addThread(m_idleTime);
         res = m_taskThreads.find(index);
     }
-
+	DEBUGF(LS_TAG, "get thread sucess [%s->%d]\n", id.c_str(), res->first);
     mIdentifyMap[id] = res->first;
     return res->second;
 }

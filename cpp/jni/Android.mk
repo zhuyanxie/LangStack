@@ -39,7 +39,8 @@ LOCAL_SHARED_LIBRARIES := -lstdc++ -lstlport
 
 LOCAL_STATIC_LIBRARIES += libc
 
-LOCAL_CPPFLAGS	:= -std=c++11 -pthread -fexceptions -frtti -Dandroid
+LOCAL_CPPFLAGS	:= -std=c++11 -pthread -fexceptions -frtti 
+##LOCAL_CPPFLAGS	+= -Dandroid
 LOCAL_CPPFLAGS	+= -g -Wall
 LOCAL_CFLAGS	+= -g -Wall
 

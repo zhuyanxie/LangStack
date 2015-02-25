@@ -27,6 +27,9 @@ SOFTWARE.
 #include "Task/ITask.h"
 #include "Task/TaskThread.h"
 
+#include "Log/Log.h"
+#include "LangStackConstant.h"
+
 namespace ls {
 
 class CDeleteThreadTask : public ITask
@@ -35,12 +38,17 @@ public:
     CDeleteThreadTask(TaskThreadPtr thread) : m_thread(thread)
     {
         char buf[64];
-        sprintf(buf, "thread:%d", m_thread->getIndex());
+        sprintf(buf, "delete thread:%d", m_thread->getIndex());
         m_id = buf;
+    	VERBOSEF(LS_TAG, "execute delete task create [%s]\n", m_id.c_str());
     }
-    virtual ~CDeleteThreadTask() {}
+    virtual ~CDeleteThreadTask()
+    {
+    	VERBOSEF(LS_TAG, "execute delete task release [%s]\n", m_id.c_str());
+    }
     virtual void execute()
     {
+    	VERBOSEF(LS_TAG, "execute delete [%s]\n", m_id.c_str());
         m_thread.reset();
     }
     virtual std::string getTaskId()

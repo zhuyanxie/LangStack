@@ -52,7 +52,7 @@ public:
     std::string     m_special;
 
 private:
-    REFLECTION_CLASS_DECLEAR(CEasyTypeClass);
+    REFLECTION_CLASS_DECLEAR(CEasyTypeClass, "com.LangStackTest.EasyTypeClass");
 
     REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, int,            m_int);
     REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, long long,      m_longlong);
