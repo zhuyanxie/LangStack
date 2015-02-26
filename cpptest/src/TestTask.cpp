@@ -35,23 +35,22 @@ public:
     	char buf[1024];
     	snprintf(buf, 1024, "thread:%d", m_id);
     	m_sid = buf;
-    	DEBUGF("DelayTask", "CREATE %s\n", m_sid.c_str());
 	}
 
 	virtual ~CDelayTask()
 	{
-    	DEBUGF("DelayTask", "RELEASE %s\n", m_sid.c_str());
 	}
 
 
     virtual void execute()
     {
+        //WARNF("Delay", "[%ld]excute delay task [%s]\n", 
+        //    std::hash<std::thread::id>()(std::this_thread::get_id()), m_sid.c_str());
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
     virtual std::string getTaskId()
     {
-    	DEBUGF("DelayTask", "%s\n", m_sid.c_str());
     	return m_sid;
     }
 
@@ -63,46 +62,37 @@ private:
 
 TEST_F(CTestTask, testSameThreadId)
 {
-	DEBUGF("TaskTest", "\n");
-
 	ls::CTaskThreadPool::instance()->setThreadIdleTime(5000);
-	DEBUGF("TaskTest", "\n");
-
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
-	DEBUGF("TaskTest", "\n");
-
+    ERRORF("TEST", "\n");
 	for (int i = 0; i < 28; ++i)
 	{
 		ls::CTaskThreadPool::instance()->addTask(new CDelayTask((i%4) + 1));
 	}
-	DEBUGF("TaskTest", "\n");
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
-	DEBUGF("TaskTest", "\n");
-
-
+    ERRORF("TEST", "\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(15 * 1000));
-	DEBUGF("TaskTest", "\n");
+    ERRORF("TEST", "\n");
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
-	DEBUGF("TaskTest", "\n");
+    ERRORF("TEST", "\n");
 }
 
 TEST_F(CTestTask, testDiffThreadId)
 {
+    ERRORF("TEST", "\n");
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
-	DEBUGF("TaskTest", "\n");
 	ls::CTaskThreadPool::instance()->setThreadIdleTime(5000);
-	DEBUGF("TaskTest", "\n");
 
 	for (int i = 0; i < 256; ++i)
 	{
 		ls::CTaskThreadPool::instance()->addTask(new CDelayTask(0));
 	}
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 64);
-	DEBUGF("TaskTest", "\n");
+
+    ERRORF("TEST", "\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(15 * 1000));
 
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
-	DEBUGF("TaskTest", "\n");
 }
 
 TEST_F(CTestTask, Dead)

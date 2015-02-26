@@ -27,6 +27,10 @@ SOFTWARE.
 extern "C" {
 #endif
 
+#ifdef WIN32
+#define snprintf _snprintf
+#endif
+
 typedef enum
 {
 	LogLevelFATAL,		///< 不输出任何日志

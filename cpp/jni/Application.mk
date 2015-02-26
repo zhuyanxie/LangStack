@@ -4,4 +4,3 @@ APP_CPPFLAGS := -frtti
 APP_CPPFLAGS += -std=c++11
 APP_CPPFLAGS += -fpermissive
 APP_CPPFLAGS += -fexceptions
-NDK_TOOLCHAIN_VERSION := 4.8

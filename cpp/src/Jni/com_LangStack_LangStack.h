@@ -35,8 +35,11 @@ void sendReturn2Java(const char *str);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for jni
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved);
-JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved);
+JNIEXPORT jint JNICALL
+JNI_OnLoad(JavaVM *vm, void *reserved);
+
+JNIEXPORT void JNICALL
+JNI_OnUnload(JavaVM *vm, void *reserved);
 
 #ifdef __cplusplus
 }

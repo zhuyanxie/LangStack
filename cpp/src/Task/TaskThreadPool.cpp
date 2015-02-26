@@ -80,7 +80,6 @@ void CTaskThreadPool::addTask(ITask* task)
 ///\brief           获取负载较轻的线程
 TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
 {
-	VERBOSEF(LS_TAG, "id [%s]\n", id.c_str());
     std::map<std::string, int>::iterator itmap = mIdentifyMap.find(id);
     if (mIdentifyMap.end() != itmap && m_taskThreads.count(itmap->second))
     {
@@ -89,11 +88,6 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
         return m_taskThreads[itmap->second];
     }
 
-    for (auto it = m_taskThreads.begin(); it != m_taskThreads.end(); ++it)
-    {
-    	DEBUGF(LS_TAG, "thread weight info dump [%d->%d]\n",
-    			it->second->getIndex(), it->second->getWeight());
-    }
     auto res = m_taskThreads.begin();
     int weight = res->second->getWeight();
     for (auto it = m_taskThreads.begin(); it != m_taskThreads.end(); ++it)
@@ -123,7 +117,7 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
 int CTaskThreadPool::addThread(int maxIdleTime)
 {
     m_taskThreads[m_index] = TaskThreadPtr(
-            new TaskThread(this, maxIdleTime, m_index));
+        new TaskThread(this, maxIdleTime, m_index));
    return m_index++;
 }
 

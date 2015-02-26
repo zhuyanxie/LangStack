@@ -40,15 +40,13 @@ public:
         char buf[64];
         sprintf(buf, "delete thread:%d", m_thread->getIndex());
         m_id = buf;
-    	VERBOSEF(LS_TAG, "execute delete task create [%s]\n", m_id.c_str());
     }
     virtual ~CDeleteThreadTask()
     {
-    	VERBOSEF(LS_TAG, "execute delete task release [%s]\n", m_id.c_str());
     }
     virtual void execute()
     {
-    	VERBOSEF(LS_TAG, "execute delete [%s]\n", m_id.c_str());
+        //DEBUGF(LS_TAG, "execute delete thread task [%s]\n", m_id.c_str());
         m_thread.reset();
     }
     virtual std::string getTaskId()

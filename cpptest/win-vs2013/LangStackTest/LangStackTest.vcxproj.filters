@@ -15,21 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\EasyTypeClass.cpp">
+    <ClCompile Include="..\..\src\EasyTypeClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Reflect\TestReflect.cpp">
+    <ClCompile Include="..\..\src\TestLog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Reflect\TestReflectMain.cpp">
+    <ClCompile Include="..\..\src\TestMain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TestReflect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TestSerial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TestTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\EasyTypeClass.h">
+    <ClInclude Include="..\..\src\EasyTypeClass.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Reflect\TestReflect.h">
+    <ClInclude Include="..\..\src\TestLog.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TestReflect.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TestSerial.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TestTask.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

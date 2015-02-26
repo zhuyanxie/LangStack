@@ -55,177 +55,195 @@
     <Filter Include="源文件\Transport">
       <UniqueIdentifier>{97c7f61c-a2b3-4e44-b107-9221850b055a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Log">
+      <UniqueIdentifier>{0f9a9bee-52b8-460a-9192-944b1374ba7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Log">
+      <UniqueIdentifier>{659d719f-825c-4d47-b233-e0200cea76de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\project\include\Base\MemoryStream.h">
+    <ClInclude Include="..\..\..\cpp\include\Base\MemoryStream.h">
       <Filter>头文件\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Base\SocketHeader.h">
+    <ClInclude Include="..\..\..\cpp\include\Base\SocketHeader.h">
       <Filter>头文件\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Base\TcpBuffer.h">
+    <ClInclude Include="..\..\..\cpp\include\Base\TcpBuffer.h">
       <Filter>头文件\Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\IReflection.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\IReflection.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaData.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaData.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaDataTraits.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaDataTraits.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaFactory.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaFactory.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaMethod.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaMethod.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaTable.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaTable.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\MetaValue.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\MetaValue.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\ReflectFunction.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\ReflectFunction.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Reflect\ReflectInvoke.h">
+    <ClInclude Include="..\..\..\cpp\include\Reflect\ReflectInvoke.h">
       <Filter>头文件\Reflect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Rpc\IRpcApi.h">
+    <ClInclude Include="..\..\..\cpp\include\Rpc\IRpcApi.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Rpc\RpcCall.h">
+    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCall.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Rpc\RpcConstant.h">
+    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcConstant.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Rpc\RpcCore.h">
+    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCore.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Rpc\RpcTask.h">
+    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcTask.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Serial\Deserializion.h">
+    <ClInclude Include="..\..\..\cpp\include\Serial\Deserializion.h">
       <Filter>头文件\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Serial\DeserialType.h">
+    <ClInclude Include="..\..\..\cpp\include\Serial\DeserialType.h">
       <Filter>头文件\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Serial\Serial.h">
+    <ClInclude Include="..\..\..\cpp\include\Serial\Serial.h">
       <Filter>头文件\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Serial\SerializationConstant.h">
+    <ClInclude Include="..\..\..\cpp\include\Serial\SerializationConstant.h">
       <Filter>头文件\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Serial\Serializion.h">
+    <ClInclude Include="..\..\..\cpp\include\Serial\Serializion.h">
       <Filter>头文件\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Task\ITask.h">
+    <ClInclude Include="..\..\..\cpp\include\Task\ITask.h">
       <Filter>头文件\Task</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Task\TaskThread.h">
+    <ClInclude Include="..\..\..\cpp\include\Task\TaskThread.h">
       <Filter>头文件\Task</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Task\TaskThreadPool.h">
+    <ClInclude Include="..\..\..\cpp\include\Task\TaskThreadPool.h">
       <Filter>头文件\Task</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Transport\JniSession.h">
+    <ClInclude Include="..\..\..\cpp\include\Transport\JniSession.h">
       <Filter>头文件\Transport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Transport\TcpServer.h">
+    <ClInclude Include="..\..\..\cpp\include\Transport\TcpServer.h">
       <Filter>头文件\Transport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Transport\TcpSession.h">
+    <ClInclude Include="..\..\..\cpp\include\Transport\TcpSession.h">
       <Filter>头文件\Transport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\Transport\TransSession.h">
+    <ClInclude Include="..\..\..\cpp\include\Transport\TransSession.h">
       <Filter>头文件\Transport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\include\LangStack.h">
+    <ClInclude Include="..\..\..\cpp\include\LangStack.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Rpc\RpcObjectPool.h">
+    <ClInclude Include="..\..\..\cpp\src\Rpc\RpcObjectPool.h">
       <Filter>源文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Rpc\RpcRequest.h">
+    <ClInclude Include="..\..\..\cpp\src\Rpc\RpcRequest.h">
       <Filter>源文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Rpc\RpcResponse.h">
+    <ClInclude Include="..\..\..\cpp\src\Rpc\RpcResponse.h">
       <Filter>源文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Task\DeleteThreadTask.h">
+    <ClInclude Include="..\..\..\cpp\src\Task\DeleteThreadTask.h">
       <Filter>源文件\Task</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\LangStackImpl.h">
+    <ClInclude Include="..\..\..\cpp\src\LangStackImpl.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Transport\TcpMessage.h">
+    <ClInclude Include="..\..\..\cpp\src\Transport\TcpMessage.h">
       <Filter>源文件\Transport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\project\src\Rpc\RpcCoreImpl.h">
+    <ClInclude Include="..\..\..\cpp\src\Rpc\RpcCoreImpl.h">
       <Filter>源文件\Rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\cpp\include\Log\Log.h">
+      <Filter>头文件\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\cpp\src\LangStackConstant.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\project\src\Base\MemoryStream.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Base\MemoryStream.cpp">
       <Filter>源文件\Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Reflect\MetaFactory.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Reflect\MetaFactory.cpp">
       <Filter>源文件\Reflect</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Reflect\MetaMethod.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Reflect\MetaMethod.cpp">
       <Filter>源文件\Reflect</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Reflect\MetaTable.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Reflect\MetaTable.cpp">
       <Filter>源文件\Reflect</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcConstant.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcConstant.cpp">
       <Filter>源文件\Rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcCore.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCore.cpp">
       <Filter>源文件\Rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcObjectPool.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcObjectPool.cpp">
       <Filter>源文件\Rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcRequest.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcRequest.cpp">
       <Filter>源文件\Rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcResponse.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcResponse.cpp">
       <Filter>源文件\Rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Serial\SerializationConstant.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Serial\SerializationConstant.cpp">
       <Filter>源文件\Serial</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Task\TaskThread.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Task\TaskThread.cpp">
       <Filter>源文件\Task</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Task\TaskThreadPool.cpp">
-      <Filter>源文件\Task</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Transport\JniSession.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Transport\JniSession.cpp">
       <Filter>源文件\Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Transport\TcpServer.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Transport\TcpServer.cpp">
       <Filter>源文件\Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Transport\TcpSession.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Transport\TcpSession.cpp">
       <Filter>源文件\Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Transport\TransSession.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Transport\TransSession.cpp">
       <Filter>源文件\Transport</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\LangStack.cpp">
+    <ClCompile Include="..\..\..\cpp\src\LangStack.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\LangStackImpl.cpp">
+    <ClCompile Include="..\..\..\cpp\src\LangStackImpl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\project\src\Rpc\RpcCoreImpl.cpp">
+    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCoreImpl.cpp">
       <Filter>源文件\Rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\Log\Log.cpp">
+      <Filter>源文件\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\LangStackConstant.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\Task\TaskThreadPool.cpp">
+      <Filter>源文件\Task</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

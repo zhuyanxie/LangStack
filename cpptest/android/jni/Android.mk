@@ -17,8 +17,8 @@
 # JNI
 #
 LOCAL_PATH := $(call my-dir)
-CPP_SRC_PATH := ../../../../cpp
-TEST_SRC_PATH := ../../..
+CPP_SRC_PATH := ../../../cpp
+TEST_SRC_PATH := ../..
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := testLangStack
@@ -30,15 +30,16 @@ LOCAL_C_INCLUDES += $(TEST_SRC_PATH)/src
 LOCAL_C_INCLUDES += $(CPP_SRC_PATH)/include
 
 #源文件路径声明
-CPP_DIRS := $(shell find $(TEST_SRC_PATH)/src -maxdepth 2 -type d)
+# CPP_DIRS := $(shell find $(TEST_SRC_PATH)/src -maxdepth 2 -type d)
+CPP_DIRS := ../../src
 
 #查找cpp源文件
 LOCAL_SRC_FILES := $(foreach dir, ${CPP_DIRS}, $(wildcard $(dir)/*.cpp))
 
-LOCAL_LDFLAGS   += -L../../../../cpp/obj/local/armeabi
+LOCAL_LDFLAGS   += -L$(CPP_SRC_PATH)/libs/armeabi
 
 LOCAL_LDLIBS	:= -L$(SYSROOT)/usr/lib -llog 
-LOCAL_LDLIBS	+=  -lLangStack
+LOCAL_LDLIBS	+= -lLangStack
 
 LOCAL_SHARED_LIBRARIES := -lstdc++ -lstlport
 

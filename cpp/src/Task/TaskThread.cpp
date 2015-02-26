@@ -39,6 +39,9 @@ TaskThread::TaskThread(CTaskThreadPool *parent, int maxIdleTime, int index)
 {
     m_thread = std::unique_ptr<std::thread>(new std::thread(
             std::bind(&TaskThread::threadProc, this)));
+
+    DEBUGF(LS_TAG, "[%ld] create sucess\n",
+        std::hash<std::thread::id>()(m_thread->get_id()));
 }
 
 TaskThread::~TaskThread()
@@ -53,12 +56,17 @@ TaskThread::~TaskThread()
         /// TODO error!!!
     }
 
+    DEBUGF(LS_TAG, "[%ld]  sucess\n",
+        std::hash<std::thread::id>()(m_thread->get_id()));
     clearTasks();
 }
 
 ///\brief           线程体
 void TaskThread::threadProc()
 {
+    DEBUGF(LS_TAG, "thread [%ld] enter\n",
+        std::hash<std::thread::id>()(std::this_thread::get_id()));
+
     std::vector<ITask*> tempVec;
     while (m_loop)
     {
@@ -86,9 +94,17 @@ void TaskThread::threadProc()
             }
         }
 
+        {
+            std::lock_guard<std::mutex> lck(m_taskLock);
+            m_taskCount -= tempVec.size();
+        }
+
         m_idleTick = 0;
         tempVec.clear();
     }
+
+    DEBUGF(LS_TAG, "thread [%ld] leave\n",
+        std::hash<std::thread::id>()(std::this_thread::get_id()));
 }
 
 ///\brief           添加线程任务
@@ -133,7 +149,6 @@ void TaskThread::getExcuteTasks(std::vector<ITask*> &vec)
         }
         vec.push_back(it->second.front());
         it->second.pop_front();
-        --m_taskCount;
     }
 }
 

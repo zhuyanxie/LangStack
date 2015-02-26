@@ -89,7 +89,7 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 #else
 
 static const char *s_logLevelStrings[] =
-	{"FATAL", "ERROR", "WARNF", "INFOF", "DEBUG", "VERBOSE"};
+	{"FATAL", "ERROR", "WARNF", "INFOF", "DEBUG", "VERBO"};
 
 void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		const char *tag, const char *fmt, ...)

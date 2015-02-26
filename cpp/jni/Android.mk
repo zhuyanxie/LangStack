@@ -17,7 +17,7 @@
 # JNI
 #
 LOCAL_PATH := $(call my-dir)
-CPP_SRC_PATH := ../
+CPP_SRC_PATH := ..
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := LangStack
@@ -27,7 +27,18 @@ LOCAL_C_INCLUDES += $(CPP_SRC_PATH)/src
 LOCAL_C_INCLUDES += $(CPP_SRC_PATH)/include
 
 #源文件路径声明
-CPP_DIRS := $(shell find $(CPP_SRC_PATH)/src -maxdepth 2 -type d)
+#win32 fail
+#CPP_DIRS := $(shell /usr/bin/find $(CPP_SRC_PATH)/src -maxdepth 2 -type d)
+
+CPP_DIRS := ../src	\
+../src/Base			\
+../src/Jni			\
+../src/Log			\
+../src/Reflect		\
+../src/Rpc			\
+../src/Serial		\
+../src/Task			\
+../src/Transport	
 
 #查找cpp源文件
 LOCAL_SRC_FILES := $(foreach dir, ${CPP_DIRS}, $(wildcard $(dir)/*.cpp))

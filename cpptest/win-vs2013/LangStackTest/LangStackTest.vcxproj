@@ -10,11 +10,26 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\EasyTypeClass.cpp" />
+    <ClCompile Include="..\..\src\TestLog.cpp" />
+    <ClCompile Include="..\..\src\TestMain.cpp" />
+    <ClCompile Include="..\..\src\TestReflect.cpp" />
+    <ClCompile Include="..\..\src\TestSerial.cpp" />
+    <ClCompile Include="..\..\src\TestTask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\EasyTypeClass.h" />
+    <ClInclude Include="..\..\src\TestLog.h" />
+    <ClInclude Include="..\..\src\TestReflect.h" />
+    <ClInclude Include="..\..\src\TestSerial.h" />
+    <ClInclude Include="..\..\src\TestTask.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7D28340D-0A81-4FD4-B59C-296A488F7FF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LangStackTest</RootNamespace>
-    <ProjectName>ReflectTest</ProjectName>
+    <ProjectName>LangStackTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -52,8 +67,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)$/../../../../project/include;$(SolutionDir)$/../../../;$(SolutionDir)$/../../../gtest;$(SolutionDir)$/../../../src</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)$/..\..\..\cpp/include;$(SolutionDir)$/../../;$(SolutionDir)$/../../gtest;$(SolutionDir)$/../../src</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -80,15 +95,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\src\EasyTypeClass.cpp" />
-    <ClCompile Include="..\..\..\src\Reflect\TestReflect.cpp" />
-    <ClCompile Include="..\..\..\src\Reflect\TestReflectMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\src\EasyTypeClass.h" />
-    <ClInclude Include="..\..\..\src\Reflect\TestReflect.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
