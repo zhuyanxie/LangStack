@@ -21,6 +21,8 @@ SOFTWARE.
 ******************************************************************************/
 
 #include "Reflect/MetaFactory.h"
+#include "Log/Log.h"
+#include "LangStackConstant.h"
 
 namespace ls {
 
@@ -36,6 +38,7 @@ void CMetaFactory::registerClass(const char* className,
 {
     if (m_metaTables.count(className))
     {
+    	WARNF(LS_TAG, "registerClass overwrite class [%s]\n", className);
         m_metaTables[className]->updateCreator(creator);
     }
     else
@@ -50,6 +53,7 @@ void CMetaFactory::registerMethod(const char* className, const char* methodName,
 {
     if (!m_metaTables.count(className))
     {
+    	WARNF(LS_TAG, "registerMethod hava no class [%s]\n", className);
         m_metaTables[className] = new CMetaTable(className);
     }
 
@@ -63,6 +67,7 @@ void CMetaFactory::registerMember(const char* className,
 {
     if (!m_metaTables.count(className))
     {
+    	WARNF(LS_TAG, "registerMember hava no class [%s]\n", className);
         m_metaTables[className] = new CMetaTable(className);
     }
 
@@ -77,6 +82,7 @@ bool CMetaFactory::getMetaTable(const char* className, CMetaTable*& table)
 
     if (it == m_metaTables.end())
     {
+    	ERRORF(LS_TAG, "can't find class [%s]\n", className);
         return false;
     }
 

@@ -41,10 +41,6 @@ public:
         m_taskId = buf;
     }
     virtual ~CRpcCallTask() {}
-    virtual TaskType getTaskType()
-    {
-        return TaskTypeRpcCall;
-    }
     virtual void execute()
     {
         CRpcCore::instance()->onRpcCall(m_call);

@@ -53,6 +53,7 @@ public:
     {                                                                       \
         return new CLASS();                                                 \
     }                                                                       \
+    inline static const char* getJavaName() {return JAVANAME;}				\
     virtual const char* getClassName() {return JAVANAME;}                   \
 
 ///\brief   注册反射类信息到元表
@@ -62,10 +63,10 @@ public:
         CLASS##Register()                                                   \
         {                                                                   \
         ::ls::CMetaFactory::instance()->registerClass(    					\
-                #CLASS, CLASS::create##CLASS );                             \
+        		CLASS::getJavaName(), CLASS::create##CLASS );      			\
         }                                                                   \
     } s_##CLASS##_ReflectionRegister;                                       \
-    }                                                                       \
+    }
 
 ///\brief   反射成员变量声明，生成反射必须的get、set方法
 #define REFLECTION_MEMBER_DECLEAR(CLASS, TYPE, NAME)                        \
@@ -87,7 +88,7 @@ public:
         CLASS##NAME##Register()                                             \
         {                                                                   \
         ::ls::CMetaFactory::instance()->registerMember(   					\
-                #CLASS,                                                     \
+        		CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 ::ls::Type2MetaDataType< TYPE >()(),      					\
                 CLASS::set##NAME,                                           \
@@ -153,7 +154,7 @@ public:
 #define REFLECTION_METHOD_ARGS(CLASS, NAME, R, ...)                         \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+                CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 Types2MetaDataTypes<R(##__VA_ARGS__)>()(),                  \
                 new ::ls::ReflectFunciton<R>(                               \
@@ -163,7 +164,7 @@ public:
 #define REFLECTION_METHOD_ARGS0(CLASS, NAME, R)                             \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+    			CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()()          					\
@@ -174,7 +175,7 @@ public:
 #define REFLECTION_METHOD_ARGS1(CLASS, NAME, R, T1)                         \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+				CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()(),         					\
@@ -186,7 +187,7 @@ public:
 #define REFLECTION_METHOD_ARGS2(CLASS, NAME, R, T1, T2)                     \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+                CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()(),         					\
@@ -199,7 +200,7 @@ public:
 #define REFLECTION_METHOD_ARGS3(CLASS, NAME, R, T1, T2, T3)                 \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+                CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()(),         					\
@@ -214,7 +215,7 @@ public:
 #define REFLECTION_METHOD_ARGS4(CLASS, NAME, R, T1, T2, T3, T4)             \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+                CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()(),         					\
@@ -229,7 +230,7 @@ public:
 #define REFLECTION_METHOD_ARGS5(CLASS, NAME, R, T1, T2, T3, T4, T5)         \
     namespace {                                                             \
     static ReflectionMethodRegister s_##CLASS##NAME##Register(              \
-                #CLASS,                                                     \
+                CLASS::getJavaName(),                                       \
                 #NAME,                                                      \
                 {                                                           \
                 ::ls::Type2MetaDataType< R >()(),         					\

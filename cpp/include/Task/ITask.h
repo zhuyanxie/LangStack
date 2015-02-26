@@ -28,14 +28,6 @@ SOFTWARE.
 
 namespace ls {
 
-enum TaskType
-{
-    TaskTypeRpcCall = 0x0,          ///< RPC相关任务
-    TaskTypeRpcReturn,
-
-    TaskTypeUnCare = 0xff,          ///< 不关注任务类型
-};
-
 class ITask
 {
 public:

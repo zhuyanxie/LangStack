@@ -22,6 +22,8 @@ SOFTWARE.
 
 
 #include "Reflect/MetaTable.h"
+#include "Log/Log.h"
+#include "LangStackConstant.h"
 
 namespace ls {
 
@@ -72,6 +74,8 @@ bool CMetaTable::getMethods(const char* methodName, OverLoadMethods*& methods)
 {
     if (!m_methods.count(methodName))
     {
+    	ERRORF(LS_TAG, "can't find method [%s], table size[%ld]\n",
+    			methodName, m_methods.size());
         return false;
     }
 
@@ -100,6 +104,7 @@ bool CMetaTable::getMetaData(const char* memberName, MetaData*& data)
 
     if (it == m_members.end())
     {
+    	ERRORF(LS_TAG, "can't find member [%s]\n", memberName);
         return false;
     }
 

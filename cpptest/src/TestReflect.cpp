@@ -27,13 +27,14 @@ SOFTWARE.
 #include <iostream>
 
 #include "EasyTypeClass.h"
+#include "Log/Log.h"
 
 /// 类创建反射
 TEST_F(CTestReflect, EasyClassReflect)
 {
     CMetaTable *table = nullptr;
-    CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
-    auto foo = CMetaFactory::instance()->createClassByName("CEasyTypeClass");
+    CMetaFactory::instance()->getMetaTable("com.LangStackTest.EasyTypeClass", table);
+    auto foo = CMetaFactory::instance()->createClassByName("com.LangStackTest.EasyTypeClass");
     auto etc = dynamic_cast<CEasyTypeClass*>(foo);
     ASSERT_TRUE(etc != nullptr);
     ASSERT_DOUBLE_EQ(etc->foo(1), 0.01);
@@ -45,8 +46,8 @@ TEST_F(CTestReflect, EasyClassReflect)
 TEST_F(CTestReflect, EasyMemberReflect)
 {
     CMetaTable *table = nullptr;
-    CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
-    auto foo = CMetaFactory::instance()->createClassByName("CEasyTypeClass");
+    CMetaFactory::instance()->getMetaTable("com.LangStackTest.EasyTypeClass", table);
+    auto foo = CMetaFactory::instance()->createClassByName("com.LangStackTest.EasyTypeClass");
     auto etc = dynamic_cast<CEasyTypeClass*>(foo);
     ASSERT_TRUE(etc != nullptr);
     ASSERT_DOUBLE_EQ(etc->foo(1), 0.01);
@@ -106,23 +107,31 @@ TEST_F(CTestReflect, EasyFunctionReflectTest)
     easy.m_normal = "10.10.10.10";
     easy.m_special = "!@#$%^&*()_+-=[]\\;',./`~<>?:\"{}|::;;%0%1%%";
     easy.dump();
+    INFOF("REFKECT TEST", "\n");
 
     /// 类
     CMetaTable *table = nullptr;
-    CMetaFactory::instance()->getMetaTable("CEasyTypeClass", table);
+    CMetaFactory::instance()->getMetaTable("com.LangStackTest.EasyTypeClass", table);
+    INFOF("REFKECT TEST", "\n");
 
     /// 成员方法 dump
     OverLoadMethods *methods = nullptr;
+    INFOF("REFKECT TEST", "\n");
     table->getMethods("dump", methods);
+    INFOF("REFKECT TEST", "\n");
     ReflectFunciton<void> *dump = (ReflectFunciton<void>*)(*methods)[0].method;
+    INFOF("REFKECT TEST", "\n");
     dump->bind(&easy);
+    INFOF("REFKECT TEST", "\n");
     dump->invoke();
+    INFOF("REFKECT TEST", "\n");
 
     /// 静态方法 foo
     methods = nullptr;
     table->getMethods("foo", methods);
     ReflectFunciton<double> *foo = (ReflectFunciton<double>*)(*methods)[0].method;
     std::cout << foo->invoke(1) << std::endl;
+    INFOF("REFKECT TEST", "\n");
 
     /// 全局函数 foo
     CMetaFactory::instance()->getMetaTable("", table);
@@ -131,6 +140,7 @@ TEST_F(CTestReflect, EasyFunctionReflectTest)
     std::list<double> ld = {0.1, 0.2, 0.3};
     for (auto i : gfoo->invoke(&ld, &easy))
         std::cout << "\t\t\t\t i: " << i << std::endl;
+    INFOF("REFKECT TEST", "\n");
 
 }
 
