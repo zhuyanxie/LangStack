@@ -30,20 +30,20 @@ JavaVM *g_jvm = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for LangStack
-JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startJniMode
+LS_EXPORT void JNICALL Java_com_LangStack_LangStack_startJniMode
   (JNIEnv *env, jclass cls)
 {
     ls::CLangStack::startJniMode();
 }
 
-JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
+LS_EXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
   (JNIEnv *env, jclass cls, jint port)
 {
     ls::CLangStack::startTcpMode((uint16_t)port);
 }
 ////////////////////////////////////////////////////////////////////////////////
 /// for Log
-JNIEXPORT void JNICALL Java_com_LangStack_Log_Logger_log
+LS_EXPORT void JNICALL Java_com_LangStack_Log_Logger_log
   (JNIEnv *env, jclass cls, jint lev, jstring tag, jstring detail)
 {
 	const char* ctag = env->GetStringUTFChars(tag, nullptr);
@@ -53,9 +53,15 @@ JNIEXPORT void JNICALL Java_com_LangStack_Log_Logger_log
 	env->ReleaseStringUTFChars(detail, cdetail);
 }
 
+LS_EXPORT void JNICALL Java_com_LangStack_Log_Logger_setLoggerLevel
+  (JNIEnv *env, jclass cls, jint lev)
+{
+	setLangStackLogLevel(LogLevel(lev));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport java Jnisession
-JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
   (JNIEnv *env, jclass cls, jstring str)
 {
 	const char* buf = env->GetStringUTFChars(str, nullptr);
@@ -63,7 +69,7 @@ JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
 	env->ReleaseStringUTFChars(str, buf);
 }
 
-JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
  (JNIEnv *env, jclass cls, jstring str)
 {
 	const char* buf = env->GetStringUTFChars(str, nullptr);
@@ -73,7 +79,7 @@ JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport cpp Jnisession
-void sendCall2Java(const char *str)
+LS_EXPORT void sendCall2Java(const char *str)
 {
     void *vptr = nullptr;
     g_jvm->AttachCurrentThread(&vptr, nullptr);
@@ -100,7 +106,7 @@ void sendCall2Java(const char *str)
 	g_jvm->DetachCurrentThread();
 }
 
-void sendReturn2Java(const char *str)
+LS_EXPORT void sendReturn2Java(const char *str)
 {
     void *vptr = nullptr;
     g_jvm->AttachCurrentThread(&vptr, nullptr);
@@ -129,13 +135,13 @@ void sendReturn2Java(const char *str)
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for jni
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
+LS_EXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     g_jvm = vm;
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
+LS_EXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
 
 }

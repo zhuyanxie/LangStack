@@ -1,5 +1,4 @@
 
-#include <jni.h>
 
 #ifndef _INCLUDE_LANGUAGE_STACK_LSTACK_JNI_H_
 #define _INCLUDE_LANGUAGE_STACK_LSTACK_JNI_H_
@@ -7,38 +6,43 @@
 extern "C" {
 #endif
 
+#include <jni.h>
+#include "Defs.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 /// for LangStack
-JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startJniMode
+LS_EXPORT void JNICALL Java_com_LangStack_LangStack_startJniMode
   (JNIEnv *, jclass);
 
-JNIEXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
+LS_EXPORT void JNICALL Java_com_LangStack_LangStack_startTcpMode
   (JNIEnv *, jclass, jint);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Log
-JNIEXPORT void JNICALL Java_com_LangStack_Log_Logger_log
+LS_EXPORT void JNICALL Java_com_LangStack_Log_Logger_log
   (JNIEnv *, jclass, jint, jstring, jstring);
+LS_EXPORT void JNICALL Java_com_LangStack_Log_Logger_setLoggerLevel
+  (JNIEnv *, jclass, jint);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport java Jnisession
-JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
   (JNIEnv *, jclass, jstring);
 
-JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
   (JNIEnv *, jclass, jstring);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport cpp Jnisession
-void sendCall2Java(const char *str);
-void sendReturn2Java(const char *str);
+LS_EXPORT void sendCall2Java(const char *str);
+LS_EXPORT void sendReturn2Java(const char *str);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for jni
-JNIEXPORT jint JNICALL
+LS_EXPORT jint JNICALL
 JNI_OnLoad(JavaVM *vm, void *reserved);
 
-JNIEXPORT void JNICALL
+LS_EXPORT void JNICALL
 JNI_OnUnload(JavaVM *vm, void *reserved);
 
 #ifdef __cplusplus

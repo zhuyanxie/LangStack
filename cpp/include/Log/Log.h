@@ -46,14 +46,14 @@ typedef enum
 } LogLevel;
 
 ///\brief		设置日志输出等级
-void LS_EXPORT setLangStackLogLevel(LogLevel limitLevel);
+LS_EXPORT void setLangStackLogLevel(LogLevel limitLevel);
 
 ///\brief		不直接调用
-void LS_EXPORT langstackLogPrintFull(LogLevel lev, const char *file, int line,
+LS_EXPORT void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		const char *tag, const char *fmt, ...);
 
 ///\brief       获取当前线程ID
-uint32_t LS_EXPORT getCurrentThreadId();
+LS_EXPORT uint32_t getCurrentThreadId();
 
 #define VERBOSEF(TAG, FORMAT, ...) \
 		langstackLogPrintFull(LogLevelVERBOSE, __FILE__, __LINE__, TAG, FORMAT, ##__VA_ARGS__)

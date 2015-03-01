@@ -28,4 +28,8 @@ public class LangStack
 
     private native static void startJniMode();
     private native static void startTcpMode(int port);
+    
+    static {
+    	System.loadLibrary("LangStack");
+    }
 }

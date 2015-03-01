@@ -38,7 +38,7 @@ static LogLevel s_globalLevel = LogLevel::LogLevelVERBOSE;
 #include <pthread.h>
 #endif
 
-uint32_t getCurrentThreadId()
+LS_EXPORT uint32_t getCurrentThreadId()
 {
 #ifdef WIN32
     return (uint32_t)::GetCurrentThreadId();
@@ -47,7 +47,7 @@ uint32_t getCurrentThreadId()
 #endif
 }
 
-void setLangStackLogLevel(LogLevel limitLevel)
+LS_EXPORT void setLangStackLogLevel(LogLevel limitLevel)
 {
 	s_globalLevel = limitLevel;
 }
@@ -62,7 +62,7 @@ static const char* getFileName(const char *file)
 
 #ifdef android
 #include <android/log.h>
-void langstackLogPrintFull(LogLevel lev, const char *file, int line,
+LS_EXPORT void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		const char *tag, const char *fmt, ...)
 {
 	if (lev >= s_globalLevel)
@@ -106,7 +106,7 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 static const char *s_logLevelStrings[] =
 	{"FATAL", "ERROR", "WARNF", "INFOF", "DEBUG", "VERBO"};
 
-void langstackLogPrintFull(LogLevel lev, const char *file, int line,
+LS_EXPORT void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		const char *tag, const char *fmt, ...)
 {
 	if (lev >= s_globalLevel)
