@@ -33,6 +33,7 @@ SOFTWARE.
 #include <memory>
 
 #include "Task/ITask.h"
+#include "Defs.h"
 
 namespace ls {
 
@@ -40,7 +41,7 @@ typedef std::list<ITask*>                   TaskList;
 typedef std::map<std::string, TaskList>     TaskLists;
 
 class CTaskThreadPool;
-class TaskThread
+class LS_EXPORT TaskThread
 {
 public:
     static const int s_idleTickSpace = 10;              ///< 空闲线程sleep时间

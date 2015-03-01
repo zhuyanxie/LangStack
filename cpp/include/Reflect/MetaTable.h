@@ -25,10 +25,11 @@ SOFTWARE.
 
 #include "Reflect/MetaData.h"
 #include "Reflect/MetaMethod.h"
+#include "Defs.h"
 
 namespace ls {
 
-class CMetaTable
+class LS_EXPORT CMetaTable
 {
 public:
     ///\brief           默认构造
@@ -37,7 +38,7 @@ public:
     ///\brief           元表
     ///\param[in]       className       类名
     ///\param[in]       creator         创建回调
-    CMetaTable(const char *className, MetaClassCreator creator = NULL);
+    CMetaTable(const char *className, MetaClassCreator creator = nullptr);
     ~CMetaTable();
 
     ///\brief           更新创建回调

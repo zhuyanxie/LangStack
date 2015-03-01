@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "Reflect/MetaValue.h"
 #include <functional>
+#include "Defs.h"
 
 namespace ls {
 

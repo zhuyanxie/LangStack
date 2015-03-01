@@ -25,6 +25,7 @@ SOFTWARE.
 #define _LANGUAGE_STACK_IRPC_API_H_
 
 #include "Rpc/RpcCore.h"
+#include "Defs.h"
 
 namespace ls {
 

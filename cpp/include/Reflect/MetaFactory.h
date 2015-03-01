@@ -26,10 +26,11 @@ SOFTWARE.
 
 #include <map>
 #include "Reflect/MetaTable.h"
+#include "Defs.h"
 
 namespace ls {
 
-class CMetaFactory
+class LS_EXPORT CMetaFactory
 {
 public:
     static CMetaFactory* instance();

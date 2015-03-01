@@ -25,10 +25,11 @@ SOFTWARE.
 #define _LANGUAGE_STACK_TITASK_H_
 
 #include <string>
+#include "Defs.h"
 
 namespace ls {
 
-class ITask
+class LS_EXPORT ITask
 {
 public:
     ITask(){}

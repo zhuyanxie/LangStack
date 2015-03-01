@@ -24,10 +24,11 @@ SOFTWARE.
 #define _LANGUAGE_STACK_LSTACK_H_
 
 #include <inttypes.h>
+#include "Defs.h"
 
 namespace ls {
 
-class CLangStack
+class LS_EXPORT CLangStack
 {
 public:
     ///\brief       启动协议栈,Jni传输

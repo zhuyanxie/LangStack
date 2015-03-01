@@ -26,11 +26,12 @@ SOFTWARE.
 #include <jni.h>
 
 #include "TransSession.h"
+#include "Defs.h"
 
 namespace ls {
 
 ///\brief       一个tcp session对应一个线程
-class CJniSession : public ITransSession
+class LS_EXPORT CJniSession : public ITransSession
 {
 public:
     CJniSession();

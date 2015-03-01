@@ -27,10 +27,11 @@ SOFTWARE.
 #include <string>
 
 #include "Reflect/MetadataTraits.h"
+#include "Defs.h"
 
 namespace ls {
 
-struct MetaValue
+struct LS_EXPORT MetaValue
 {
     union
     {

@@ -2,6 +2,7 @@
 /bin
 # eclipse
 /.metadata
+
 # vs
 *.lib
 *.log
@@ -13,6 +14,9 @@
 *.ilk
 *.sdf
 *.opensdf
+*.dll
+*.exp
+*.ipch
 
 #java
 *.class

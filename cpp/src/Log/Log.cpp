@@ -32,6 +32,21 @@ using namespace std::chrono;
 static mutex 	s_lock;
 static LogLevel s_globalLevel = LogLevel::LogLevelVERBOSE;
 
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <pthread.h>
+#endif
+
+uint32_t getCurrentThreadId()
+{
+#ifdef WIN32
+    return (uint32_t)::GetCurrentThreadId();
+#else
+    return (uint32_t)thread_self();
+#endif
+}
+
 void setLangStackLogLevel(LogLevel limitLevel)
 {
 	s_globalLevel = limitLevel;
@@ -104,9 +119,11 @@ void langstackLogPrintFull(LogLevel lev, const char *file, int line,
     va_list args;
 	va_start(args, fmt);
 	s_lock.lock();
-	printf("%s|%s|%02d-%02d %02d:%02d:%02d<%s:%d>",
-			tag, s_logLevelStrings[lev], date->tm_mon, date->tm_mday,
-			date->tm_hour, date->tm_min, date->tm_sec, getFileName(file), line);
+	printf("%s|%s|%d|%02d-%02d %02d:%02d:%02d<%s:%d>",
+        tag, s_logLevelStrings[lev], getCurrentThreadId(),
+        date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, 
+        date->tm_sec, getFileName(file), line);
+
 	vfprintf(stdout, fmt, args);
 	s_lock.unlock();
 	va_end(args);

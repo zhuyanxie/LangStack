@@ -27,10 +27,11 @@ SOFTWARE.
 #include "Task/TaskThreadPool.h"
 
 #include "Rpc/RpcCore.h"
+#include "Defs.h"
 
 namespace ls {
 
-class CRpcCallTask : public ITask
+class LS_EXPORT CRpcCallTask : public ITask
 {
 public:
     CRpcCallTask(RpcCallPtr rpcCall)

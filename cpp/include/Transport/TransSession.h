@@ -30,10 +30,11 @@ SOFTWARE.
 #include <atomic>
 
 #include "Rpc/RpcCall.h"
+#include "Defs.h"
 
 namespace ls {
 
-class ITransSession
+class LS_EXPORT ITransSession
 {
 public:
     ITransSession();

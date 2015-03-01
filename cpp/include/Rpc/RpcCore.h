@@ -29,11 +29,12 @@ SOFTWARE.
 
 #include "Rpc/RpcCall.h"
 #include "Transport/TransSession.h"
+#include "Defs.h"
 
 namespace ls {
 
 class CRpcCoreImpl;
-class CRpcCore
+class LS_EXPORT CRpcCore
 {
 public:
     static CRpcCore* instance();

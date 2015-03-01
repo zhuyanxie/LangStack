@@ -24,9 +24,12 @@ SOFTWARE.
 #ifndef _DAHUA_MOBILE_TCP_BUFFER_H_
 #define _DAHUA_MOBILE_TCP_BUFFER_H_
 
+#include <inttypes.h>
+#include "Defs.h"
+
 namespace ls {
 
-class CTcpBuffer
+class LS_EXPORT CTcpBuffer
 {
 public:
     CTcpBuffer(uint32_t size)

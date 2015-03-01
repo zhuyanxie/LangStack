@@ -75,8 +75,9 @@ JNIEXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
 /// for Transport cpp Jnisession
 void sendCall2Java(const char *str)
 {
-	JNIEnv *env = nullptr;
-    g_jvm->AttachCurrentThread(&env, nullptr);
+    void *vptr = nullptr;
+    g_jvm->AttachCurrentThread(&vptr, nullptr);
+    JNIEnv *env = (JNIEnv *)vptr;
     do
     {
 		if (env == nullptr)
@@ -101,8 +102,9 @@ void sendCall2Java(const char *str)
 
 void sendReturn2Java(const char *str)
 {
-	JNIEnv *env = nullptr;
-    g_jvm->AttachCurrentThread(&env, nullptr);
+    void *vptr = nullptr;
+    g_jvm->AttachCurrentThread(&vptr, nullptr);
+    JNIEnv *env = (JNIEnv *)vptr;
     do
     {
 		if (env == nullptr)
@@ -127,13 +129,13 @@ void sendReturn2Java(const char *str)
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for jni
-JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     g_jvm = vm;
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved)
+JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved)
 {
 
 }

@@ -33,11 +33,12 @@ SOFTWARE.
 #include "Reflect/MetaFactory.h"
 #include "SerializationConstant.h"
 #include "Reflect/IReflection.h"
+#include "Defs.h"
 
 namespace ls {
 
 ///\brief   序列化
-template <class T> class Serializion
+template <class T> class LS_EXPORT Serializion
 {
 public:
     ///\brief           序列化
@@ -52,7 +53,7 @@ public:
 };
 
 ///\brief   int序列化
-template <> class Serializion<int>
+template <> class LS_EXPORT Serializion<int>
 {
 public:
     bool operator()(int obj, std::ostream &os)
@@ -63,7 +64,7 @@ public:
 };
 
 ///\brief   long long序列化
-template <> class Serializion<long long>
+template <> class LS_EXPORT Serializion<long long>
 {
 public:
     bool operator()(long long obj, std::ostream &os)
@@ -74,7 +75,7 @@ public:
 };
 
 ///\brief   double序列化
-template <> class Serializion<double>
+template <> class LS_EXPORT Serializion<double>
 {
 public:
     bool operator()(double obj, std::ostream &os)
@@ -100,7 +101,7 @@ static std::string serializionEncode(const char *buf)
 }
 
 ///\brief   cstr序列化
-template <> class Serializion<const char *>
+template <> class LS_EXPORT Serializion<const char *>
 {
 public:
     bool operator()(const char *obj, std::ostream &os)
@@ -116,7 +117,7 @@ public:
 };
 
 ///\brief   string序列化
-template <> class Serializion<std::string>
+template <> class LS_EXPORT Serializion<std::string>
 {
 public:
     bool operator()(const std::string &obj, std::ostream &os)
@@ -126,7 +127,7 @@ public:
 };
 
 ///\brief   list相关
-template <class T> class Serializion<std::list<T> >
+template <class T> class LS_EXPORT Serializion<std::list<T> >
 {
 public:
     bool operator()(const std::list<T> &obj, std::ostream &os)
@@ -150,7 +151,7 @@ public:
 };
 
 ///\brief   IReflection*序列化
-template <> class Serializion<IReflection*>
+template <> class LS_EXPORT Serializion<IReflection*>
 {
 public:
     bool operator()(IReflection* obj, std::ostream &os)
@@ -175,8 +176,8 @@ public:
         for (; it != table.end(); ++it)
         {
             MetaData *data = it->second;
-            os << data->m_metaName << TAG_PARAM_SPLIT;
-            switch(data->m_metaType)
+            os << data->getMetaName() << TAG_PARAM_SPLIT;
+            switch(data->getMetaType())
             {
             case MetaDataTypeInt:
                 ret &= Serializion<int>()(

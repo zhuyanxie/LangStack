@@ -27,10 +27,11 @@ SOFTWARE.
 #include <deque>
 #include <string>
 #include "Task/TaskThread.h"
+#include "Defs.h"
 
 namespace ls {
 
-class CTaskThreadPool
+class LS_EXPORT CTaskThreadPool
 {
 public:
     ///\brief           单例

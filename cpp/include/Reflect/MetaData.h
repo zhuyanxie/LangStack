@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include "Reflect/MetaDataTraits.h"
 #include "Serial/SerializationConstant.h"
+#include "Defs.h"
 
 namespace ls {
 
@@ -41,52 +42,43 @@ typedef void (*MetaDataSet)(IReflection *obj, void *val);
 ///\brief   元数据获取回调
 typedef void* (*MetaDataGet)(IReflection *obj);
 
-struct MetaData
+class LS_EXPORT MetaData
 {
-    MetaDataType    m_metaType;         ///< 元数据类型
-    std::string     m_metaName;         ///< 元数据描述
-    MetaDataSet     m_setCall;          ///< 元数据设置回调
-    MetaDataGet     m_getCall;          ///< 元数据获取回调
-
+public:
     ///\brief                   构造
     ///\param[in]   type        元数据类型
     ///\param[in]   metaName    元数据名称
     ///\param[in]   setCall     元数据设置回调
     ///\param[in]   getCall     元数据获取回调
     MetaData(MetaDataType type, const char *metaName, MetaDataSet setCall,
-            MetaDataGet getCall)
-    : m_metaType(type)
-    , m_metaName(metaName)
-    , m_setCall(setCall)
-    , m_getCall(getCall)
-    {
-    }
+            MetaDataGet getCall);
 
-    ~MetaData()
-    {
-    }
+    ~MetaData();
 
     ///\brief                   设置元数据值
     ///\param[in]       obj     对象地址
     ///\param[in]       value   值
-    void setMetaData(IReflection *obj, void *val)
-    {
-        return m_setCall(obj, val);
-    }
+    void setMetaData(IReflection *obj, void *val);
 
     ///\brief                   获取元数据值
     ///\param[in]       obj     对象地址
     ///\return          值
-    void* getMetaData(IReflection *obj)
-    {
-        return m_getCall(obj);
-    }
+    void* getMetaData(IReflection *obj);
 
     ///\brief                   获取元类型
-    std::string getMetaType()
-    {
-        return META_TYPE_STRING[m_metaType];
-    }
+    std::string getMetaTypeString();
+
+    ///\brief					inline gets
+    inline MetaDataSet getSetCall() { return m_setCall; }
+    inline MetaDataGet getGetCall() { return m_getCall; }
+    inline std::string getMetaName() { return m_metaName; }
+    inline MetaDataType getMetaType() { return m_metaType; }
+
+private:
+    MetaDataType    m_metaType;         ///< 元数据类型
+    std::string     m_metaName;         ///< 元数据描述
+    MetaDataSet     m_setCall;          ///< 元数据设置回调
+    MetaDataGet     m_getCall;          ///< 元数据获取回调
 };
 
 typedef std::map<std::string, MetaData*>    MetaParamTable; ///< 元参数表

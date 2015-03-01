@@ -20,36 +20,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#ifndef _LANGUAGE_STACK_TCP_SERVER_H_
-#define _LANGUAGE_STACK_TCP_SERVER_H_
-
-#include <inttypes.h>
-#include <thread>
-#include <memory>
-#include "Defs.h"
+#include "Reflect/MetaData.h"
 
 namespace ls {
 
-///\brief   tcp server 单独起线程监听
-class LS_EXPORT CTcpServer
+///\brief                   构造
+///\param[in]   type        元数据类型
+///\param[in]   metaName    元数据名称
+///\param[in]   setCall     元数据设置回调
+///\param[in]   getCall     元数据获取回调
+MetaData::MetaData(MetaDataType type, const char *metaName, MetaDataSet setCall,
+        MetaDataGet getCall)
+    : m_metaType(type)
+    , m_metaName(metaName)
+    , m_setCall(setCall)
+    , m_getCall(getCall)
 {
-public:
-    CTcpServer(uint16_t port);
-    ~CTcpServer();
+}
 
-private:
-    ///\brief       监听接收函数
-    void doAccept();
+MetaData::~MetaData()
+{
+}
 
-private:
-    int             m_fd;       ///< 监听的服务器FD
-    bool            m_loop;     ///< 线程循环控制
-    std::thread     *m_thread;  ///< 独立的接收线程
-};
+///\brief                   设置元数据值
+///\param[in]       obj     对象地址
+///\param[in]       value   值
+void MetaData::setMetaData(IReflection *obj, void *val)
+{
+    return m_setCall(obj, val);
+}
 
-typedef std::unique_ptr<CTcpServer>     TcpServerPtr;
+///\brief                   获取元数据值
+///\param[in]       obj     对象地址
+///\return          值
+void* MetaData::getMetaData(IReflection *obj)
+{
+    return m_getCall(obj);
+}
+
+///\brief                   获取元类型
+std::string MetaData::getMetaTypeString()
+{
+    return META_TYPE_STRING[m_metaType];
+}
 
 }
 
 
-#endif /* _LANGUAGE_STACK_TCP_SERVER_H_ */

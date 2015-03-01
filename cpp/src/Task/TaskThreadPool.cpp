@@ -83,7 +83,7 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
     std::map<std::string, int>::iterator itmap = mIdentifyMap.find(id);
     if (mIdentifyMap.end() != itmap && m_taskThreads.count(itmap->second))
     {
-    	VERBOSEF(LS_TAG, "get thread sucess repeat id [%s->%d]\n",
+    	VERBOSEF(LS_TAG, "get thread sucess repeat taski id[%s] -> index:[%d]\n",
     			id.c_str(), itmap->second);
         return m_taskThreads[itmap->second];
     }
@@ -108,7 +108,9 @@ TaskThreadPtr CTaskThreadPool::getTheLightThread(const std::string &id)
         int index = addThread(m_idleTime);
         res = m_taskThreads.find(index);
     }
-	DEBUGF(LS_TAG, "get thread sucess [%s->%d]\n", id.c_str(), res->first);
+    VERBOSEF(LS_TAG, "get new thread sucess, taski id[%s] -> index:[%d]\n",
+        id.c_str(), res->first);
+
     mIdentifyMap[id] = res->first;
     return res->second;
 }

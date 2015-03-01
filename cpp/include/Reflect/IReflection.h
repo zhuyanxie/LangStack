@@ -29,10 +29,11 @@ SOFTWARE.
 #include "Reflect/MetaFactory.h"
 
 #include "Reflect/ReflectFunction.h"
+#include "Defs.h"
 
 namespace ls {
 
-class IReflection
+class LS_EXPORT IReflection
 {
 public:
     IReflection(){}
@@ -138,7 +139,7 @@ public:
 }
 
 ///\brief   反射方法注册类
-class ReflectionMethodRegister
+class LS_EXPORT ReflectionMethodRegister
 {
 public:
     ReflectionMethodRegister(const char *cls, const char *method,

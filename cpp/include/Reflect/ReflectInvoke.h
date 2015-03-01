@@ -25,6 +25,7 @@ SOFTWARE.
 #define _LANGUAGE_STACK_REFLECT_INVOKE_H_
 
 #include "Reflect/MetaDataTraits.h"
+#include "Defs.h"
 
 namespace ls {
 

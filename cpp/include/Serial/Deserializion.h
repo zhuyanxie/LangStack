@@ -29,11 +29,12 @@ SOFTWARE.
 #include <istream>
 
 #include "Reflect/IReflection.h"
+#include "Defs.h"
 
 namespace ls {
 
 ///\brief   序列化
-template <class T> class Deserializion
+template <class T> class LS_EXPORT Deserializion
 {
 public:
     ///\brief           反序列化
@@ -95,7 +96,7 @@ static bool deserialSampleValueFromString(const char *buf, const char *checkTag,
 }
 
 ///\brief   int的反序列化
-template <> class Deserializion<int>
+template <> class LS_EXPORT Deserializion<int>
 {
 public:
     bool operator()(const char *buf, int &val) const
@@ -111,7 +112,7 @@ public:
 };
 
 ///\brief   long long的反序列化
-template <> class Deserializion<long long>
+template <> class LS_EXPORT Deserializion<long long>
 {
 public:
     bool operator()(const char *buf, long long &val) const
@@ -127,7 +128,7 @@ public:
 };
 
 ///\brief   double的反序列化
-template <> class Deserializion<double>
+template <> class LS_EXPORT Deserializion<double>
 {
 public:
     bool operator()(const char *buf, double &val) const
@@ -169,7 +170,7 @@ static std::string serializionDecode(const char *buf, size_t len)
 }
 
 ///\brief   std::string的反序列化
-template <> class Deserializion<std::string>
+template <> class LS_EXPORT Deserializion<std::string>
 {
 public:
     bool operator()(const char *buf, std::string &val) const
@@ -197,7 +198,7 @@ public:
 };
 
 ///\brief   list相关
-template <class T> class Deserializion<std::list<T> >
+template <class T> class LS_EXPORT Deserializion<std::list<T> >
 {
 public:
     bool operator()(const char *buf, std::list<T> &val) const
@@ -234,7 +235,7 @@ public:
 };
 
 ///\brief   反序列化class
-template <class T> class DeserializionClass
+template <class T> class LS_EXPORT DeserializionClass
 {
 public:
     bool operator()(MetaData *data, IReflection* val, const char* buf)
@@ -247,7 +248,7 @@ public:
 };
 
 ///\brief   std::string的反序列化
-template <> class Deserializion<IReflection*>
+template <> class LS_EXPORT Deserializion<IReflection*>
 {
 public:
     bool operator()(const char *buf, IReflection *&val) const
@@ -361,7 +362,7 @@ private:
     {
         bool ret = true;
         /// 反序列化值
-        switch (data->m_metaType)
+        switch (data->getMetaType())
         {
         case MetaDataTypeInt:
             ret &= DeserializionClass<int>()(data, val, buf);

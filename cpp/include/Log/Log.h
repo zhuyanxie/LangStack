@@ -23,6 +23,9 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_LOG_H_
 #define _LANGUAGE_STACK_LOG_H_
 
+#include <inttypes.h>
+#include "Defs.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,12 +46,14 @@ typedef enum
 } LogLevel;
 
 ///\brief		设置日志输出等级
-void setLangStackLogLevel(LogLevel limitLevel);
+void LS_EXPORT setLangStackLogLevel(LogLevel limitLevel);
 
 ///\brief		不直接调用
-void langstackLogPrintFull(LogLevel lev, const char *file, int line,
+void LS_EXPORT langstackLogPrintFull(LogLevel lev, const char *file, int line,
 		const char *tag, const char *fmt, ...);
 
+///\brief       获取当前线程ID
+uint32_t LS_EXPORT getCurrentThreadId();
 
 #define VERBOSEF(TAG, FORMAT, ...) \
 		langstackLogPrintFull(LogLevelVERBOSE, __FILE__, __LINE__, TAG, FORMAT, ##__VA_ARGS__)

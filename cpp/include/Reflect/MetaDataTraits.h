@@ -29,6 +29,7 @@ SOFTWARE.
 #include <string>
 
 #include <type_traits>
+#include "Defs.h"
 
 namespace ls {
 

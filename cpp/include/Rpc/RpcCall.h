@@ -32,6 +32,7 @@ SOFTWARE.
 #include <sstream>
 
 #include "Serial/Serial.h"
+#include "Defs.h"
 
 namespace ls {
 
