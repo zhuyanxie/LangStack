@@ -31,7 +31,7 @@ SOFTWARE.
 
 namespace ls {
 
-class LS_EXPORT CRpcCallTask : public ITask
+class CRpcCallTask : public ITask
 {
 public:
     CRpcCallTask(RpcCallPtr rpcCall)

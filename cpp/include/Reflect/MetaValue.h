@@ -31,7 +31,7 @@ SOFTWARE.
 
 namespace ls {
 
-struct LS_EXPORT MetaValue
+struct MetaValue
 {
     union
     {

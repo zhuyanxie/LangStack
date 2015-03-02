@@ -29,7 +29,7 @@ SOFTWARE.
 
 namespace ls {
 
-class LS_EXPORT CTcpBuffer
+class CTcpBuffer
 {
 public:
     CTcpBuffer(uint32_t size)

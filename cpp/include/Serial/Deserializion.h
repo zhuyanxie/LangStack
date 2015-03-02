@@ -34,7 +34,7 @@ SOFTWARE.
 namespace ls {
 
 ///\brief   序列化
-template <class T> class LS_EXPORT Deserializion
+template <class T> class Deserializion
 {
 public:
     ///\brief           反序列化
@@ -96,7 +96,7 @@ static bool deserialSampleValueFromString(const char *buf, const char *checkTag,
 }
 
 ///\brief   int的反序列化
-template <> class LS_EXPORT Deserializion<int>
+template <> class Deserializion<int>
 {
 public:
     bool operator()(const char *buf, int &val) const
@@ -112,7 +112,7 @@ public:
 };
 
 ///\brief   long long的反序列化
-template <> class LS_EXPORT Deserializion<long long>
+template <> class Deserializion<long long>
 {
 public:
     bool operator()(const char *buf, long long &val) const
@@ -128,7 +128,7 @@ public:
 };
 
 ///\brief   double的反序列化
-template <> class LS_EXPORT Deserializion<double>
+template <> class Deserializion<double>
 {
 public:
     bool operator()(const char *buf, double &val) const
@@ -170,7 +170,7 @@ static std::string serializionDecode(const char *buf, size_t len)
 }
 
 ///\brief   std::string的反序列化
-template <> class LS_EXPORT Deserializion<std::string>
+template <> class Deserializion<std::string>
 {
 public:
     bool operator()(const char *buf, std::string &val) const
@@ -198,7 +198,7 @@ public:
 };
 
 ///\brief   list相关
-template <class T> class LS_EXPORT Deserializion<std::list<T> >
+template <class T> class Deserializion<std::list<T> >
 {
 public:
     bool operator()(const char *buf, std::list<T> &val) const
@@ -235,7 +235,7 @@ public:
 };
 
 ///\brief   反序列化class
-template <class T> class LS_EXPORT DeserializionClass
+template <class T> class DeserializionClass
 {
 public:
     bool operator()(MetaData *data, IReflection* val, const char* buf)
@@ -248,7 +248,7 @@ public:
 };
 
 ///\brief   std::string的反序列化
-template <> class LS_EXPORT Deserializion<IReflection*>
+template <> class Deserializion<IReflection*>
 {
 public:
     bool operator()(const char *buf, IReflection *&val) const

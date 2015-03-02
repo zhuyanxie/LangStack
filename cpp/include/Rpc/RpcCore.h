@@ -34,7 +34,7 @@ SOFTWARE.
 namespace ls {
 
 class CRpcCoreImpl;
-class LS_EXPORT CRpcCore
+class CRpcCore
 {
 public:
     static CRpcCore* instance();

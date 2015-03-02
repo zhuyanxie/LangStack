@@ -31,7 +31,7 @@ SOFTWARE.
 namespace ls {
 
 ///\brief       一个tcp session对应一个线程
-class LS_EXPORT CJniSession : public ITransSession
+class CJniSession : public ITransSession
 {
 public:
     CJniSession();

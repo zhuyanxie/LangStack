@@ -33,7 +33,7 @@ SOFTWARE.
 namespace ls {
 
 ///\brief       一个tcp session对应一个线程
-class LS_EXPORT CTcpSession : public ITransSession
+class CTcpSession : public ITransSession
 {
 public:
     CTcpSession(int fd);

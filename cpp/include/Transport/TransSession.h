@@ -34,7 +34,7 @@ SOFTWARE.
 
 namespace ls {
 
-class LS_EXPORT ITransSession
+class ITransSession
 {
 public:
     ITransSession();

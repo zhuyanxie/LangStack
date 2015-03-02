@@ -42,7 +42,7 @@ namespace ls {
 typedef std::vector<MetaDataType>               ParamTypes;     ///< 方法参数类型列表
 
 ///\brief       方法元信息
-struct LS_EXPORT MetaMethodData
+struct MetaMethodData
 {
     ParamTypes              params;                             ///< 参数类型列表
     size_t                  paramsCount;                        ///< 参数个数

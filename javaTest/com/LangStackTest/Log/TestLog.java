@@ -15,8 +15,9 @@ public class TestLog {
 	@Test
 	public void test() 
 	{
-		for (int i = Logger.LogLevelFATAL; i < Logger.LogLevelFULL; ++i)
+		for (int i = Logger.LogLevelFATAL; i <= Logger.LogLevelFULL; ++i)
 		{
+			Logger.setLoggerLevel(i);
 			Logger.f("TestLog", "Test : " + i + "\n");
 			Logger.e("TestLog", "Test : " + i + "\n");
 			Logger.w("TestLog", "Test : " + i + "\n");

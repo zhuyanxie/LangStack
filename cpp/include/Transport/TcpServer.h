@@ -31,7 +31,7 @@ SOFTWARE.
 namespace ls {
 
 ///\brief   tcp server 单独起线程监听
-class LS_EXPORT CTcpServer
+class CTcpServer
 {
 public:
     CTcpServer(uint16_t port);
