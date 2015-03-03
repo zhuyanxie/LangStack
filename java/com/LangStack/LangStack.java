@@ -8,9 +8,8 @@ public class LangStack
 {
     /**
      * @brief       启动Jni传输模式
-     * @param       port        端口
      */
-    public static void startJniTransMode(int transPort, int port)
+    public static void startJniTransMode()
     {
         startJniMode();
         RpcCore.instance().bindSession(new JniSession());

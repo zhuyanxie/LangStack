@@ -43,7 +43,7 @@ LS_EXPORT uint32_t getCurrentThreadId()
 #ifdef WIN32
     return (uint32_t)::GetCurrentThreadId();
 #else
-    return (uint32_t)thread_self();
+    return (uint32_t)gettid();
 #endif
 }
 
@@ -118,14 +118,13 @@ LS_EXPORT void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 	tm *date = std::localtime(&now);
     va_list args;
 	va_start(args, fmt);
-	s_lock.lock();
+//   std::unique_lock<std::mutex> g(s_lock);
 	printf("%s|%s|%d|%02d-%02d %02d:%02d:%02d<%s:%d>",
         tag, s_logLevelStrings[lev], getCurrentThreadId(),
         date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, 
         date->tm_sec, getFileName(file), line);
 
 	vfprintf(stdout, fmt, args);
-	s_lock.unlock();
 	va_end(args);
 	fflush(stdout);
 }

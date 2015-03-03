@@ -57,7 +57,7 @@ static bool deserialCStringMatch(const char *buf, const char *tag)
 static const char* deserialFindCString(const char *buf, const char *tag)
 {
     while (*buf && *tag && !deserialCStringMatch(buf, tag)) ++buf;
-    return *buf ? buf : NULL;
+    return *buf ? buf : nullptr;
 }
 
 static size_t deserialGetDetailLength(const char *buf)

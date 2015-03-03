@@ -1,20 +1,22 @@
 package com.LangStackTest;
 
+import com.LangStack.Log.Logger;
+
 public class EasyTypeClass {
 	
-    public int    mInt;
-    public long   mLonglong;
-    public double mDouble;
-    public String mNormal;
-    public String mSpecial;
+	private int		m_int;
+	private long	m_longlong;
+	private double	m_double;
+	private String	m_normal;
+	private String	m_special;
 
     public EasyTypeClass()
     {
-        mInt = 0;
-        mLonglong = 0;
-        mDouble = 0;
-        mNormal = null;
-        mSpecial = null;
+    	m_int = 0;
+    	m_longlong = 0;
+    	m_double = 0;
+    	m_normal = null;
+    	m_special = null;
     }
 
     @Override
@@ -22,18 +24,18 @@ public class EasyTypeClass {
     {
         EasyTypeClass rhs = (EasyTypeClass) o;
 
-        return mInt == rhs.mInt && mLonglong == rhs.mLonglong && 
-        		mDouble == rhs.mDouble && mNormal.equals(rhs.mNormal) && 
-        		mSpecial.equals(rhs.mSpecial);
+        return m_int == rhs.m_int && m_longlong == rhs.m_longlong && 
+        		m_double == rhs.m_double && m_normal.equals(rhs.m_normal) && 
+        				m_special.equals(rhs.m_special);
     }
     
     public void dump()
     {
-        System.out.println("dump :");
-        System.out.println("\t\t\t\t mInt :" + mInt);
-        System.out.println("\t\t\t\t mLonglong :" + mLonglong);
-        System.out.println("\t\t\t\t mDouble :" + mDouble);
-        System.out.println("\t\t\t\t mNormal :" + mNormal);
-        System.out.println("\t\t\t\t mSpecial :" + mSpecial);
+        Logger.v("LSJava", "dump :");
+        Logger.v("LSJava", "\t\t\t\t mInt :" + m_int);
+        Logger.v("LSJava", "\t\t\t\t mLonglong :" + m_longlong);
+        Logger.v("LSJava", "\t\t\t\t mDouble :" + m_double);
+        Logger.v("LSJava", "\t\t\t\t mNormal :" + m_normal);
+        Logger.v("LSJava", "\t\t\t\t mSpecial :" + m_special);
     }
 }

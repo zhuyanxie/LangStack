@@ -27,7 +27,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\EasyTypeClass.cpp" />
     <ClCompile Include="..\..\src\TestLog.cpp" />
     <ClCompile Include="..\..\src\TestMain.cpp" />
     <ClCompile Include="..\..\src\TestReflect.cpp" />
@@ -35,7 +34,6 @@
     <ClCompile Include="..\..\src\TestTask.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\EasyTypeClass.h" />
     <ClInclude Include="..\..\src\TestLog.h" />
     <ClInclude Include="..\..\src\TestReflect.h" />
     <ClInclude Include="..\..\src\TestSerial.h" />
@@ -191,7 +189,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)/x64/mdd;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>LangStack.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LangStack.lib;LSCppDemo.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

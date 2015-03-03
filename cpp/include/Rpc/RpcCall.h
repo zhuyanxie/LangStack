@@ -168,7 +168,7 @@ public:
         }
 
         val = new CRpcCall();
-        int offset = strlen("RpcCall:");
+        size_t offset = strlen("RpcCall:");
 
         if (!deserial(buf, offset, val->m_method))
         {
@@ -198,7 +198,7 @@ public:
     }
 
 private:
-    template <class T> bool deserial(const char *buf, int &offset, T &val) const
+    template <class T> bool deserial(const char *buf, size_t &offset, T &val) const
     {
         size_t next = deserialGetDetailLength(buf + offset);
         if (!ls::deserial(buf + offset, val))
