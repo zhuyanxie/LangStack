@@ -25,7 +25,7 @@ SOFTWARE.
 
 namespace ls {
 
-const char LS_TAG[]                = "LangStatckCpp";
+const char LS_TAG[]                = "LSCpp";
 
 }
 

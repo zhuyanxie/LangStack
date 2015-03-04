@@ -123,7 +123,6 @@ TEST_F(CTestReflect, EasyFunctionReflectTest)
     methods = nullptr;
     table->getMethods("foo", methods);
     ReflectFunciton<double> *foo = (ReflectFunciton<double>*)(*methods)[0].method;
-    std::cout << foo->invoke(1) << std::endl;
 
     /// 全局函数 foo
     //CMetaFactory::instance()->getMetaTable("", table);

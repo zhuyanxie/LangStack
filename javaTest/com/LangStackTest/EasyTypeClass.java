@@ -15,8 +15,8 @@ public class EasyTypeClass {
     	m_int = 0;
     	m_longlong = 0;
     	m_double = 0;
-    	m_normal = null;
-    	m_special = null;
+    	m_normal = "test";
+    	m_special = "!@#$%^&*()_+-=[]\\;',./`~<>?:\"{}|;;;:::%0%1%";
     }
 
     @Override
@@ -31,11 +31,11 @@ public class EasyTypeClass {
     
     public void dump()
     {
-        Logger.v("LSJava", "dump :");
-        Logger.v("LSJava", "\t\t\t\t mInt :" + m_int);
-        Logger.v("LSJava", "\t\t\t\t mLonglong :" + m_longlong);
-        Logger.v("LSJava", "\t\t\t\t mDouble :" + m_double);
-        Logger.v("LSJava", "\t\t\t\t mNormal :" + m_normal);
-        Logger.v("LSJava", "\t\t\t\t mSpecial :" + m_special);
+        Logger.v("test", "dump :");
+        Logger.v("test", "\t\t\t\t mInt :" + m_int);
+        Logger.v("test", "\t\t\t\t mLonglong :" + m_longlong);
+        Logger.v("test", "\t\t\t\t mDouble :" + m_double);
+        Logger.v("test", "\t\t\t\t mNormal :" + m_normal);
+        Logger.v("test", "\t\t\t\t mSpecial :" + m_special);
     }
 }

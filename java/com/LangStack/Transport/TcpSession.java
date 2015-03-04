@@ -199,7 +199,6 @@ public class TcpSession extends TransSession implements Runnable
                 e.printStackTrace();
             }
             
-            System.out.println("recv : " + message);
 	        RpcCall call = RpcCall.deserial(message);
 	        if (call != null)
 	        {
@@ -235,7 +234,6 @@ public class TcpSession extends TransSession implements Runnable
             mSocket.getOutputStream().write(str.getBytes("ISO-8859-1"));
             mSocket.getOutputStream().flush();
             
-            System.out.println("send : " + str);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

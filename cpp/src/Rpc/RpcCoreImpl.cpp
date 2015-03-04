@@ -29,6 +29,8 @@
 #include "Reflect/ReflectInvoke.h"
 #include "Serial/Deserializion.h"
 #include "Serial/DeserialType.h"
+#include "LangStackConstant.h"
+#include "Log/Log.h"
 
 namespace ls {
 
@@ -258,7 +260,7 @@ void CRpcCoreImpl::createObject(RpcCallPtr &call, CRpcResponse &resp)
             /// FIXME error info;
         }
 
-        std::cout << "new : " << id << " local : " << object << std::endl;
+        DEBUGF(LS_TAG, "new rpc object, id[lld] local[%p]\n", id, object);
     }
     else
     {
@@ -273,7 +275,7 @@ void CRpcCoreImpl::createObject(RpcCallPtr &call, CRpcResponse &resp)
             /// FIXME error info;
         }
 
-        std::cout << "delete : " << id << " local : " << object << std::endl;
+        DEBUGF(LS_TAG, "del rpc object, id[lld] local[%p]\n", id, object);
     }
 }
 
@@ -288,8 +290,8 @@ void CRpcCoreImpl::attachObject(RpcCallPtr &call, CRpcResponse &resp)
 
     resp.getReturn()->pushParams<long long>((long long)(object));
 
-    std::cout << "attach : " << id << " local : " << object <<
-        " return : " << resp.getReturn()->m_values[0] << std::endl;
+    DEBUGF(LS_TAG, "attach rpc object, id[lld] local[%p] retrun:[%s]\n",
+            id, object, resp.getReturn()->m_values[0].c_str());
 }
 
 

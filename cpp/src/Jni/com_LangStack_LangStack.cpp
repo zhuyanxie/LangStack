@@ -61,7 +61,7 @@ LS_EXPORT void JNICALL Java_com_LangStack_Log_Logger_setLoggerLevel
 
 ////////////////////////////////////////////////////////////////////////////////
 /// for Transport java Jnisession
-LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_JniSession_sendCall2Cpp
   (JNIEnv *env, jclass cls, jstring str)
 {
 	const char* buf = env->GetStringUTFChars(str, nullptr);
@@ -69,7 +69,7 @@ LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendCall2Cpp
 	env->ReleaseStringUTFChars(str, buf);
 }
 
-LS_EXPORT void JNICALL Java_com_LangStack_Transport_sendReturn2Cpp
+LS_EXPORT void JNICALL Java_com_LangStack_Transport_JniSession_sendReturn2Cpp
  (JNIEnv *env, jclass cls, jstring str)
 {
 	const char* buf = env->GetStringUTFChars(str, nullptr);

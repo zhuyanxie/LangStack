@@ -77,7 +77,7 @@ public:
     REFLECTION_METHOD_DECLEAR_ARGS0(std::string, interface4)
 
 private:
-    REFLECTION_CLASS_DECLEAR(CCallBackProxy, "com.LangStackTest.CallBackProxy");
+    REFLECTION_CLASS_DECLEAR(CCallBackProxy, "com.LangStackTest.RealCallback");
 };
 REFLECTION_CLASS_IMPLEMENT(CCallBackProxy);
 REFLECTION_METHOD_ARGS0(CCallBackProxy, interface1, void);

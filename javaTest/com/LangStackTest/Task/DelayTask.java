@@ -17,8 +17,6 @@ public class DelayTask implements ITask {
 		{
 			mId = "delay : " + i;
 		}
-		
-		System.out.println(mId);
 	}
 
 	@Override

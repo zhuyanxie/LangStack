@@ -36,7 +36,7 @@ public class MethodClass extends IRpcApi {
     @Override public void attach(IRpcApi o)
     {
         /// 先创建回调代理
-        call("new", "CRealCallBackProxy", o);
+        call("new", RealCallback.class.getName(), o);
         /// 再attach回调对象ID
         callbackSetting("attach", this.getClass().getName(), this, o);
     }
@@ -47,7 +47,7 @@ public class MethodClass extends IRpcApi {
         /// 先detach回调对象ID
         callbackSetting("detach", this.getClass().getName(), this, o);
         /// 再删除远程回调代理
-        call("delete", "CRealCallBackProxy", o);
+        call("delete", RealCallback.class.getName(), o);
     }
 
 }

@@ -117,10 +117,10 @@ LS_EXPORT void langstackLogPrintFull(LogLevel lev, const char *file, int line,
 	auto now = system_clock::to_time_t(system_clock::now());
 	tm *date = std::localtime(&now);
     char format[256];
-    snprintf(format, sizeof(format), "%s|%s|%d|%02d-%02d %02d:%02d:%02d<%s:%d>%s", 
-        tag, s_logLevelStrings[lev], getCurrentThreadId(),
+    snprintf(format, sizeof(format), "%s|%d|%02d-%02d %02d:%02d:%02d|%s|<%s:%d>%s",
+        s_logLevelStrings[lev], getCurrentThreadId(),
         date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min,
-        date->tm_sec, getFileName(file), line, fmt);
+        date->tm_sec, tag, getFileName(file), line, fmt);
     va_list args;
     va_start(args, fmt);
     s_lock.lock();

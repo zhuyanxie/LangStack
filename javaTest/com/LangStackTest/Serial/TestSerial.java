@@ -7,7 +7,6 @@ import org.junit.Test;
 import com.LangStack.Serial.Deserial;
 import com.LangStack.Serial.Serial;
 import com.LangStackTest.EasyTypeClass;
-import com.LangStackTest.NormalTypeClass;
 
 public class TestSerial {
 
@@ -43,23 +42,9 @@ public class TestSerial {
     public void testSerialEasyClass()
     {
         EasyTypeClass easy = new EasyTypeClass();
-        easy.mInt = 10;
-        easy.mLonglong = 1010202030304040L;
-        easy.mDouble = 10.10;
-        easy.mNormal = "10.10.10.10";
-        easy.mSpecial = "!@#$%^&*()_+-=[]\\;',./`~<>?:\"{}|;;;:::%0%1%";
         String str = Serial.serial(easy);
         EasyTypeClass de = (EasyTypeClass) Deserial.deserial(str);
         assertTrue(de.equals(easy));
-    }
-
-    @Test
-    public void testSerialNormalClass()
-    {
-        NormalTypeClass normal = new NormalTypeClass(3);
-        String serialStr = Serial.serial(normal);
-        NormalTypeClass dn = (NormalTypeClass) Deserial.deserial(serialStr);
-        assertTrue(dn.equals(normal));
     }
 
 }

@@ -38,7 +38,6 @@ public class RpcRequest
         try {
             mLock.lock();
             mCon.await();
-            //mCon.await(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

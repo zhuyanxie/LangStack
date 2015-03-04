@@ -59,7 +59,6 @@ bool CTcpSession::send(RpcCallPtr call, RpcType type)
     /// 本次未发送完,环回不做处理
     uint32_t len = uint32_t(sizeof(RpcHeader)+mos.charsWritten());
     size_t res = ::send(m_fd, sendBuffer, len, 0);
-    std::cout << "send :" << res << " fd : " << m_fd << std::endl;
 
     return true;
 }
@@ -74,7 +73,6 @@ void CTcpSession::readTcpMessage()
         {
             break;
         }
-        printf("do read : %ld\n", len);
         m_buf.addSize((uint32_t)len);
 
         dealMessage();
@@ -128,7 +126,6 @@ void CTcpSession::dealMessage()
             RpcCallPtr rpcCall(call);
             if (type == rpcTypeCall)
             {
-                std::cout << buf << std::endl;
                 CTaskThreadPool::instance()->addTask(new CRpcCallTask(rpcCall));
             }
             else

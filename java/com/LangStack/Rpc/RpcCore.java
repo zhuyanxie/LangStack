@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.LangStack.LS;
+import com.LangStack.Log.Logger;
 import com.LangStack.Serial.Deserial;
 import com.LangStack.Serial.Serial;
 import com.LangStack.Transport.TransSession;
@@ -66,14 +68,14 @@ public class RpcCore
             mObjects.addObject(
                     (Long)Deserial.deserial(retCall.getValues().get(0)), o);
             
-            System.out.println("attach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
+            Logger.d(LS.TAG, "attach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
         }
         else if (call.getMethod().equals("detach"))
         {
             mObjects.delObject(
                     (Long)Deserial.deserial(retCall.getValues().get(0)));
             
-            System.out.println("detach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
+            Logger.d(LS.TAG, "detach : " + (Long)Deserial.deserial(retCall.getValues().get(0)));
         }
 
         deleteRequest(req);

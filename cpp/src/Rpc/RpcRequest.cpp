@@ -23,7 +23,8 @@ SOFTWARE.
 
 #include "RpcRequest.h"
 
-#include <iostream>
+#include "LangStackConstant.h"
+#include "Log/Log.h"
 
 namespace ls {
 
@@ -44,20 +45,17 @@ bool CRpcRequest::call(uint32_t timeout)
     {
         return false;
     }
-    std::cout << "wait : " << m_call->m_method << " : " << m_call->m_callId << std::endl;
     if (!m_return)
     {
         std::unique_lock<std::mutex> lck(m_lock);
         m_cond.wait(lck);
     }
-    std::cout << "recv : " << m_call->m_method << " : " << m_call->m_callId << std::endl;
     return !!m_return;
 }
 
 ///\brief   接收到return
 void CRpcRequest::onReturn(RpcCallPtr call)
 {
-    std::cout << "return : " << call->m_callId << std::endl;
     m_return = call;
     std::unique_lock<std::mutex> lck(m_lock);
     m_cond.notify_one();
