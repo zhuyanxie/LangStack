@@ -22,22 +22,25 @@ SOFTWARE.
 
 #include "EasyTypeClass.h"
 
-#include <iostream>
+#include "Log/Log.h"
+
 
 CEasyTypeClass::CEasyTypeClass() : m_int(0), m_longlong(0), m_double(0) {}
 CEasyTypeClass::~CEasyTypeClass() {}
 
 void CEasyTypeClass::dump()
 {
-    std::cout << "\tm_int:\t\t\t" << m_int << std::endl;
-    std::cout << "\tm_longlong:\t\t" << m_longlong << std::endl;
-    std::cout << "\tm_double:\t\t" << m_double << std::endl;
-    std::cout << "\tm_normal:\t\t" << m_normal << std::endl;
-    std::cout << "\tm_special:\t\t" << m_special << std::endl;
+	DEBUGF("test", "CEasyTypeClass dump called\n");
+	VERBOSEF("test", "\tm_int: \t\t\t[%d]\n", m_int);
+	VERBOSEF("test", "\tm_longlong:\t\t[%lld]\n", m_longlong);
+	VERBOSEF("test", "\tm_double:\t\t[%lf]\n", m_double);
+	VERBOSEF("test", "\tm_normal:\t\t[%s]\n", m_normal.c_str());
+	VERBOSEF("test", "\tm_special:\t\t[%s]\n", m_special.c_str());
 }
 
 double CEasyTypeClass::foo(int arg)
 {
+	DEBUGF("test", "CEasyTypeClass foo called\n");
     return 0.01;
 }
 
@@ -52,8 +55,9 @@ bool CEasyTypeClass::operator==(const CEasyTypeClass &rhs) const
 
 std::list<int> foo(std::list<double> dl, IReflection* obj)
 {
+	DEBUGF("test", "global foo called\n");
+
     CEasyTypeClass *easy = dynamic_cast<CEasyTypeClass*>(obj);
     easy->dump();
-    for (auto d : dl) std::cout << "\tdouble:\t\t" << d << std::endl;
     return { 1, 2, 3 };
 }

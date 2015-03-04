@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;_USRDLL;LS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)$/../../../cpp/src;$(SolutionDir)$/../../../cpp/include;C:\Program Files\Java\jdk1.8.0_31\include\win32;C:\Program Files\Java\jdk1.8.0_31\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$/../../../cpp/src;$(SolutionDir)$/../../../cpp/include;C:\Program Files\Java\jdk1.8.0_31\include\win32;C:\Program Files\Java\jdk1.8.0_31\include;C:\Program Files (x86)\Java\jdk1.8.0_05\include;C:\Program Files (x86)\Java\jdk1.8.0_05\include\win32</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -68,7 +68,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;_USRDLL;LS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)$/../../../cpp/src;$(SolutionDir)$/../../../cpp/include;C:\Program Files\Java\jdk1.8.0_31\include\win32;C:\Program Files\Java\jdk1.8.0_31\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$/../../../cpp/src;$(SolutionDir)$/../../../cpp/include;C:\Program Files (x86)\Java\jdk1.8.0_05\include\win32;C:\Program Files (x86)\Java\jdk1.8.0_05\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -94,7 +94,6 @@
     <ClInclude Include="..\..\..\cpp\include\Reflect\ReflectInvoke.h" />
     <ClInclude Include="..\..\..\cpp\include\Rpc\IRpcApi.h" />
     <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCall.h" />
-    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcConstant.h" />
     <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCore.h" />
     <ClInclude Include="..\..\..\cpp\include\Rpc\RpcTask.h" />
     <ClInclude Include="..\..\..\cpp\include\Serial\Deserializion.h" />
@@ -117,6 +116,7 @@
     <ClInclude Include="..\..\..\cpp\src\Rpc\RpcRequest.h" />
     <ClInclude Include="..\..\..\cpp\src\Rpc\RpcResponse.h" />
     <ClInclude Include="..\..\..\cpp\src\Task\DeleteThreadTask.h" />
+    <ClInclude Include="..\..\..\cpp\src\Transport\TcpConstant.h" />
     <ClInclude Include="..\..\..\cpp\src\Transport\TcpMessage.h" />
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +130,6 @@
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaFactory.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaMethod.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaTable.cpp" />
-    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcConstant.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCore.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCoreImpl.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcObjectPool.cpp" />
@@ -140,6 +139,7 @@
     <ClCompile Include="..\..\..\cpp\src\Task\TaskThread.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Task\TaskThreadPool.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Transport\JniSession.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\Transport\TcpConstant.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Transport\TcpServer.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Transport\TcpSession.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Transport\TransSession.cpp" />

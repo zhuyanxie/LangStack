@@ -105,9 +105,6 @@
     <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCall.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\cpp\include\Rpc\RpcConstant.h">
-      <Filter>头文件\Rpc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\cpp\include\Rpc\RpcCore.h">
       <Filter>头文件\Rpc</Filter>
     </ClInclude>
@@ -186,6 +183,9 @@
     <ClInclude Include="..\..\..\cpp\include\Defs.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\cpp\src\Transport\TcpConstant.h">
+      <Filter>源文件\Transport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\cpp\src\Base\MemoryStream.cpp">
@@ -199,9 +199,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaTable.cpp">
       <Filter>源文件\Reflect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\cpp\src\Rpc\RpcConstant.cpp">
-      <Filter>源文件\Rpc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCore.cpp">
       <Filter>源文件\Rpc</Filter>
@@ -256,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaData.cpp">
       <Filter>源文件\Reflect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\Transport\TcpConstant.cpp">
+      <Filter>源文件\Transport</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

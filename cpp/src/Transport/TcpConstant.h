@@ -21,17 +21,17 @@ SOFTWARE.
 ******************************************************************************/
 
 
-#ifndef _LANGUAGE_STACK_RPC_CONSTANT_H_
-#define _LANGUAGE_STACK_RPC_CONSTANT_H_
+#ifndef _LANGUAGE_STACK_TCP_CONSTANT_H_
+#define _LANGUAGE_STACK_TCP_CONSTANT_H_
 
 #include <inttypes.h>
 
 namespace ls {
 
-extern const char RPC_MESSAGE_TAG[];                    ///< RPC消息头标识:
-extern const uint32_t RPC_HEADER_LENGTH;                ///< RPC消息头长度
+extern const char TCP_MESSAGE_TAG[];                    ///< TCP消息头标识:
+extern const uint32_t TCP_HEADER_LENGTH;                ///< TCP消息头长度
 
 }
 
 
-#endif /* RPCCONSTANT_H_ */
+#endif /* _LANGUAGE_STACK_TCP_CONSTANT_H_ */

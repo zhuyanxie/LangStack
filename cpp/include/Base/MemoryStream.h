@@ -63,7 +63,7 @@ private:
 typedef BasicMemoryStreamBuf<char, std::char_traits<char> > MemoryStreamBuf;
 
 ///\brief 内存输入输出流基类， 实际缓存
-class MemoryIOS: public virtual std::ios
+class LS_EXPORT MemoryIOS : public virtual std::ios
 {
 public:
     MemoryIOS(char* pBuffer, std::streamsize bufferSize);
@@ -77,7 +77,7 @@ protected:
 };
 
 ///\brief 内存输入流
-class MemoryInputStream: public MemoryIOS, public std::istream
+class LS_EXPORT MemoryInputStream : public MemoryIOS, public std::istream
 {
 public:
     MemoryInputStream(const char* pBuffer, std::streamsize bufferSize);
@@ -85,7 +85,7 @@ public:
 };
 
 ///\brief 内存输出流
-class MemoryOutputStream: public MemoryIOS, public std::ostream
+class LS_EXPORT MemoryOutputStream : public MemoryIOS, public std::ostream
 {
 public:
     MemoryOutputStream(char* pBuffer, std::streamsize bufferSize);

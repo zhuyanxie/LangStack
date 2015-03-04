@@ -38,7 +38,7 @@ SOFTWARE.
 #endif
 #include <string>
 
-#include "Rpc/RpcConstant.h"
+#include "TcpConstant.h"
 
 namespace ls {
 
@@ -58,7 +58,7 @@ struct RpcHeader
         , checkSum(0)
         , reversed(0)
     {
-        memcpy(&flag, RPC_MESSAGE_TAG, 4);
+        memcpy(&flag, TCP_MESSAGE_TAG, 4);
     }
 
     inline void setLength(uint16_t len) {length = htons(uint16_t(len));}

@@ -27,11 +27,11 @@ SOFTWARE.
 #include <iostream>
 
 #include "Reflect/IReflection.h"
-#include "Defs.h"
+#include "DemoDefs.h"
 
 using namespace ls;
 
-class LS_EXPORT CEasyTypeClass : public IReflection
+class DEMO_EXPORT CEasyTypeClass : public IReflection
 {
 public:
     CEasyTypeClass();
@@ -74,9 +74,9 @@ REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, std::string,    m_special);
 REFLECTION_METHOD_ARGS0(CEasyTypeClass, dump, void);
 REFLECTION_METHOD_ARGS1(CEasyTypeClass, foo, double, int);
 
-LS_EXPORT std::list<int> foo(std::list<double> dl, IReflection* obj);
-REFLECTION_METHOD_DECLEAR_ARGS2(std::list<int>, foo);
-REFLECTION_FUNCTION_ARGS2(foo, std::list<int>, std::list<double>, IReflection*);
+//DEMO_EXPORT std::list<int> foo(std::list<double> dl, IReflection* obj);
+//DEMO_EXPORT REFLECTION_METHOD_DECLEAR_ARGS2(std::list<int>, foo);
+//REFLECTION_FUNCTION_ARGS2(foo, std::list<int>, std::list<double>, IReflection*);
 
 template <class T> struct equalClass
 {

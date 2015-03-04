@@ -1,22 +1,32 @@
-/*************************************************************************
- ** 版权保留(C), 2001-2014, 浙江大华技术股份有限公司.
- ** 版权所有.
- **
- ** $Id$
- **
- ** 功能描述   :
- **
- ** 修改历史     : 2015年1月13日 zhu_long Modification
-*************************************************************************/
+/******************************************************************************
+Copyright (C) 2015 zhuyanxie
 
-#include "NormalTypeClass.h"
+　　Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
 
-#include <iostream>
+　　The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+******************************************************************************/
+#include "MethodClass.h"
+
 #include "ICallback.h"
+#include "Log/Log.h"
 
-CNormalTypeClass::CNormalTypeClass() : CNormalTypeClass(5) {}
+CMethodClass::CMethodClass() : CMethodClass(5) {}
 
-CNormalTypeClass::CNormalTypeClass(int seed) : m_int(seed),
+CMethodClass::CMethodClass(int seed) : m_int(seed),
         m_longlong(seed * 10001000LL), m_double(seed * 0.001001),
         m_class(0), m_classNULL(0), m_handler(0)
 {
@@ -48,7 +58,7 @@ CNormalTypeClass::CNormalTypeClass(int seed) : m_int(seed),
     }
 }
 
-CNormalTypeClass::~CNormalTypeClass()
+CMethodClass::~CMethodClass()
 {
     if (m_class)
     {
@@ -63,19 +73,13 @@ CNormalTypeClass::~CNormalTypeClass()
     m_classList.clear();
 }
 
-void CNormalTypeClass::dump()
+void CMethodClass::dump()
 {
-    std::cout << "m_int:\t\t\t" << m_int << std::endl;
-    std::cout << "m_longlong:\t\t" << m_longlong << std::endl;
-    std::cout << "m_double:\t\t" << m_double << std::endl;
-    std::cout << "m_string:\t\t" << m_string << std::endl;
-
-    std::cout << "CEasyTypeClass:\t\t" << std::endl;
+    VERBOSEF("test", "dump start:\n");
     dynamic_cast<CEasyTypeClass*>(m_class)->dump();
 
     for (auto it = m_classList.begin(); it != m_classList.end(); ++it)
     {
-        std::cout << "CEasyTypeClass:\t\t" << std::endl;
         dynamic_cast<CEasyTypeClass*>(*it)->dump();
     }
 
@@ -83,37 +87,26 @@ void CNormalTypeClass::dump()
     {
         ICallBack *callback = (ICallBack *)m_handler;
         callback->interface1();
-        std::cout << __FILE__ << "-" << __LINE__ << ":" << callback->interface2(33) << std::endl;
-        std::cout << __FILE__ << "-" << __LINE__ << ":" << callback->interface3({1,2}, nullptr) << std::endl;
-        std::cout << __FILE__ << "-" << __LINE__ << ":" << callback->interface4() << std::endl;
-
-        std::cout << __FILE__ << "-" << __LINE__ << ":" <<
-                callback->interface3({1,2}, new CEasyTypeClass()) << std::endl;
+        VERBOSEF("test", "call back inerface2 return[%d]\n", callback->interface2(33));
+        auto p = new CEasyTypeClass();
+        VERBOSEF("test", "call back inerface3 return[%lf]\n", callback->interface3({1,2}, p));
+        VERBOSEF("test", "call back inerface4 return[%s]\n", callback->interface4().c_str());
     }
+    VERBOSEF("test", "dump over:\n");
 }
 
-double CNormalTypeClass::test(int i, long long j, std::list<int> ilist, std::list<long long> llist)
+double CMethodClass::test(int i, long long j, std::list<int> ilist, std::list<long long> llist)
 {
-    std::cout << "i:\t\t\t" << i << std::endl;
-    std::cout << "j:\t\t\t" << j << std::endl;
-
-    std::cout << "m_int:\t\t\t" << m_int << std::endl;
-    std::cout << "m_longlong:\t\t" << m_longlong << std::endl;
-    std::cout << "m_double:\t\t" << m_double << std::endl;
-    std::cout << "m_string:\t\t" << m_string << std::endl;
-
-    for (auto &ii : ilist) std::cout << "ii:\t\t\t\t" << ii << std::endl;
-    for (auto &ll : llist) std::cout << "ll:\t\t\t\t" << ll << std::endl;
-
+	VERBOSEF("test", "cpp test called\n");
     return 0.01;
 }
 
-void CNormalTypeClass::attach(long long handler)
+void CMethodClass::attach(long long handler)
 {
     m_handler = handler;
 }
 
-void CNormalTypeClass::detach(long long handler)
+void CMethodClass::detach(long long handler)
 {
     if (m_handler == handler)
     {
@@ -121,7 +114,7 @@ void CNormalTypeClass::detach(long long handler)
     }
 }
 
-bool CNormalTypeClass::operator==(const CNormalTypeClass&rhs) const
+bool CMethodClass::operator==(const CMethodClass&rhs) const
 {
     bool ret = isEqual(m_int,               rhs.m_int);
     ret     &= isEqual(m_longlong,          rhs.m_longlong);

@@ -84,13 +84,13 @@ void CTcpSession::readTcpMessage()
 ///\brief       消息完整性校验
 bool CTcpSession::checkMessageValid()
 {
-    if (m_buf.size() < RPC_HEADER_LENGTH)
+    if (m_buf.size() < TCP_HEADER_LENGTH)
     {
         return false;
     }
 
     uint32_t offset = 0;
-    while (memcmp(m_buf.getBuffer() + offset, RPC_MESSAGE_TAG, 4) != 0)
+    while (memcmp(m_buf.getBuffer() + offset, TCP_MESSAGE_TAG, 4) != 0)
     {
         ++offset;
         if (offset + 4 >= m_buf.size())
@@ -100,7 +100,7 @@ bool CTcpSession::checkMessageValid()
     }
 
     m_buf.popBuffer(offset);
-    if (m_buf.size() < RPC_HEADER_LENGTH)
+    if (m_buf.size() < TCP_HEADER_LENGTH)
     {
         return false;
     }
@@ -116,13 +116,13 @@ void CTcpSession::dealMessage()
         RpcHeader *header = (RpcHeader *)m_buf.getBuffer();
         uint16_t length = header->getLength();
         RpcType type = (RpcType)header->getType();
-        if (length + RPC_HEADER_LENGTH > m_buf.size())
+        if (length + TCP_HEADER_LENGTH > m_buf.size())
         {
             break;
         }
 
         CRpcCall *call;
-        std::string buf(m_buf.getBuffer() + RPC_HEADER_LENGTH, length);
+        std::string buf(m_buf.getBuffer() + TCP_HEADER_LENGTH, length);
         if (ls::deserial(buf.c_str(), call))
         {
             RpcCallPtr rpcCall(call);
@@ -136,7 +136,7 @@ void CTcpSession::dealMessage()
                 CRpcCore::instance()->onRpcReturn(rpcCall);
             }
         }
-        m_buf.popBuffer(length + RPC_HEADER_LENGTH);
+        m_buf.popBuffer(length + TCP_HEADER_LENGTH);
     }
 }
 

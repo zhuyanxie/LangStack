@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import com.LangStack.Rpc.IRpcApi;
 
-public class NormalTypeClass extends IRpcApi {
+public class MethodClass extends IRpcApi {
 
 	/// 构造对应new
-    public NormalTypeClass()
+    public MethodClass()
     {
         call("new", this.getClass().getName(), this);
     }

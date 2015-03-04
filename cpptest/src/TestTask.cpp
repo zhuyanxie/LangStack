@@ -90,7 +90,7 @@ TEST_F(CTestTask, testDiffThreadId)
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 64);
 
     ERRORF("TEST", "\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(15 * 1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(20 * 1000));
 
 	ASSERT_EQ(ls::CTaskThreadPool::instance()->getThreadCount(), 4);
 }
