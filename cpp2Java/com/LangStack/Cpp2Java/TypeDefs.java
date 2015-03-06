@@ -25,11 +25,12 @@ public class TypeDefs {
 
     public static final int           TYPE_OBJECT      = 20;
     public static final int           TYPE_LIST_OBJECT = 30;
+    public static final int           TYPE_VOID        = 99;
 
     private Set<String>               mUnkownKeys      = new HashSet<String>();
     private Map<String, DefineSource> mUnkownTypes     = new HashMap<String, DefineSource>();
     private Map<String, Integer>      mType2Key        = new HashMap<String, Integer>();
-    private Map<Integer, String>      mKey2Type        = new HashMap<Integer, String>();
+    private Map<Integer, String>      mKey2JavaType    = new HashMap<Integer, String>();
     
     class DefineSource
     {
@@ -119,6 +120,24 @@ public class TypeDefs {
         mType2Key.put("std::list<std::string>", TYPE_LIST_STRING);
         mType2Key.put("list<string>", TYPE_LIST_STRING);
         mType2Key.put("list<std::string>", TYPE_LIST_STRING);
+
+        mType2Key.put("void", TYPE_VOID);
+        mType2Key.put("VOID", TYPE_VOID);
+
+
+        mKey2JavaType.put(TYPE_INT32, "int");
+        mKey2JavaType.put(TYPE_INT64, "long");
+        mKey2JavaType.put(TYPE_DOUBLE, "double");
+        mKey2JavaType.put(TYPE_STRING, "String");
+        
+        mKey2JavaType.put(TYPE_LIST_INT32, "ArrayList<Integer>");
+        mKey2JavaType.put(TYPE_LIST_INT64, "ArrayList<Long>");
+        mKey2JavaType.put(TYPE_LIST_DOUBLE, "ArrayList<Double>");
+        mKey2JavaType.put(TYPE_LIST_STRING, "ArrayList<String>");
+        
+        mKey2JavaType.put(TYPE_OBJECT, "IRpcApi");
+        mKey2JavaType.put(TYPE_LIST_OBJECT, "ArrayList<IRpcApi>");
+        mKey2JavaType.put(TYPE_VOID, "void");
     }
     
     /**
@@ -143,8 +162,8 @@ public class TypeDefs {
      */
     public void linkTypes() {
         for (String key : mUnkownKeys) {
-            int newType = getTypes(key);
-            int oldType = getTypes(mUnkownTypes.get(key).mType);
+            int newType = getUnkownTypes(key);
+            int oldType = getUnkownTypes(mUnkownTypes.get(key).mType);
             if (TYPE_UNKOWN == newType && TYPE_UNKOWN == oldType) {
                 continue;
             }
@@ -166,8 +185,8 @@ public class TypeDefs {
      */
     private void linkTypeError(String key, int newType, int oldType) {
         DefineSource source = mUnkownTypes.get(key);
-        System.out.println("typedefine error new Type:" + 
-            mKey2Type.get(newType) + " oldType: " + mKey2Type.get(oldType));
+        System.out.println("type link error new Type:" + 
+            mKey2JavaType.get(newType) + " oldType: " + mKey2JavaType.get(oldType));
         
         for (Source s : source.mSouce) {
             System.out.println("\tfile:" + s.getFile() + " line:"
@@ -176,12 +195,39 @@ public class TypeDefs {
         System.out.print("\n");
     }
 
-    private int getTypes(String key) {
+    /**
+     * @brief       获取位置的类型
+     * @param       key         键
+     * @return
+     */
+    private int getUnkownTypes(String key) {
         if (mType2Key.containsKey(key)) {
             return mType2Key.get(key);
         }
         
-        return getTypes(mUnkownTypes.get(key).mType);
+        if (mUnkownTypes.containsKey(key)) {
+            return getUnkownTypes(mUnkownTypes.get(key).mType);
+        }
+        return TYPE_UNKOWN;
+    }
+
+    /**
+     * @param       param       cpp类型定义
+     * @return      类型枚举定义
+     */
+    public int getType(String param) {
+        if (mType2Key.containsKey(param)) {
+            return mType2Key.get(param);
+        }
+        return TYPE_UNKOWN;
+    }
+
+    /**
+     * @param       type        类型枚举值
+     * @return      java中的类型定义
+     */
+    public String getJavaType(int type) {
+        return mKey2JavaType.get(type);
     }
     
 }
