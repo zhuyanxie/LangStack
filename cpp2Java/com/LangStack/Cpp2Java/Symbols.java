@@ -12,7 +12,7 @@ public class Symbols {
 	    mClasses = new HashMap<String, ClassDefs>();
 	    mTypes   = new TypeDefs();
 	    
-	    mClasses.put("", new ClassDefs("", ""));
+	    mClasses.put("", new ClassDefs("", "", mTypes));
 	}
 
 	public ClassDefs getClass(String namespace, String className) {
@@ -22,7 +22,7 @@ public class Symbols {
 	
 	public ClassDefs addClass(String namespace, String className) {
 	    /// TODO namespace 与  classname的关系
-		ClassDefs classDefs = new ClassDefs(namespace, className);
+		ClassDefs classDefs = new ClassDefs(namespace, className, mTypes);
 		mClasses.put(namespace + "::" + className, classDefs);
 		return classDefs;
 	}

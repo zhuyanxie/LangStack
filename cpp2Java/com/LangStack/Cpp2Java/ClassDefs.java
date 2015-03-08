@@ -16,20 +16,23 @@ public class ClassDefs
     private List<MethodDefs>        mMethods = null;
     private Map<String, MemberDefs> mMembers = null;
     private Set<String>             mDepends = null;
+    
+    private TypeDefs                mTypes;             ///< 类型定义引用
 
 	/**
 	 * @brief 		构造类定义
 	 * @param 		namespace		类命名空间(""为全局类)
 	 * @param 		className		类名(""为全局函数)
 	 */
-	public ClassDefs(String namespace, String className) {
+	public ClassDefs(String namespace, String className, TypeDefs types) {
 	    mConsts  = new ContantDefs();
 	    mMethods = new ArrayList<MethodDefs>();
 	    mMembers = new HashMap<String, MemberDefs>();
 	    mDepends = new HashSet<String>();
 	    
-		mNamespace = namespace;
-		mClassName = className;
+        mNamespace = namespace;
+        mClassName = className;
+        mTypes     = types;
 	}
 	
 	/**
@@ -57,12 +60,11 @@ public class ClassDefs
 	 * @param 		name			成员名
 	 * @return		成员定义
 	 */
-	public MemberDefs addMember(String name) {
-		MemberDefs member = new MemberDefs();
+	public MemberDefs addMember(String name, boolean isStatic) {
+		MemberDefs member = new MemberDefs(mTypes, isStatic);
 		mMembers.put(name, member);
 		return member;
 	}
-	
 	
 	public String getNamespace() {
 		return mNamespace;

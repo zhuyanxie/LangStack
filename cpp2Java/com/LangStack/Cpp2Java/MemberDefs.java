@@ -1,5 +1,91 @@
 package com.LangStack.Cpp2Java;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 public class MemberDefs {
+    private String mName;           ///< 成员名
+    private String mCppClassName;   ///< 成员所属类名
+    private String mCppType;        ///< 成员类型
+    private String mComment;        ///< 成员注释
+    private boolean mIsPublic;      ///< 是否public
+    private boolean mIsStatic;      ///< 是否为静态成员
+    private int mMemType;           ///< 解析成员类型
+    private TypeDefs mTypes;        ///< 类型定义引用
+
+
+    public MemberDefs(TypeDefs types, boolean isPublic) {
+        mTypes = types;
+        mIsPublic = isPublic;
+    }
+    
+    public void parse() {
+        mMemType = mTypes.getCppType(mCppType);
+    }
+    
+    public void genJava(PrintStream p) {
+        if (mComment == null) {
+            p.println("    ///< " + mComment);
+        }
+        p.print("    " + (isPublic() ? "public" : "private"));
+        p.print(isStatic() ? " static " : " ");
+        p.println(mTypes.getJavaType(mMemType) + " " + mName + ";");
+    }
+    
+    public void genCppGetSet(PrintStream p) {
+        p.printf("    inline static void set%s(ls::IReflection *obj, void *value)\r\n", mName);
+        p.println("    {");
+        p.printf("        ((%s*)(obj))->NAME = *(%s*)value;\r\n", mCppClassName, mCppType);
+        p.println("    }");
+        
+        p.printf("    inline static void get%s(ls::IReflection *obj)\r\n", mName);
+        p.println("    {");
+        p.printf("        return (void*)&(((%s*)(obj))->NAME)\r\n", mCppClassName);
+        p.println("    }");
+    }
+    
+    public void genCppReflectRegist(PrintStream p) {
+        p.printf("    ::ls::CMetaFactory::instance()->registerMember("
+                + "%s::getJavaName(), %s, ::ls::Type2MetaDataType< %s >()(), "
+                + "%s::set%s, %s::get%s\r\n", 
+                mCppClassName, mName, mCppType, mName, mName);;
+    }
+    
+    public String getName() {
+        return mName;
+    }
+    public void setName(String name) {
+        this.mName = name;
+    }
+    public String getCppType() {
+        return mCppType;
+    }    
+    public boolean isPublic() {
+        return mIsPublic;
+    }
+    public void setPublic(boolean isPublic) {
+        this.mIsPublic = isPublic;
+    }
+    public boolean isStatic() {
+        return mIsStatic;
+    }
+    public void setStatic(boolean isStatic) {
+        this.mIsStatic = isStatic;
+    }
+    public void setCppType(String cppType) {
+        this.mCppType = cppType;
+    }
+    public String getComment() {
+        return mComment;
+    }
+    public void setComment(String comment) {
+        this.mComment = comment;
+    }
+    public int getType() {
+        return mMemType;
+    }
+    public void setType(int mTokenType) {
+        this.mMemType = mTokenType;
+    }
 
 }
