@@ -185,7 +185,7 @@ public class TypeDefs {
      */
     private void parseTypeError(String key, int newType, int oldType) {
         DefineSource source = mCppTypes.get(key);
-        System.out.println("type link error new Type:" + 
+        System.out.println("ERROR:type link error new Type:" + 
             mEnum2JavaType.get(newType) + " oldType: " + mEnum2JavaType.get(oldType));
         
         for (Source s : source.mSouce) {

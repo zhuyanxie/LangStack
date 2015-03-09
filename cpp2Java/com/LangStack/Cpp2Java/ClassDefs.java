@@ -1,5 +1,6 @@
 package com.LangStack.Cpp2Java;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,15 +10,17 @@ import java.util.Set;
 
 public class ClassDefs 
 {
-    private String                  mNamespace;
-    private String                  mClassName;
+    private String                  mCppNamespace;          ///<  类命名空间
+    private String                  mCppClassName;          ///<  类名
+    private String                  mJavaClassName = null;  ///<  java类名
+    private String                  mJavaPackage;           ///<  java包
 
-    private ContantDefs             mConsts  = null;
-    private List<MethodDefs>        mMethods = null;
-    private Map<String, MemberDefs> mMembers = null;
-    private Set<String>             mDepends = null;
-    
-    private TypeDefs                mTypes;             ///< 类型定义引用
+    private ContantDefs             mConsts        = null;  ///<  类常量定义
+    private List<MethodDefs>        mMethods       = null;  ///<  类方法
+    private Map<String, MemberDefs> mMembers       = null;  ///<  类成员
+    private Set<String>             mDepends       = null;  ///<  依赖包
+
+    private TypeDefs                mTypes;                 ///<  类型定义引用
 
 	/**
 	 * @brief 		构造类定义
@@ -30,9 +33,9 @@ public class ClassDefs
 	    mMembers = new HashMap<String, MemberDefs>();
 	    mDepends = new HashSet<String>();
 	    
-        mNamespace = namespace;
-        mClassName = className;
-        mTypes     = types;
+        mCppNamespace = namespace;
+        mCppClassName = className;
+        mTypes        = types;
 	}
 	
 	/**
@@ -50,7 +53,7 @@ public class ClassDefs
 	 * @return		方法定义
 	 */
 	public MethodDefs addMethod(String name, boolean isStatic) {
-		MethodDefs method = new MethodDefs(mClassName, name, isStatic);
+		MethodDefs method = new MethodDefs(mCppClassName, name, isStatic);
 		mMethods.add(method);
 		return method;
 	}
@@ -66,20 +69,96 @@ public class ClassDefs
 		return member;
 	}
 	
-	public String getNamespace() {
-		return mNamespace;
+	/**
+	 * @brief      解析java类
+	 */
+	public void parseJavaClass() {
+        parsePackage();
+	    parseDepend();
+	    parseMember();
+	    parseMethod();
 	}
 
-	public void setNamespace(String mNamespace) {
-		this.mNamespace = mNamespace;
+    /**
+	 * @brief      生成java类
+	 */
+	public void genJavaClass(PrintStream p) {
+	    genJavaPackage(p);
+	    genJavaDepend(p);
+	    genJavaMember(p);
+	    genJavaMethod(p);
+	}
+
+    private void genJavaPackage(PrintStream p) {
+        p.printf("package %s;\r\n\r\n", mJavaPackage);
+    }
+
+    private void genJavaDepend(PrintStream p) {
+        for (String d : mDepends) {
+            p.printf("import %s;\r\n", d);
+        }
+        p.print("\r\n");
+    }
+
+    private void genJavaMember(PrintStream p) {
+        for (MemberDefs member : mMembers.values()) {
+            member.genJava(p);
+        }
+    }
+
+    private void genJavaMethod(PrintStream p) {
+        for (MethodDefs method : mMethods) {
+            method.genJava(p);
+        }
+    }
+    
+    private void parseMember() {
+        for (MemberDefs member : mMembers.values()) {
+            member.parse();
+        }
+    }
+
+    private void parseMethod() {
+        for (MethodDefs method : mMethods) {
+            method.parse();
+        }
+    }
+    
+	private void parseDepend() {
+	    /// TODO 目前只使用java.util.*
+	    mDepends.add("java.util.*;");
+	}
+	
+    private void parsePackage() {
+        if (getJavaClassName() != null) {
+            int pos = getJavaClassName().lastIndexOf(".");
+            if (pos != -1) {
+                setJavaPackage(getJavaClassName().substring(0, pos));
+                setJavaClassName(getJavaClassName().substring(
+                        pos + 1, getJavaClassName().length()));
+            }
+            else {
+                setJavaPackage("com.LangStack");
+            }
+        } else {
+            setJavaClassName(getClassName());
+        }
+    }
+
+	public String getNamespace() {
+		return mCppNamespace;
+	}
+
+	public void setNamespace(String cppNamespace) {
+		this.mCppNamespace = cppNamespace;
 	}
 	
 	public String getClassName() {
-		return mClassName;
+		return mCppClassName;
 	}
 
 	public void setClassName(String mClassName) {
-		this.mClassName = mClassName;
+		this.mCppClassName = mClassName;
 	}
 
 	public List<MethodDefs> getMethods() {
@@ -89,5 +168,28 @@ public class ClassDefs
 	public Map<String, MemberDefs> getMembers() {
 		return mMembers;
 	}
+	
+    public String getJavaClassName() {
+        return mJavaClassName;
+    }
 
+    public void setJavaClassName(String javaClassName) {
+        this.mJavaClassName = javaClassName;
+    }
+
+    public String getJavaPackage() {
+        return mJavaPackage;
+    }
+
+    public void setJavaPackage(String javaPackage) {
+        this.mJavaPackage = javaPackage;
+    }
+
+    public ContantDefs getConsts() {
+        return mConsts;
+    }
+
+    public void setConsts(ContantDefs consts) {
+        this.mConsts = consts;
+    }
 }

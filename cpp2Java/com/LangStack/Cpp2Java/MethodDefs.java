@@ -1,6 +1,5 @@
 package com.LangStack.Cpp2Java;
 
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,25 +14,12 @@ public class MethodDefs {
 
     class Param 
     {
-        private String  mCppType;       ///< c++参数类型
-        private int     mEnumType;      ///< 类型定义@see TypeDefs
-        private String  mName;          ///< 参数名
+        public String  mCppType;       ///< c++参数类型
+        public int     mEnumType;      ///< 类型定义@see TypeDefs
+        public String  mName;          ///< 参数名
+        public String  mFile;          ///< 来源文件
+        public String  mLine;          ///< 来源行
         
-        public String getCppType() {
-            return mCppType;
-        }
-        public void setCppType(String param) {
-            this.mCppType = param;
-        }
-        public int getType() {
-            return mEnumType;
-        }
-        public String getName() {
-            return mName;
-        }
-        public void setName(String name) {
-            this.mName = name;
-        }
         public boolean cpp2Enum() {
             mEnumType = mTypes.getCppType(mCppType);
             return mEnumType != TypeDefs.TYPE_UNKOWN;
@@ -46,28 +32,27 @@ public class MethodDefs {
         mIsStatic = isStatic;
     }
     
-    public void addParam(String param, String name) {
+    public void addParam(String cppType, String name) {
         Param method = new Param();
-        method.setCppType(param);
-        method.setName(name);
+        method.mCppType = cppType;
+        method.mName = name;
     }
     
-    public boolean paramToType() {
+    public void parse() {
         for (Param method : mParams) {
             if (!method.cpp2Enum()) {
-                return false;
+                System.out.printf("ERROR: prase param[%s] fail, form [%s:%d]\n",
+                        method.mCppType, method.mFile, method.mLine);
+                System.exit(-1);
             }
         }
-        
-        return true;
     }
     
     /**
      * @brief       生成java部分代码
-     * @param       fout            文件输出流
+     * @param       p               输出流
      */
     public void genJava(PrintStream p) {
-        
         if (mMethodName.equals("attach")) {
             genJavaAttach(p);
         } else if (mMethodName.equals("detach")) {
@@ -77,22 +62,22 @@ public class MethodDefs {
         
         p.print("    public");
         p.print(isStatic() ? " static " : " ");
-        p.print(mTypes.getJavaType(mParams.get(0).getType()) + " ");
+        p.print(mTypes.getJavaType(mParams.get(0).mEnumType) + " ");
         p.print(mMethodName + "(");
         for (int i = 1; i < mParams.size(); ++i) {
             if (i != 1) p.print(", ");
-            p.print(mTypes.getJavaType(mParams.get(i).getType()) + " ");
-            p.print(mParams.get(i).getName());
+            p.print(mTypes.getJavaType(mParams.get(i).mEnumType) + " ");
+            p.print(mParams.get(i).mName);
         }
         p.println(") {");
 
         p.print("        ");
-        if (mParams.get(0).getType() != TypeDefs.TYPE_VOID) {
+        if (mParams.get(0).mEnumType != TypeDefs.TYPE_VOID) {
             p.print("return ");
         }
         p.print("call(\"" + mMethodName + "\", this.getClass().getName(), this");
         for (int i = 1; i < mParams.size(); ++i) {
-            p.print(", " + mParams.get(i).getName());
+            p.print(", " + mParams.get(i).mName);
         }
         p.println(");");
         p.println("}");
@@ -110,13 +95,13 @@ public class MethodDefs {
         if (!mCppClassName.equals(""))
             p.print("        ");
         Param retval = mParams.get(0);
-        p.printf("%s reflect_proxy_%s(", retval.getCppType(), retval.getName());
+        p.printf("%s reflect_proxy_%s(", retval.mCppType, retval.mName);
         for (int i = 1; i < mParams.size(); ++i) {
             if (i != 1) p.print(',');
             p.printf("const ls::MetaValue t%d", i);
         }
         p.println("{");
-        if (retval.getType() == TypeDefs.TYPE_VOID) p.print("    ");
+        if (retval.mEnumType == TypeDefs.TYPE_VOID) p.print("    ");
         else p.print("    return");
         p.printf("%s(", mMethodName);
         for (int i = 1; i < mParams.size(); ++i) {
@@ -131,12 +116,12 @@ public class MethodDefs {
                 + "%s::getJavaName(), %s, {\r\n", mCppClassName, mMethodName);
         for (int i = 0; i < mParams.size(); ++i) {
             p.printf("        ::ls::Type2MetaDataType< %s >()(), \r\n", 
-                    mParams.get(i).getCppType());
+                    mParams.get(i).mCppType);
         }
         Param retval = mParams.get(0);
         p.printf("}, new ::ls::ReflectFunciton<%s>(\r\n"
                 + "        &%s::reflect_proxy_%s,(%s*)0))\r\n", 
-                retval.getCppType(), getCppClassName(), 
+                retval.mCppType, getCppClassName(), 
                 getMethodName(), getCppClassName());
     }
 

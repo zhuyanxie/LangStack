@@ -1,6 +1,5 @@
 package com.LangStack.Cpp2Java;
 
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 public class MemberDefs {

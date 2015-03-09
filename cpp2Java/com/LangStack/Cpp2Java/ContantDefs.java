@@ -1,6 +1,5 @@
 package com.LangStack.Cpp2Java;
 
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,10 +44,9 @@ public class ContantDefs {
     
     /**
      * @brief       生成Java对应的常量定义
-     * @param       out         文件输出流
+     * @param       p           输出流
      */
-    public void genJava(FileOutputStream out) {
-        PrintStream p = new PrintStream(out);
+    public void genJava(PrintStream p) {
         for (String key : mIntConsts.keySet()) {
             p.println("    public static final int    " + key + " = "
                     + mIntConsts.get(key) + ";");
