@@ -27,6 +27,7 @@ public class Scanner {
     private int                 mLine;      ///< 当前行
     private String              mCache;     ///< 上次解析缓存
     private String              mComment;   ///< 本次读取的注释
+    private int                 mPermission;///< 访问权限0:public 1:protected 2:private
     
     BlockingQueue<String> mNameSpaces = new ArrayBlockingQueue<String>(128);
     BlockingQueue<String> mClasses    = new ArrayBlockingQueue<String>(128);
@@ -120,8 +121,9 @@ public class Scanner {
      * @brief       解析当前已读缓存
      * @param       br          输入流
      * @return      是否能够继续解析
+     * @throws IOException 
      */
-    private boolean praseCache(BufferedReader br) {
+    private boolean praseCache(BufferedReader br) throws IOException {
         /// TODO 构造有限状态机来处理
         if (matchBlockComment()) {
             return readBlockComment(br);
@@ -137,26 +139,112 @@ public class Scanner {
             return readUsing(br);
         } else if (matchNamespace()) {
             return readNamespace(br);
-        } else if (matchClass()) {
-            return readClass(br);
-        } else if (matchMethod()) {
-            return readMethod(br);
-        } else if (matchMember()) {
-            return readMember(br);
+        } else if (matchPermission()) {
+            return readPermission(br);
+        } else if (matchEndOfBlock()) {
+            return readEndOfBlock(br);
+        } else if (matchTemplate()) {
+            System.err.println("ERROR: now not support template - -!!!");
+            System.err.printf("\t\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
+            System.exit(-1);
         } else {
-            return false;
+            return parseBlock();
         }
         
         return true;
     }
 
+    /**
+     * @brief 解析一块区域
+     * 1 ;  结尾
+     * 2 {} 花括号域
+     * @return
+     */
+    private boolean parseBlock() {
+        // TODO 解析一块区域
+        return false;
+    }
+
+    private boolean matchTemplate() {
+        return ScannerPattern.TEMPLATE.matcher(mCache).find();
+    }
+
+    private boolean readEndOfBlock(BufferedReader br) {
+        Matcher m = ScannerPattern.END_OF_BLOCK.matcher(mCache);
+        mCache = m.group() == null ? "" : m.group().trim();
+        return !mCache.equals("");
+    }
+
+    private boolean matchEndOfBlock() {
+        return ScannerPattern.END_OF_BLOCK.matcher(mCache).find();
+    }
+
+    private boolean matchPermission() {
+        return ScannerPattern.PERMISSION.matcher(mCache).find();
+    }
+
+    private boolean readPermission(BufferedReader br) {
+        Matcher m = ScannerPattern.PERMISSION.matcher(mCache);
+        String permission = m.group();
+        if (permission.equals("public")) mPermission = 0;
+        else if (permission.equals("protected")) mPermission = 1;
+        else mPermission = 2;
+        
+        mCache = m.group(1) == null ? "" : m.group(1).trim();
+        return !mCache.equals("");
+    }
+
+    private boolean readMember(BufferedReader br) {
+        Matcher m = ScannerPattern.MEMBER.matcher(mCache);
+        String type = m.group(0);
+        String name = m.group(1);
+        if (mPermission == 0) {
+            /// FIXME只保留public的成员
+            MemberDefs member = mSymbols.getClassDef(
+                    getNamespace(), getCurrentClass()).addMember(name, false);
+            member.setCppType(type);
+        }
+        
+        mCache = m.group(2) == null ? "" : m.group(2);
+        return !mCache.equals("");
+    }
+
+    private String getCurrentClass() {
+        if (mClasses.isEmpty()) return "";
+        return mClasses.peek();
+    }
+    
+    private String getNamespace() {
+        String namespace = "";
+        for (String name : mNameSpaces) {
+            if (namespace.equals("")) namespace = namespace + ".";
+            namespace = namespace + name;
+        }
+        
+        return namespace;
+    }
+
+    private boolean matchMember() {
+        return ScannerPattern.MEMBER.matcher(mCache).find();
+    }
+    
     private boolean readClass(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.CLASS, br, " ")) return false;
         Matcher m = ScannerPattern.NAMESPACE.matcher(mCache);
-        String classdefine = m.group(1).trim();
-        String[] classes = classdefine.split(" ");
+        if (m.group(0).trim().equals("class")) {
+            mPermission = 1;
+        } else {
+            mPermission = 0;
+        }
+        String classdefine  = m.group(1).trim();
+        String[] classes    = classdefine.split(" ");
         if (classes != null && classes.length != 0) {
-            
+            String classname = classes[classes.length - 1];
+            try {
+                mClasses.put(classname);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
             System.err.println("\tERROR: unspport class prase from : ");
             System.err.printf("\t\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
@@ -309,20 +397,5 @@ public class Scanner {
     private boolean matchBlockComment() {
         return ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
     }
-
-    private boolean matchDefines(BufferedReader br, String buff) {
-        Matcher m = r.matcher(line);
-        if (m.find( )) {
-           System.out.println("Found value: " + m.group(0) );
-           System.out.println("Found value: " + m.group(1) );
-           System.out.println("Found value: " + m.group(2) );
-           
-           return true;
-        } else {
-           System.out.println("NO MATCH");
-        }
-    }
-
-    
     
 }

@@ -43,4 +43,15 @@ public class ScannerPattern {
             "^\\s*(class|struct).*");
     public static Pattern CLASS = Pattern.compile(
             "^\\s*(class|struct)\\s*(.*)\\s*{(.*)");  
+    
+    public static Pattern MEMBER = Pattern.compile(
+            "^\\s*(\\S+)\\s+(\\S+);(.*)");     
+    public static Pattern MEMBER_ = Pattern.compile(
+            "^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+);(.*)"); 
+    
+    public static Pattern PERMISSION = Pattern.compile(
+            "^\\s*(public|protected|private)\\s*:(.*)"); 
+    
+    public static Pattern END_OF_BLOCK = Pattern.compile(
+            "^\\s*}\\s*(.*)");
 }

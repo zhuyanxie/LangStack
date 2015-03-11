@@ -15,7 +15,7 @@ public class Symbols {
 	    mClasses.put("", new ClassDefs("", "", mTypes));
 	}
 
-	public ClassDefs getClass(String namespace, String className) {
+	public ClassDefs getClassDef(String namespace, String className) {
 	    /// TODO namespace 与  classname的关系
 		return mClasses.get(namespace + "::" + className);
 	}
