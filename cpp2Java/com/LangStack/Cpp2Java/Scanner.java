@@ -144,25 +144,171 @@ public class Scanner {
         } else if (matchEndOfBlock()) {
             return readEndOfBlock(br);
         } else if (matchTemplate()) {
-            System.err.println("ERROR: now not support template - -!!!");
-            System.err.printf("\t\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
-            System.exit(-1);
+            dropCurrentBlock(br);
+            System.out.println("WARN: now not support template drop- -!!!");
+            System.out.printf("\t\tfile[%s:%d]\r\n", mFile, mLine);
         } else {
-            return parseBlock();
+            return parseBlock(br);
         }
         
         return true;
     }
+    
+    class BlockPosition {
+        public int semicolonPos;    ///< ";"的位置
+        public int lBraceCount;     ///< "{"的数量
+        public int rBraceCount;     ///< "}"的数量
+        public int left;            ///< "{.....}"中的"{"位置
+        public int right;           ///< "{.....}"中的"}"位置
+        
+        public BlockPosition() {
+            semicolonPos    = 0;
+            lBraceCount     = 0;
+            rBraceCount     = 0;
+            left            = 0;
+            right           = 0;
+        }
+    }
+
+    private void dropCurrentBlock(BufferedReader br) throws IOException  {
+        BlockPosition pos = new BlockPosition();
+        if (readNextBlock(br, pos)) {
+            mCache = mCache.substring(pos.semicolonPos + 1, mCache.length()).trim();
+        } else if (pos.lBraceCount == pos.rBraceCount) {
+            mCache = mCache.substring(pos.right + 1, mCache.length()).trim();
+        } else {
+            mCache = "";
+        }
+    }
+
+    private boolean parseBlock(BufferedReader br) throws IOException {
+        BlockPosition pos = new BlockPosition();
+        if (readNextBlock(br, pos)) {
+            return parseSemicolon(pos);
+        } else {
+            return parseBrace(pos);
+        }
+    }
+
+    private boolean parseBrace(BlockPosition pos) {
+        if (pos.lBraceCount == pos.rBraceCount) {
+            parseMethod(mCache.substring(0, pos.left).trim());
+            mCache = mCache.substring(pos.right + 1, mCache.length()).trim();
+        } else {
+            mCache = "";
+        }
+        
+        return !mCache.equals("");
+    }
 
     /**
-     * @brief 解析一块区域
+     * @brief 读取下一块以;结尾或者以{}的区域
      * 1 ;  结尾
      * 2 {} 花括号域
+     * @param       pos       域位置信息
+     * @return true";"域 | false "{}"域
+     */
+    private boolean readNextBlock(BufferedReader br, BlockPosition pos) throws IOException {
+        boolean isBraceBlock = cacheIsBraceBlock(br, pos);
+        if (isBraceBlock) {
+            readBrace(br, pos);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @brief       解析 ";"域
+     * @param       pos         ";"域位置信息
      * @return
      */
-    private boolean parseBlock() {
-        // TODO 解析一块区域
-        return false;
+    private boolean parseSemicolon(BlockPosition pos) {        
+        Matcher m = ScannerPattern.BLOCK_SEMICOLON.matcher(mCache);
+        String block = m.group(0);
+        parseBlock(block);
+        mCache = m.group(1) == null ? "" : m.group(1).trim();
+        return !mCache.equals("");
+    }
+
+    /**
+     * @brief       解析指定域
+     */
+    private void parseBlock(String block) {
+        if (block.indexOf("(") != -1) {
+            parseMethod(block);
+        } else {
+            parseMember(block);
+        }
+    }
+
+    private void parseMember(String block) {
+        // TODO Auto-generated method stub
+    }
+
+    private void parseMethod(String block) {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * @param       bracePos        {}域位置信息
+     * @brief       读取包含{}的域
+     */
+    private void readBrace(BufferedReader br, BlockPosition bracePos) throws IOException {        
+        int next = 0;
+        do {
+            int lb = mCache.indexOf("{", next);
+            int rb = mCache.indexOf("}", next);
+            if (rb != -1) {
+                if (rb < lb || lb == -1) {
+                    next = rb;
+                    ++bracePos.rBraceCount;
+                    bracePos.right = rb;
+                }
+            } else if (lb != -1) {
+                next = lb;
+                if (bracePos.left == 0) bracePos.left = lb;
+                ++bracePos.lBraceCount;
+            }
+            
+            if (bracePos.lBraceCount == bracePos.rBraceCount) break;
+            
+            String buff = br.readLine();
+            ++mLine;
+            if (buff == null) {
+                mCache = "";
+                return;
+            }
+            mCache = mCache + buff;
+        } while (true);
+    }
+
+    private boolean cacheIsBraceBlock(BufferedReader br, BlockPosition pos) throws IOException {
+        while (true) {
+            int semicolon = mCache.indexOf(";");
+            int brace = mCache.indexOf("{");
+            
+            /// 找到分号，未找到左括号
+            if (brace == -1) {
+                if (semicolon != -1) {
+                    pos.semicolonPos = semicolon;
+                    return false;
+                }
+            } else {
+                if (semicolon != -1 && semicolon < brace) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            
+            String buff = br.readLine();
+            ++mLine;
+            if (buff == null) return false;
+            mCache = mCache + buff;
+        }
+        
+        return true;
     }
 
     private boolean matchTemplate() {
@@ -399,3 +545,4 @@ public class Scanner {
     }
     
 }
+
