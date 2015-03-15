@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -242,12 +244,38 @@ public class Scanner {
         }
     }
 
+    /**
+     * @brief       成员变量解析
+     * @param       block       成员变量字符串
+     */
     private void parseMember(String block) {
-        // TODO Auto-generated method stub
+        /// 获取指定类，增加成员
+        ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
+        Map<String, MemberDefs> members = cls.getMembers();
+        int nameIndex = block.lastIndexOf(" ");
+        String name = block.substring(nameIndex, block.length()).trim();
+        
+        if (members.containsKey(name)) {
+            errorLog("ERROR: repeat member : " + name + "in class : " + members, 
+                    System.err, true);
+        }
+        
+        MemberDefs member = new MemberDefs(block, mFile, mLine);
+        member.setPublic(mPermission == 0);
     }
 
-    private void parseMethod(String block) {
-        // TODO Auto-generated method stub
+    /**
+     * @brief       解析方法
+     * @param       block       方法字符串
+     */
+    private void parseMethod(String block) {   
+        int nameIndex = block.lastIndexOf(" ");
+        String name = block.substring(nameIndex, block.length()).trim();
+        
+        ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
+        List<MethodDefs> methods = cls.getMethods();
+        methods.add(
+                new MethodDefs(cls.getClassName(), name, block, mFile, mLine));
     }
 
     /**
@@ -542,6 +570,10 @@ public class Scanner {
 
     private boolean matchBlockComment() {
         return ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
+    }
+    
+    private void errorLog(String errorInfo, PrintStream os, boolean terminal) {
+        Logger.e(errorInfo, os, terminal, mFile, mLine, mCache);
     }
     
 }

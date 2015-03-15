@@ -11,7 +11,15 @@ public class MemberDefs {
     private boolean mIsStatic;      ///< 是否为静态成员
     private int mMemType;           ///< 解析成员类型
     private TypeDefs mTypes;        ///< 类型定义引用
+    private String mBlock;          ///< 一个待解析的成员字符串
+    private String mFile;           ///< 定义文件
+    private int mLine;              ///< 对应行数
 
+    public MemberDefs(String block, String file, int line) {
+        mBlock = block;
+        mFile = file;
+        mLine = line;
+    }
 
     public MemberDefs(TypeDefs types, boolean isPublic) {
         mTypes = types;
@@ -19,7 +27,28 @@ public class MemberDefs {
     }
     
     public void parse() {
+        parseBlock();
         mMemType = mTypes.getCppType(mCppType);
+    }
+    
+    /**
+     * @brief       简单的解析，不支持特殊宏定义
+     */
+    private void parseBlock() {
+        int staticIndex = mBlock.indexOf("static");
+        if (staticIndex != -1) {
+            mIsStatic = true;
+            staticIndex = staticIndex + "static ".length();
+        } else {
+            staticIndex = 0;
+        }
+        
+        int nameIndex = mBlock.indexOf(mCppClassName);
+        if (nameIndex == -1) {
+            Logger.e("MemberDefs::parseBlock Unkown member Name", 
+                    System.err, true, mFile, mLine);
+        }
+        mCppType = mBlock.substring(staticIndex, nameIndex).trim();
     }
     
     public void genJava(PrintStream p) {

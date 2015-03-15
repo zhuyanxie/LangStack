@@ -46,12 +46,19 @@ public class ScannerPattern {
     
     public static Pattern MEMBER = Pattern.compile(
             "^\\s*(\\S+)\\s+(\\S+);(.*)");     
-    public static Pattern MEMBER_ = Pattern.compile(
-            "^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+);(.*)"); 
     
     public static Pattern PERMISSION = Pattern.compile(
             "^\\s*(public|protected|private)\\s*:(.*)"); 
     
     public static Pattern END_OF_BLOCK = Pattern.compile(
             "^\\s*}\\s*(.*)");
+    
+    public static Pattern TEMPLATE = Pattern.compile(
+            "^\\s*template\\S*<.*>\\s*(.*)");
+    
+    public static Pattern BLOCK_SEMICOLON = Pattern.compile(
+            "^\\s*(.*)\\s*;(.*)");
+    
+    public static Pattern METHOD_BLOCK = Pattern.compile(
+            "^\\s*(.*)\\s*\\((.*)\\)");
 }
