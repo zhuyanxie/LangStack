@@ -27,7 +27,8 @@ public class Logger {
     public static void e(String errorInfo, PrintStream os, boolean terminal,
             String file, int line, String cache) {
         os.println(errorInfo);
-        os.printf("\tfile[%s:%d] [%s]\r\n", file, line, cache);
+        os.printf("\t%s\r\n", cache);
+        os.printf("\tfile[%s:%d]\r\n", file, line);
         
         if (terminal) {
             System.exit(-1);

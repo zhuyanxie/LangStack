@@ -126,6 +126,11 @@ public class Scanner {
      * @throws IOException 
      */
     private boolean praseCache(BufferedReader br) throws IOException {
+        
+        if (mCache.isEmpty()) {
+            return false;
+        }
+        
         /// TODO 构造有限状态机来处理
         if (matchBlockComment()) {
             return readBlockComment(br);
@@ -146,9 +151,9 @@ public class Scanner {
         } else if (matchEndOfBlock()) {
             return readEndOfBlock(br);
         } else if (matchTemplate()) {
+            errorLog("WARN: now not support template drop- -!!!", 
+                    System.out, false);
             dropCurrentBlock(br);
-            System.out.println("WARN: now not support template drop- -!!!");
-            System.out.printf("\t\tfile[%s:%d]\r\n", mFile, mLine);
         } else {
             return parseBlock(br);
         }
@@ -289,17 +294,18 @@ public class Scanner {
             int rb = mCache.indexOf("}", next);
             if (rb != -1) {
                 if (rb < lb || lb == -1) {
-                    next = rb;
+                    next = rb + 1;
                     ++bracePos.rBraceCount;
                     bracePos.right = rb;
                 }
             } else if (lb != -1) {
-                next = lb;
+                next = lb + 1;
                 if (bracePos.left == 0) bracePos.left = lb;
                 ++bracePos.lBraceCount;
             }
             
             if (bracePos.lBraceCount == bracePos.rBraceCount) break;
+            if (lb != -1 || rb != -1) continue;
             
             String buff = br.readLine();
             ++mLine;
@@ -336,7 +342,6 @@ public class Scanner {
             mCache = mCache + buff;
         }
         
-        return true;
     }
 
     private boolean matchTemplate() {
@@ -436,8 +441,9 @@ public class Scanner {
 
     private boolean readNamespace(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.NAMESPACE, br)) return false;
-        Matcher m = ScannerPattern.NAMESPACE.matcher(mCache);
-        String namespace = m.group().trim();
+        String []names = mCache.split(" ");
+        String namespace = names[1];
+        mCache = "";
         try {
             mNameSpaces.put(namespace);
         } catch (InterruptedException e) {
@@ -462,9 +468,10 @@ public class Scanner {
 
     private boolean readDefine(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.DEFINE, br)) return false;
+        System.out.printf("WARN: unspport define parse ingore :\r\n");
+        System.out.printf("\t\"%s\"\r\n", mCache);
+        System.out.printf("\tfile[%s:%d]\r\n", mFile, mLine);
         mCache = "";
-        System.out.println("\tWARN: unspport define parse ingore, from : ");
-        System.out.printf("\t\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
         
         return false;
     }
@@ -545,7 +552,6 @@ public class Scanner {
             Matcher m = ScannerPattern.LINE_COMMENT.matcher(mCache);
             if (m.find()) {
                 mComment    = m.group(0);
-                mCache      = m.group(1) == null ? "" : m.group(1);
                 return true;
             }
             
@@ -557,7 +563,9 @@ public class Scanner {
     }
 
     private boolean readLineComment(BufferedReader br) throws IOException {
-        return readComment(ScannerPattern.LINE_COMMENT, br);
+        readComment(ScannerPattern.LINE_COMMENT, br);
+        mCache = "";
+        return false;
     }
 
     private boolean matchLineComment() {
@@ -565,7 +573,10 @@ public class Scanner {
     }
 
     private boolean readBlockComment(BufferedReader br) throws IOException {
-        return readComment(ScannerPattern.BLOCK_COMMENT, br);
+        readComment(ScannerPattern.BLOCK_COMMENT, br);
+        int idx = mCache.lastIndexOf("*/") + "*/".length();
+        mCache = mCache.substring(idx, mCache.length());
+        return false;
     }
 
     private boolean matchBlockComment() {
