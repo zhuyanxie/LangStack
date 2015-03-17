@@ -126,7 +126,6 @@ public class Scanner {
      * @throws IOException 
      */
     private boolean praseCache(BufferedReader br) throws IOException {
-        
         if (mCache.isEmpty()) {
             return false;
         }
@@ -146,10 +145,14 @@ public class Scanner {
             return readUsing(br);
         } else if (matchNamespace()) {
             return readNamespace(br);
+        } else if (matchClass()) {
+            return readClass(br);
         } else if (matchPermission()) {
             return readPermission(br);
         } else if (matchEndOfBlock()) {
             return readEndOfBlock(br);
+        } else if (matchPrefixSemicolon()) {
+            return readPrefixSemicolon(br);
         } else if (matchTemplate()) {
             errorLog("WARN: now not support template drop- -!!!", 
                     System.out, false);
@@ -161,6 +164,21 @@ public class Scanner {
         return true;
     }
     
+    private boolean readPrefixSemicolon(BufferedReader br) {
+        do {
+            Matcher m = ScannerPattern.DROP_SEMICOLON_BLOCK.matcher(mCache);
+            if (m.find()) mCache = m.group(0);
+            else mCache = "";
+        } while (matchPrefixSemicolon());
+        
+        return !mCache.equals("");
+    }
+
+    private boolean matchPrefixSemicolon() {
+        return ScannerPattern.SEMICOLON_BLOCK.matcher(mCache).find();
+    }
+
+
     class BlockPosition {
         public int semicolonPos;    ///< ";"的位置
         public int lBraceCount;     ///< "{"的数量
@@ -409,13 +427,17 @@ public class Scanner {
     
     private boolean readClass(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.CLASS, br, " ")) return false;
-        Matcher m = ScannerPattern.NAMESPACE.matcher(mCache);
-        if (m.group(0).trim().equals("class")) {
+        if (ScannerPattern.CLASS_TAG.matcher(mCache).find()) {
             mPermission = 1;
         } else {
             mPermission = 0;
         }
-        String classdefine  = m.group(1).trim();
+        
+        int classDefsStart  = mCache.indexOf(":");
+        int classDefsEnd    = mCache.indexOf("{");
+        String classdefine  = mCache.substring(0, 
+                classDefsStart == -1 ? classDefsEnd : classDefsStart);
+        
         String[] classes    = classdefine.split(" ");
         if (classes != null && classes.length != 0) {
             String classname = classes[classes.length - 1];
@@ -431,7 +453,7 @@ public class Scanner {
         }
         
         /// TODO
-        mCache = m.group(2) == null ? "" : m.group(2);
+        mCache = mCache.substring(classDefsEnd + 1, mCache.length());
         return !mCache.equals("");
     }
 
@@ -504,9 +526,9 @@ public class Scanner {
         String typedefs = null;
         Matcher m = null;
         while (true) {        
-            m = ScannerPattern.LINE_COMMENT.matcher(mCache);
+            m = ScannerPattern.TYPEDEF.matcher(mCache);
             if (m.find()) {
-                typedefs    = m.group(0);
+                typedefs = mCache.substring(0, mCache.indexOf(";"));
                 break;
             }
             
@@ -517,7 +539,8 @@ public class Scanner {
         }
         int idx = typedefs.lastIndexOf(" ");
         if (idx != -1) {
-            String type = typedefs.substring(0, idx).trim();
+            int typedefIndex = typedefs.indexOf("typedef") + "typedef".length();
+            String type = typedefs.substring(typedefIndex, idx).trim();
             String alias = typedefs.substring(idx, typedefs.length()).trim();
             mSymbols.getTypeDefs().addTypeDefine(mFile, mLine, mCache, type, alias);
         } else {
@@ -525,7 +548,7 @@ public class Scanner {
             System.out.printf("\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
         }
         
-        mCache = m.group(1) == null ? "" : m.group(1);
+        mCache = mCache.substring(mCache.indexOf(";") + 1, mCache.length());
         return !mCache.equals("");
     }
 

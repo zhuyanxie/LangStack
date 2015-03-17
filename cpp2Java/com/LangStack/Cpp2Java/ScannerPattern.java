@@ -45,7 +45,9 @@ public class ScannerPattern {
     public static Pattern CLASS_START = Pattern.compile(
             "^\\s*(class|struct).*");
     public static Pattern CLASS = Pattern.compile(
-            "^\\s*(class|struct)\\s*(.*)\\s*\\{(.*)");  
+            "^\\s*(class|struct)\\s*(.*)\\s*\\{(.*)"); 
+    public static Pattern CLASS_TAG = Pattern.compile(
+            "^\\s*(class).*");   
     
     public static Pattern MEMBER = Pattern.compile(
             "^\\s*(\\S+)\\s+(\\S+);(.*)");     
@@ -55,6 +57,11 @@ public class ScannerPattern {
     
     public static Pattern END_OF_BLOCK = Pattern.compile(
             "^\\s*\\}\\s*(.*)");
+    
+    public static Pattern SEMICOLON_BLOCK = Pattern.compile(
+            "^\\s*;.*");    
+    public static Pattern DROP_SEMICOLON_BLOCK = Pattern.compile(
+                    "^[^;].*");
     
     public static Pattern TEMPLATE = Pattern.compile(
             "^\\s*template\\s*<.*>\\s*(.*)");
