@@ -61,7 +61,7 @@ public class ScannerPattern {
     public static Pattern SEMICOLON_BLOCK = Pattern.compile(
             "^\\s*;.*");    
     public static Pattern DROP_SEMICOLON_BLOCK = Pattern.compile(
-                    "^[^;].*");
+            "^[^;].*");
     
     public static Pattern TEMPLATE = Pattern.compile(
             "^\\s*template\\s*<.*>\\s*(.*)");

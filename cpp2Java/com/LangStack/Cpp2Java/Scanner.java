@@ -157,13 +157,13 @@ public class Scanner {
             errorLog("WARN: now not support template drop- -!!!", 
                     System.out, false);
             dropCurrentBlock(br);
-        } else {
+        } else if (matchBlock()) {
             return parseBlock(br);
         }
         
-        return true;
+        return false;
     }
-    
+
     private boolean readPrefixSemicolon(BufferedReader br) {
         do {
             Matcher m = ScannerPattern.DROP_SEMICOLON_BLOCK.matcher(mCache);
@@ -214,7 +214,11 @@ public class Scanner {
             return parseBrace(pos);
         }
     }
-
+    
+    private boolean matchBlock() {
+        return mCache.indexOf(";") != -1 || mCache.indexOf("{") != -1;
+    }
+    
     private boolean parseBrace(BlockPosition pos) {
         if (pos.lBraceCount == pos.rBraceCount) {
             parseMethod(mCache.substring(0, pos.left).trim());
@@ -248,11 +252,10 @@ public class Scanner {
      * @param       pos         ";"域位置信息
      * @return
      */
-    private boolean parseSemicolon(BlockPosition pos) {        
-        Matcher m = ScannerPattern.BLOCK_SEMICOLON.matcher(mCache);
-        String block = m.group(0);
+    private boolean parseSemicolon(BlockPosition pos) {
+        String block = mCache.substring(0, pos.semicolonPos);
         parseBlock(block);
-        mCache = m.group(1) == null ? "" : m.group(1).trim();
+        mCache = mCache.substring(pos.semicolonPos + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
@@ -292,8 +295,12 @@ public class Scanner {
      * @param       block       方法字符串
      */
     private void parseMethod(String block) {   
-        int nameIndex = block.lastIndexOf(" ");
-        String name = block.substring(nameIndex, block.length()).trim();
+        int nameIndex = block.indexOf("(");
+        String name = block.substring(0, nameIndex).trim();
+        int spaceIndex = name.lastIndexOf(" ", nameIndex);
+        if (spaceIndex != -1) {
+            name = name.substring(spaceIndex, name.length());
+        }
         
         ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
         List<MethodDefs> methods = cls.getMethods();
@@ -381,13 +388,11 @@ public class Scanner {
     }
 
     private boolean readPermission(BufferedReader br) {
-        Matcher m = ScannerPattern.PERMISSION.matcher(mCache);
-        String permission = m.group();
-        if (permission.equals("public")) mPermission = 0;
-        else if (permission.equals("protected")) mPermission = 1;
+        if (mCache.indexOf("public") != -1) mPermission = 0;
+        else if (mCache.indexOf("protected") != -1) mPermission = 1;
         else mPermission = 2;
         
-        mCache = m.group(1) == null ? "" : m.group(1).trim();
+        mCache = mCache.substring(mCache.indexOf(":") + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
@@ -453,7 +458,7 @@ public class Scanner {
         }
         
         /// TODO
-        mCache = mCache.substring(classDefsEnd + 1, mCache.length());
+        mCache = mCache.substring(classDefsEnd + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
@@ -548,7 +553,7 @@ public class Scanner {
             System.out.printf("\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
         }
         
-        mCache = mCache.substring(mCache.indexOf(";") + 1, mCache.length());
+        mCache = mCache.substring(mCache.indexOf(";") + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
@@ -598,7 +603,7 @@ public class Scanner {
     private boolean readBlockComment(BufferedReader br) throws IOException {
         readComment(ScannerPattern.BLOCK_COMMENT, br);
         int idx = mCache.lastIndexOf("*/") + "*/".length();
-        mCache = mCache.substring(idx, mCache.length());
+        mCache = mCache.substring(idx, mCache.length()).trim();
         return false;
     }
 
