@@ -14,7 +14,7 @@ public class ScannerPattern {
     public static Pattern LINE_COMMENT_START = Pattern.compile(
             "^\\s*//.*");
     public static Pattern LINE_COMMENT = Pattern.compile(
-            "^\\s*//(.*)[^\\\\]$");
+            "^\\s*//(.*)[^\\\\]*$");
 
     public static Pattern INCLUDE_START = Pattern.compile(
             "^\\s*#include.*");

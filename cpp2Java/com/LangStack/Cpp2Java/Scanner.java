@@ -299,7 +299,9 @@ public class Scanner {
         String name = block.substring(0, nameIndex).trim();
         int spaceIndex = name.lastIndexOf(" ", nameIndex);
         if (spaceIndex != -1) {
-            name = name.substring(spaceIndex, name.length());
+            name = name.substring(spaceIndex + 1, name.length());
+            /// inline 方法直接忽略
+            if (name.contains("::")) return;
         }
         
         ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
@@ -374,8 +376,10 @@ public class Scanner {
     }
 
     private boolean readEndOfBlock(BufferedReader br) {
-        Matcher m = ScannerPattern.END_OF_BLOCK.matcher(mCache);
-        mCache = m.group() == null ? "" : m.group().trim();
+        if (!mClasses.isEmpty()) mClasses.poll();
+        else if (!mNameSpaces.isEmpty()) mNameSpaces.poll();
+        else errorLog("Mismatcher \"}\"", System.err, true);
+        mCache = mCache.substring(mCache.indexOf("}") + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
@@ -419,7 +423,7 @@ public class Scanner {
     private String getNamespace() {
         String namespace = "";
         for (String name : mNameSpaces) {
-            if (namespace.equals("")) namespace = namespace + ".";
+            if (!namespace.equals("")) namespace = namespace + ".";
             namespace = namespace + name;
         }
         
@@ -447,6 +451,7 @@ public class Scanner {
         if (classes != null && classes.length != 0) {
             String classname = classes[classes.length - 1];
             try {
+                mSymbols.addClass(getNamespace(), classname);
                 mClasses.put(classname);
             } catch (InterruptedException e) {
                 e.printStackTrace();
