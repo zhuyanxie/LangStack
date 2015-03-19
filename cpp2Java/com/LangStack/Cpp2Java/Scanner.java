@@ -30,13 +30,19 @@ public class Scanner {
     private String              mCache;     ///< 上次解析缓存
     private String              mComment;   ///< 本次读取的注释
     private int                 mPermission;///< 访问权限0:public 1:protected 2:private
-    
-    BlockingQueue<String> mNameSpaces = new ArrayBlockingQueue<String>(128);
-    BlockingQueue<String> mClasses    = new ArrayBlockingQueue<String>(128);
+
+    public static final int CLASS_SCOPE = 0;
+    public static final int EMPTY_SCOPE = 1;
+    public static final int NAMES_SCOPE = 2;
+    ∂
+    BlockingQueue<String>   mNameSpaces = new ArrayBlockingQueue<String>(128);
+    BlockingQueue<String>   mClasses    = new ArrayBlockingQueue<String>(128);
+    BlockingQueue<Integer>  mScopes     = new ArrayBlockingQueue<Integer>(128);
     
     public Scanner(String root, Symbols symbols) {
-        mRoot = root;
-        mSymbols = symbols;
+        mPermission = 0;
+        mRoot       = root;
+        mSymbols    = symbols;
     }
 
     public void scan()
@@ -92,11 +98,14 @@ public class Scanner {
     	        mFile = file;
     	        System.out.println("scaning " + file);
                 scanFile(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            } catch (FileNotFoundException fe) {
+                fe.printStackTrace();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
-            }
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorLog("", System.err, true);
+            } 
     	}
     }
 
@@ -143,14 +152,16 @@ public class Scanner {
             return readDefine(br);
         } else if (matchUsing()) {
             return readUsing(br);
+        } else if (matchExtern()) {
+            return readExtern(br);
         } else if (matchNamespace()) {
             return readNamespace(br);
         } else if (matchClass()) {
             return readClass(br);
         } else if (matchPermission()) {
             return readPermission(br);
-        } else if (matchEndOfBlock()) {
-            return readEndOfBlock(br);
+        } else if (matchScope()) {
+            return readScope(br);
         } else if (matchPrefixSemicolon()) {
             return readPrefixSemicolon(br);
         } else if (matchTemplate()) {
@@ -166,7 +177,7 @@ public class Scanner {
 
     private boolean readPrefixSemicolon(BufferedReader br) {
         do {
-            Matcher m = ScannerPattern.DROP_SEMICOLON_BLOCK.matcher(mCache);
+            Matcher m = ScannerPattern.DROP_SEMICOLON_SCOPE.matcher(mCache);
             if (m.find()) mCache = m.group(0);
             else mCache = "";
         } while (matchPrefixSemicolon());
@@ -175,7 +186,7 @@ public class Scanner {
     }
 
     private boolean matchPrefixSemicolon() {
-        return ScannerPattern.SEMICOLON_BLOCK.matcher(mCache).find();
+        return ScannerPattern.SEMICOLON_SCOPE.matcher(mCache).find();
     }
 
 
@@ -375,16 +386,33 @@ public class Scanner {
         return ScannerPattern.TEMPLATE.matcher(mCache).find();
     }
 
-    private boolean readEndOfBlock(BufferedReader br) {
-        if (!mClasses.isEmpty()) mClasses.poll();
-        else if (!mNameSpaces.isEmpty()) mNameSpaces.poll();
-        else errorLog("Mismatcher \"}\"", System.err, true);
-        mCache = mCache.substring(mCache.indexOf("}") + 1, mCache.length()).trim();
+    private boolean readScope(BufferedReader br) {
+        int start   = mCache.indexOf("{");
+        int end     = mCache.indexOf("}");
+        int idx     = -1;
+        if (end == -1 || (start != -1 && start < end)) {
+            mScopes.put(EMPTY_SCOPE);
+            idx = start;
+        } else {
+            int scope = mScopes.poll();
+            switch (scope) {
+            case CLASS_SCOPE: 
+                mClasses.poll();
+                break;
+            case NAMES_SCOPE: 
+                mNameSpaces.poll();
+                break;
+            default:
+                break;
+            }
+            idx = end;
+        }
+        mCache = mCache.substring(idx + 1, mCache.length()).trim();
         return !mCache.equals("");
     }
 
-    private boolean matchEndOfBlock() {
-        return ScannerPattern.END_OF_BLOCK.matcher(mCache).find();
+    private boolean matchScope() {
+        return ScannerPattern.SCOPE.matcher(mCache).find();
     }
 
     private boolean matchPermission() {
@@ -453,6 +481,7 @@ public class Scanner {
             try {
                 mSymbols.addClass(getNamespace(), classname);
                 mClasses.put(classname);
+                mScopes.put(CLASS_SCOPE);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -478,6 +507,7 @@ public class Scanner {
         mCache = "";
         try {
             mNameSpaces.put(namespace);
+            mScopes.put(NAMES_SCOPE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -487,6 +517,36 @@ public class Scanner {
 
     private boolean matchNamespace() {
         return ScannerPattern.NAMESPACE_START.matcher(mCache).find();
+    }
+    
+    private boolean matchExtern() {
+        return ScannerPattern.EXTERN_START.matcher(mCache).find();
+    }
+
+    private boolean readExtern(BufferedReader br) throws IOException {
+        int scope = -1;
+        int semicolon = -1;
+        while (true) {        
+            scope = mCache.indexOf("{");
+            semicolon = mCache.indexOf(";");
+            if (scope != -1 || semicolon != -1) {
+                break;
+            }
+            
+            String buff = br.readLine();
+            ++mLine;
+            if (buff == null) return false;
+            mCache = mCache + buff;
+        }
+        int idx = -1;
+        if (scope != -1) {
+            idx = scope;
+            mScopes.put(EMPTY_SCOPE);
+        } else {
+            idx = semicolon;
+        }
+        mCache = mCache.substring(idx + 1, mCache.length());
+        return !mCache.equals("");
     }
 
     private boolean readUsing(BufferedReader br) throws IOException {
@@ -582,7 +642,7 @@ public class Scanner {
     private boolean readComment(Pattern commentPattern, BufferedReader br) 
             throws IOException {
         while (true) {        
-            Matcher m = ScannerPattern.LINE_COMMENT.matcher(mCache);
+            Matcher m = commentPattern.matcher(mCache);
             if (m.find()) {
                 mComment    = m.group(0);
                 return true;
@@ -591,7 +651,7 @@ public class Scanner {
             String buff = br.readLine();
             ++mLine;
             if (buff == null) return false;
-            mCache = mCache + buff + "\r\n";
+            mCache = mCache + "\r\n" + buff;
         } 
     }
 
@@ -606,18 +666,26 @@ public class Scanner {
     }
 
     private boolean readBlockComment(BufferedReader br) throws IOException {
-        readComment(ScannerPattern.BLOCK_COMMENT, br);
-        int idx = mCache.lastIndexOf("*/") + "*/".length();
+        int idx = -1;
+        while (true) {
+            idx = mCache.indexOf("*/");
+            if (idx != -1) {
+                break;
+            }
+            
+            String buff = br.readLine();
+            ++mLine;
+            if (buff == null) return false;
+            mCache = mCache + "\r\n" + buff;
+        }
+        idx = idx + "/*".length();
+        mComment = mCache.substring(0, idx);
         mCache = mCache.substring(idx, mCache.length()).trim();
         return false;
     }
 
     private boolean matchBlockComment() {
-        int idx = mCache.indexOf("/*");
-        boolean start = mCache.startsWith("/*");
-        
-        return mCache.startsWith("/*") || 
-                ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
+        return ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
     }
     
     private void errorLog(String errorInfo, PrintStream os, boolean terminal) {

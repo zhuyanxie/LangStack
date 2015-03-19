@@ -60,7 +60,7 @@ public class MethodDefs {
     }
     
     private void parseBlock() {
-        Matcher m = ScannerPattern.METHOD_BLOCK.matcher(mBlock);
+        Matcher m = ScannerPattern.METHOD_SCOPE.matcher(mBlock);
         if (!m.find()) {
             Logger.e("MethodDefs::parseBlock Unkown method format", 
                     System.err, true, mFile, mLine);
