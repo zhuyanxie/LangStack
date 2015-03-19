@@ -294,7 +294,7 @@ public class Scanner {
      * @brief       解析方法
      * @param       block       方法字符串
      */
-    private void parseMethod(String block) {   
+    private void parseMethod(String block) {
         int nameIndex = block.indexOf("(");
         String name = block.substring(0, nameIndex).trim();
         int spaceIndex = name.lastIndexOf(" ", nameIndex);
@@ -613,7 +613,11 @@ public class Scanner {
     }
 
     private boolean matchBlockComment() {
-        return ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
+        int idx = mCache.indexOf("/*");
+        boolean start = mCache.startsWith("/*");
+        
+        return mCache.startsWith("/*") || 
+                ScannerPattern.BLOCK_COMMENT_START.matcher(mCache).find();
     }
     
     private void errorLog(String errorInfo, PrintStream os, boolean terminal) {

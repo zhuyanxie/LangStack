@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class ScannerPattern {
   
     public static Pattern BLOCK_COMMENT_START = Pattern.compile(
-            "^\\s*/\\*.*");
+            "^\\s*/\\*");
     public static Pattern BLOCK_COMMENT = Pattern.compile(
             "^\\s*/\\*(.*)\\*/(.*)");
     
