@@ -27,9 +27,9 @@ public class ScannerPattern {
             "^\\s*typedef(.*);(.*)");  
     
     public static Pattern DEFINE_START = Pattern.compile(
-            "^\\s*#(define|ifdef|ifndef|pragma).*");  
+            "^\\s*#(define|ifdef|ifndef|pragma|endif|if|else).*");  
     public static Pattern DEFINE = Pattern.compile(
-            "^\\s*#(define|ifdef|ifndef|pragma)(.*[^\\\\]$)");  
+            "^\\s*#(define|ifdef|ifndef|pragma|endif|if|else)(.*[^\\\\]$)");  
     
     public static Pattern USING_START = Pattern.compile(
             "^\\s*using.*");
@@ -58,7 +58,7 @@ public class ScannerPattern {
             "^\\s*(public|protected|private)\\s*:(.*)"); 
 
     public static Pattern SCOPE = Pattern.compile(
-            "^\\s*\\({|})\\s*(.*)");
+            "^\\s*(\\{|\\})\\s*(.*)");
     
     public static Pattern SEMICOLON_SCOPE = Pattern.compile(
             "^\\s*;.*");    
@@ -66,7 +66,11 @@ public class ScannerPattern {
             "^[^;].*");
     
     public static Pattern TEMPLATE = Pattern.compile(
-            "^\\s*template\\s*<.*>\\s*(.*)");
+            "^\\s*template\\s*<.*");    
+    public static Pattern UNION = Pattern.compile(
+            "^\\s*union\\s+.*");
+    public static Pattern ENUM = Pattern.compile(
+            "^\\s*enum\\s+.*");
     
     public static Pattern SCOPE_SEMICOLON = Pattern.compile(
             "^\\s*(.*)\\s*;(.*)");

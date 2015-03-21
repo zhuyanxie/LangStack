@@ -12,7 +12,7 @@ public class ScannerTest {
     @Test
     public void testGetFilePaths() {
         Symbols symbols = new Symbols();
-        Scanner scanner = new Scanner("./", symbols);
+        Scanner scanner = new Scanner("./cpp/include", symbols);
         scanner.scan();
         
     }

@@ -6,14 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,10 +32,10 @@ public class Scanner {
     public static final int CLASS_SCOPE = 0;
     public static final int EMPTY_SCOPE = 1;
     public static final int NAMES_SCOPE = 2;
-    ∂
-    BlockingQueue<String>   mNameSpaces = new ArrayBlockingQueue<String>(128);
-    BlockingQueue<String>   mClasses    = new ArrayBlockingQueue<String>(128);
-    BlockingQueue<Integer>  mScopes     = new ArrayBlockingQueue<Integer>(128);
+    
+    Stack<String>   mNameSpaces = new Stack<String>();
+    Stack<String>   mClasses    = new Stack<String>();
+    Stack<Integer>  mScopes     = new Stack<Integer>();
     
     public Scanner(String root, Symbols symbols) {
         mPermission = 0;
@@ -79,9 +77,6 @@ public class Scanner {
             }
             return;
         }
-        else if (!root.isDirectory()) {
-            return;
-        }
         
         mPaths.add(root.getAbsolutePath());
         for (File file : root.listFiles()) {
@@ -96,6 +91,9 @@ public class Scanner {
     	for (String file : mFiles) {
     	    try {
     	        mFile = file;
+    	        mScopes.clear();
+                mClasses.clear();
+    	        mNameSpaces.clear();
     	        System.out.println("scaning " + file);
                 scanFile(file);
             } catch (FileNotFoundException fe) {
@@ -104,12 +102,12 @@ public class Scanner {
                 ioe.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
-                errorLog("", System.err, true);
+                errorLog("Exception:", System.err, true);
             } 
     	}
     }
 
-    private void scanFile(String file) throws IOException {
+    private void scanFile(String file) throws IOException, InterruptedException {
         FileInputStream fis     = new FileInputStream(new File(file));
         InputStreamReader isr   = new InputStreamReader(fis, "UTF-8");
         BufferedReader br       = new BufferedReader(isr);
@@ -133,8 +131,9 @@ public class Scanner {
      * @param       br          输入流
      * @return      是否能够继续解析
      * @throws IOException 
+     * @throws InterruptedException 
      */
-    private boolean praseCache(BufferedReader br) throws IOException {
+    private boolean praseCache(BufferedReader br) throws IOException, InterruptedException {
         if (mCache.isEmpty()) {
             return false;
         }
@@ -168,6 +167,12 @@ public class Scanner {
             errorLog("WARN: now not support template drop- -!!!", 
                     System.out, false);
             dropCurrentBlock(br);
+        } else if (matchUnion()) {
+            errorLog("WARN: now not support union drop- -!!!", 
+                    System.out, false);
+            dropCurrentBlock(br);
+        } else if (matchEnum()) {
+            readEnum(br);
         } else if (matchBlock()) {
             return parseBlock(br);
         }
@@ -175,11 +180,77 @@ public class Scanner {
         return false;
     }
 
+    private void readEnum(BufferedReader br) throws IOException {
+        int enumValue = 0;
+        String enumType = "";
+        boolean enumstart = false;
+        while (true) {
+            if (!enumstart) {
+                int start = mCache.indexOf("{");
+                if (start != -1) {
+                    enumstart = true;
+                    mCache = mCache.substring(start + 1, mCache.length());
+                    continue;
+                }
+            } else {
+                int semicolon       = mCache.indexOf(",");
+                int right           = mCache.indexOf("}");
+                String enumScope    = "";
+                if (semicolon != -1) {
+                    enumScope       = mCache.substring(0, semicolon);
+                    mCache          = mCache.substring(semicolon + 1, mCache.length());
+                } else if (right != -1) {
+                    enumScope       = mCache.substring(0, right);
+                    mCache          = mCache.substring(right + 1, mCache.length());
+                    break;
+                }
+                
+                if (!enumScope.isEmpty()) {
+                    String []keyValue   = enumScope.split("=");
+                    enumType            = keyValue[0].trim();
+                    keyValue[1]         = keyValue[1].trim();
+                    if (keyValue.length == 2) {
+                        int radix = 10;
+                        if (keyValue[1].indexOf("0x") != -1 ||
+                                keyValue[1].indexOf("0X") != -1)
+                        {
+                            keyValue[1] = keyValue[1].substring(
+                                    2, keyValue[1].length());
+                            radix = 16;
+                        }
+                        enumValue = Integer.parseInt(keyValue[1].trim(), radix);
+                    }
+                    
+                    if (matchLineComment()) {
+                        readLineComment(br);
+                    }
+                    
+                    String namespace = getNamespace();
+                    String className = getCurrentClass();
+                    ClassDefs cls = mSymbols.getClassDef(namespace, className);
+                    if (cls == null && className.isEmpty()) {
+                        mSymbols.addClass(namespace, className);
+                        cls = mSymbols.getClassDef(namespace, className);
+                    }
+                    cls.getConsts().addConst(enumType, enumValue++, mComment.trim());
+                    continue;
+                }
+            }
+            
+            String buff = br.readLine();
+            ++mLine;
+            if (buff == null) return;
+            mCache = (mCache + buff).trim();  
+        }
+    }
+
+    private boolean matchEnum() {
+        return ScannerPattern.ENUM.matcher(mCache).find();
+    }
+
     private boolean readPrefixSemicolon(BufferedReader br) {
         do {
-            Matcher m = ScannerPattern.DROP_SEMICOLON_SCOPE.matcher(mCache);
-            if (m.find()) mCache = m.group(0);
-            else mCache = "";
+            mCache = mCache.substring(mCache.indexOf(";") + 1, mCache.length());
         } while (matchPrefixSemicolon());
         
         return !mCache.equals("");
@@ -215,6 +286,7 @@ public class Scanner {
         } else {
             mCache = "";
         }
+        
     }
 
     private boolean parseBlock(BufferedReader br) throws IOException {
@@ -290,6 +362,9 @@ public class Scanner {
         ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
         Map<String, MemberDefs> members = cls.getMembers();
         int nameIndex = block.lastIndexOf(" ");
+        if (nameIndex == -1) {
+            return;
+        }
         String name = block.substring(nameIndex, block.length()).trim();
         
         if (members.containsKey(name)) {
@@ -335,6 +410,10 @@ public class Scanner {
                     next = rb + 1;
                     ++bracePos.rBraceCount;
                     bracePos.right = rb;
+                } else {
+                    next = lb + 1;
+                    if (bracePos.left == 0) bracePos.left = lb;
+                    ++bracePos.lBraceCount;
                 }
             } else if (lb != -1) {
                 next = lb + 1;
@@ -385,22 +464,25 @@ public class Scanner {
     private boolean matchTemplate() {
         return ScannerPattern.TEMPLATE.matcher(mCache).find();
     }
-
-    private boolean readScope(BufferedReader br) {
+    private boolean matchUnion() {
+        return ScannerPattern.UNION.matcher(mCache).find();
+    }
+    
+    private boolean readScope(BufferedReader br) throws InterruptedException {
         int start   = mCache.indexOf("{");
         int end     = mCache.indexOf("}");
         int idx     = -1;
         if (end == -1 || (start != -1 && start < end)) {
-            mScopes.put(EMPTY_SCOPE);
+            mScopes.push(EMPTY_SCOPE);
             idx = start;
         } else {
-            int scope = mScopes.poll();
+            int scope = mScopes.pop();
             switch (scope) {
             case CLASS_SCOPE: 
-                mClasses.poll();
+                mClasses.pop();
                 break;
             case NAMES_SCOPE: 
-                mNameSpaces.poll();
+                mNameSpaces.pop();
                 break;
             default:
                 break;
@@ -478,13 +560,9 @@ public class Scanner {
         String[] classes    = classdefine.split(" ");
         if (classes != null && classes.length != 0) {
             String classname = classes[classes.length - 1];
-            try {
-                mSymbols.addClass(getNamespace(), classname);
-                mClasses.put(classname);
-                mScopes.put(CLASS_SCOPE);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            mSymbols.addClass(getNamespace(), classname);
+            mClasses.push(classname);
+            mScopes.push(CLASS_SCOPE);
         } else {
             System.err.println("\tERROR: unspport class prase from : ");
             System.err.printf("\t\tfile[%s:%d], %s\r\n", mFile, mLine, mCache);
@@ -505,12 +583,8 @@ public class Scanner {
         String []names = mCache.split(" ");
         String namespace = names[1];
         mCache = "";
-        try {
-            mNameSpaces.put(namespace);
-            mScopes.put(NAMES_SCOPE);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mNameSpaces.push(namespace);
+        mScopes.push(NAMES_SCOPE);
         
         return false;
     }
@@ -541,7 +615,7 @@ public class Scanner {
         int idx = -1;
         if (scope != -1) {
             idx = scope;
-            mScopes.put(EMPTY_SCOPE);
+            mScopes.push(EMPTY_SCOPE);
         } else {
             idx = semicolon;
         }
@@ -560,11 +634,7 @@ public class Scanner {
 
     private boolean readDefine(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.DEFINE, br)) return false;
-        System.out.printf("WARN: unspport define parse ingore :\r\n");
-        System.out.printf("\t\"%s\"\r\n", mCache);
-        System.out.printf("\tfile[%s:%d]\r\n", mFile, mLine);
         mCache = "";
-        
         return false;
     }
 
