@@ -35,20 +35,23 @@ public class MemberDefs {
      * @brief       简单的解析，不支持特殊宏定义
      */
     private void parseBlock() {
+        mBlock = mBlock.replaceAll("\\s+", " ").trim();
         int staticIndex = mBlock.indexOf("static");
         if (staticIndex != -1) {
             mIsStatic = true;
             staticIndex = staticIndex + "static ".length();
+            mBlock = mBlock.substring(staticIndex,  mBlock.length());
         } else {
             staticIndex = 0;
         }
         
-        int nameIndex = mBlock.indexOf(mCppClassName);
-        if (nameIndex == -1) {
-            Logger.e("MemberDefs::parseBlock Unkown member Name", 
-                    System.err, true, mFile, mLine);
+        String []blocks = mBlock.split("\\s+");
+        mName = blocks[blocks.length - 1];
+        mCppType = "";
+        for (int i = 0; i < blocks.length - 1; ++i) {
+            mCppType = mCppType + ((i == 0) ? "" : " ") + blocks[i];
         }
-        mCppType = mBlock.substring(staticIndex, nameIndex).trim();
+        mCppType.trim();
     }
     
     public void genJava(PrintStream p) {
@@ -114,6 +117,10 @@ public class MemberDefs {
     }
     public void setType(int mTokenType) {
         this.mMemType = mTokenType;
+    }
+
+    public void setTypes(TypeDefs types) {
+        mTypes = types;
     }
 
 }

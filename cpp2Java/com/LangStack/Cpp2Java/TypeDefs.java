@@ -90,6 +90,8 @@ public class TypeDefs {
         
         mCppType2Enum.put("string", TYPE_STRING);
         mCppType2Enum.put("std::string", TYPE_STRING);
+        mCppType2Enum.put("const char *", TYPE_STRING);
+        mCppType2Enum.put("char *", TYPE_STRING);
         
         mCppType2Enum.put("std::list<int>", TYPE_LIST_INT32);
         mCppType2Enum.put("std::list<INT>", TYPE_LIST_INT32);
@@ -123,6 +125,8 @@ public class TypeDefs {
 
         mCppType2Enum.put("void", TYPE_VOID);
         mCppType2Enum.put("VOID", TYPE_VOID);
+        
+        mCppType2Enum.put("class", TYPE_OBJECT);
 
 
         mEnum2JavaType.put(TYPE_INT32, "Integer");

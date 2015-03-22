@@ -6,8 +6,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class MethodDefs {
+    
+    public static final int CONSTRUCT   = 0;            ///< 构造
+    public static final int DECONSTRUCT = 1;            ///< 析构
+    public static final int METHOD      = 2;            ///< 一般方法、函数
+    
     private String      mCppClassName;                   ///< 类名
     private String      mMethodName;                     ///< 方法名
+    private int         mMethodtype = METHOD;            ///< 方法类型
     private boolean     mIsStatic = false;               ///< 静态方法标记
     private List<Param> mParams = new ArrayList<Param>();///< 首参返回值
     private TypeDefs    mTypes  = null;                  ///< 类型定义引用
@@ -33,6 +39,8 @@ public class MethodDefs {
         mCppClassName = className;
         mMethodName = methodName;
         mBlock = block;
+        mFile = file;
+        mLine = line;
     }
    
     public MethodDefs(String className, String methodName, boolean isStatic) {
@@ -52,33 +60,52 @@ public class MethodDefs {
         parseBlock();
         for (Param method : mParams) {
             if (!method.cpp2Enum()) {
-                System.out.printf("ERROR: prase param[%s] fail, form [%s:%d]\n",
-                        method.mCppType, mFile, mLine);
+                System.out.printf("ERROR: prase param[%s] fail, form:\r\n"
+                        + "\t[%s:%d]\r\n[%s]\r\n",
+                        method.mCppType, mFile, mLine, mBlock);
                 System.exit(-1);
             }
         }
     }
     
     private void parseBlock() {
-        Matcher m = ScannerPattern.METHOD_SCOPE.matcher(mBlock);
-        if (!m.find()) {
+        mBlock = mBlock.replaceAll("\\s+", " ").trim();
+
+        int idx = mBlock.indexOf(mMethodName);
+        if (idx == -1) {
             Logger.e("MethodDefs::parseBlock Unkown method format", 
                     System.err, true, mFile, mLine);
         }
-        String retVal = m.group(0);
-        String params = m.group(1);
+        String retVal = mBlock.substring(0, idx);
+        
+        int l   = mBlock.indexOf("(");
+        int r   = mBlock.indexOf(")");
+        String params = mBlock.substring(l + 1, r);
         parseReturn(retVal);
         parseParams(params);
     }
 
     private void parseParams(String paramsBlock) {
+        if (paramsBlock.isEmpty()) {
+            return;
+        }
         String []params = paramsBlock.split(",");
         
         for (String param : params) {
             int idx = param.lastIndexOf(" ");
+            int pointIdx = param.lastIndexOf("*");
+            int refIdx = param.lastIndexOf("&");
+            if (pointIdx > idx) idx = pointIdx;
             if (idx != -1) {
-                addParam(param.substring(0, idx).trim(), 
-                         param.substring(param.length(), idx).trim());
+                String type = param.substring(0, idx + 1).trim();
+                int constIdx = type.indexOf("const");
+                if (constIdx != -1) {
+                    type = type.substring(constIdx + "const".length(), 
+                            type.length()).trim();
+                }
+                if (refIdx > idx)   idx = refIdx;
+                String name = param.substring(idx + 1, param.length()).trim();
+                addParam(type, name);
             } else {
                 Logger.e("MethodDefs::parseBlock Unkown method params format", 
                         System.err, true, mFile, mLine);
@@ -87,6 +114,13 @@ public class MethodDefs {
     }
 
     private void parseReturn(String retVal) {
+        if (retVal.isEmpty()) {
+            mMethodtype = mMethodName.contains("~") ? DECONSTRUCT : CONSTRUCT;
+            return;
+        } else {
+            mMethodtype = METHOD;
+        }
+        
         int staticIndex = mBlock.indexOf("static");
         if (staticIndex != -1) {
             mIsStatic = true;
@@ -95,7 +129,7 @@ public class MethodDefs {
             staticIndex = 0;
         }
         
-        addParam(retVal.substring(staticIndex, retVal.length()), "");
+        addParam(retVal.substring(staticIndex, retVal.length()).trim(), "");
     }
 
     /**
@@ -202,5 +236,9 @@ public class MethodDefs {
 
     public TypeDefs getTypes() {
         return mTypes;
+    }
+
+    public void setTypes(TypeDefs types) {
+        mTypes = types;
     }
 }

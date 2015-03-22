@@ -57,6 +57,11 @@ public class ClassDefs
 		mMethods.add(method);
 		return method;
 	}
+
+    public void addMethod(MethodDefs method) {
+        method.setTypes(mTypes);
+        mMethods.add(method);
+    }
 	
 	/**
 	 * @brief		增加一个成员
@@ -68,6 +73,10 @@ public class ClassDefs
 		mMembers.put(name, member);
 		return member;
 	}
+    public void addMember(String name, MemberDefs member) {
+        mMembers.put(name, member);
+        member.setTypes(mTypes);
+    }
 	
 	/**
 	 * @brief      解析java类
@@ -138,7 +147,12 @@ public class ClassDefs
                         pos + 1, getJavaClassName().length()));
             }
             else {
-                setJavaPackage("com.LangStack");
+                String pack = "com";
+                String []names = getNamespace().split(".");
+                for (String name : names) {
+                    pack = pack + "." + name;
+                }
+                setJavaPackage("pack");
             }
         } else {
             setJavaClassName(getClassName());
@@ -192,4 +206,5 @@ public class ClassDefs
     public void setConsts(ContantDefs consts) {
         this.mConsts = consts;
     }
+
 }

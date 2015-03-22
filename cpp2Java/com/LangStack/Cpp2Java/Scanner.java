@@ -156,7 +156,7 @@ public class Scanner {
         } else if (matchNamespace()) {
             return readNamespace(br);
         } else if (matchClass()) {
-            return readClass(br);
+            return parseClass(br);
         } else if (matchPermission()) {
             return readPermission(br);
         } else if (matchScope()) {
@@ -229,7 +229,7 @@ public class Scanner {
                     String className = getCurrentClass();
                     ClassDefs cls = mSymbols.getClassDef(namespace, className);
                     if (cls == null && className.isEmpty()) {
-                        mSymbols.addClass(namespace, className);
+                        mSymbols.addClass(namespace, className, mFile, mLine, mCache);
                         cls = mSymbols.getClassDef(namespace, className);
                     }
                     cls.getConsts().addConst(enumType, enumValue++, mComment.trim());
@@ -373,6 +373,7 @@ public class Scanner {
         }
         
         MemberDefs member = new MemberDefs(block, mFile, mLine);
+        cls.addMember(name, member);
         member.setPublic(mPermission == 0);
     }
 
@@ -391,9 +392,10 @@ public class Scanner {
         }
         
         ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
-        List<MethodDefs> methods = cls.getMethods();
-        methods.add(
-                new MethodDefs(cls.getClassName(), name, block, mFile, mLine));
+        MethodDefs method = 
+                new MethodDefs(cls.getClassName(), name, block, mFile, mLine);
+        
+        cls.addMethod(method);
     }
 
     /**
@@ -544,7 +546,7 @@ public class Scanner {
         return ScannerPattern.MEMBER.matcher(mCache).find();
     }
     
-    private boolean readClass(BufferedReader br) throws IOException {
+    private boolean parseClass(BufferedReader br) throws IOException {
         if (!readCache(ScannerPattern.CLASS, br, " ")) return false;
         if (ScannerPattern.CLASS_TAG.matcher(mCache).find()) {
             mPermission = 1;
@@ -560,7 +562,7 @@ public class Scanner {
         String[] classes    = classdefine.split(" ");
         if (classes != null && classes.length != 0) {
             String classname = classes[classes.length - 1];
-            mSymbols.addClass(getNamespace(), classname);
+            mSymbols.addClass(getNamespace(), classname, mFile, mLine, mCache);
             mClasses.push(classname);
             mScopes.push(CLASS_SCOPE);
         } else {
@@ -763,4 +765,3 @@ public class Scanner {
     }
     
 }
-
