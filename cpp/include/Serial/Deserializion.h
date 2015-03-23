@@ -27,6 +27,7 @@ SOFTWARE.
 #include <list>
 #include <string>
 #include <istream>
+#include <cstring>
 
 #include "Reflect/IReflection.h"
 #include "Defs.h"
@@ -73,6 +74,15 @@ static size_t deserialGetDetailLength(const char *buf)
             {
                 break;
             }
+            else if (*(p+1) && *(p+1) == TAG_MEMORY[0])
+            {
+                /// memory 使用tlv模式
+                int len = 0;
+                char* tag = strstr(p + 1, ":");
+                std::string length = std::string(p + 2, tag);
+                sscanf(length.c_str(), "%d", &len);
+                p = tag + len;
+            }
         }
         else if (deserialCStringMatch(p, TAG_END))
         {
@@ -94,6 +104,56 @@ static bool deserialSampleValueFromString(const char *buf, const char *checkTag,
     sscanf(buf + offset, fmt, val);
     return true;
 }
+
+///\brief   char的反序列化
+template <> class Deserializion<char>
+{
+public:
+    bool operator()(const char *buf, char &val) const
+    {
+        int ival = 0;
+        if (deserialSampleValueFromString(buf, TAG_CHAR, "%d", &ival))
+        {
+            val = (char)ival;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    char operator()(const char *buf) const
+    {
+        char res(0);
+        this->operator ()(buf, res);
+        return res;
+    }
+};
+
+///\brief   short的反序列化
+template <> class Deserializion<short>
+{
+public:
+    bool operator()(const char *buf, short &val) const
+    {
+        int ival = 0;
+        if (deserialSampleValueFromString(buf, TAG_SHORT, "%d", &ival))
+        {
+            val = (short)ival;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    short operator()(const char *buf) const
+    {
+        short res(0);
+        this->operator ()(buf, res);
+        return res;
+    }
+};
 
 ///\brief   int的反序列化
 template <> class Deserializion<int>
@@ -345,7 +405,7 @@ public:
         if (!ret)
         {
             delete val;
-            val = NULL;
+            val = nullptr;
         }
         return ret;
     }
@@ -364,6 +424,12 @@ private:
         /// 反序列化值
         switch (data->getMetaType())
         {
+        case MetaDataTypeChar:
+            ret &= DeserializionClass<char>()(data, val, buf);
+            break;
+        case MetaDataTypeShort:
+            ret &= DeserializionClass<short>()(data, val, buf);
+            break;
         case MetaDataTypeInt:
             ret &= DeserializionClass<int>()(data, val, buf);
             break;
@@ -378,6 +444,12 @@ private:
             break;
         case MetaDataTypeClass:
             ret &= DeserializionClass<IReflection*>()(data, val, buf);
+            break;
+        case MetaDataTypeCharList:
+            ret &= DeserializionClass<std::list<char> >()(data, val, buf);
+            break;
+        case MetaDataTypeShortList:
+            ret &= DeserializionClass<std::list<short> >()(data, val, buf);
             break;
         case MetaDataTypeIntList:
             ret &= DeserializionClass<std::list<int> >()(data, val, buf);
@@ -394,6 +466,8 @@ private:
         case MetaDataTypeClassList:
             ret &= DeserializionClass<std::list<IReflection*> >()(data, val, buf);
             break;
+        case MetaDataTypeMemory:
+            /// FIXME 类成员暂不支持memory
         case MetaDataTypeUnkown:
         default:
             ret = false;

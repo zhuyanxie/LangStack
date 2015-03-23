@@ -12,19 +12,24 @@ import com.LangStack.Cpp2Java.TypeDefs.DefineSource.Source;
 public class TypeDefs {
 
     public static final int           TYPE_UNKOWN      = 0;
-    
-    public static final int           TYPE_INT32       = 1;
-    public static final int           TYPE_INT64       = 2;
-    public static final int           TYPE_DOUBLE      = 3;
-    public static final int           TYPE_STRING      = 4;
 
-    public static final int           TYPE_LIST_INT32  = 11;
-    public static final int           TYPE_LIST_INT64  = 12;
-    public static final int           TYPE_LIST_DOUBLE = 13;
-    public static final int           TYPE_LIST_STRING = 14;
+    public static final int           TYPE_INT8        = 1;
+    public static final int           TYPE_INT16       = 2;
+    public static final int           TYPE_INT32       = 3;
+    public static final int           TYPE_INT64       = 4;
+    public static final int           TYPE_DOUBLE      = 5;
+    public static final int           TYPE_STRING      = 6;
+
+    public static final int           TYPE_LIST_INT8   = 11;
+    public static final int           TYPE_LIST_INT16  = 12;
+    public static final int           TYPE_LIST_INT32  = 13;
+    public static final int           TYPE_LIST_INT64  = 14;
+    public static final int           TYPE_LIST_DOUBLE = 15;
+    public static final int           TYPE_LIST_STRING = 16;
 
     public static final int           TYPE_OBJECT      = 20;
     public static final int           TYPE_LIST_OBJECT = 30;
+    public static final int           TYPE_MEMORY      = 40;
     public static final int           TYPE_VOID        = 99;
 
     private Set<String>               mCppTypeSet      = new HashSet<String>();
@@ -74,14 +79,27 @@ public class TypeDefs {
     
     public TypeDefs()
     {
+        mCppType2Enum.put("unsigned char", TYPE_INT8);
+        mCppType2Enum.put("char", TYPE_INT8);
+        mCppType2Enum.put("int8_t", TYPE_INT8);
+        mCppType2Enum.put("uint8_t", TYPE_INT8);
+
+        mCppType2Enum.put("unsigned short", TYPE_INT16);
+        mCppType2Enum.put("short", TYPE_INT16);
+        mCppType2Enum.put("int16_t", TYPE_INT16);
+        mCppType2Enum.put("uint16_t", TYPE_INT16);
+
+        mCppType2Enum.put("unsigned int", TYPE_INT32);
         mCppType2Enum.put("int", TYPE_INT32);
         mCppType2Enum.put("INT", TYPE_INT32);
         mCppType2Enum.put("DWORD", TYPE_INT32);
         mCppType2Enum.put("int32_t", TYPE_INT32);
         mCppType2Enum.put("uint32_t", TYPE_INT32);
 
-        mCppType2Enum.put("long", TYPE_INT64);
+        mCppType2Enum.put("unsigned long long", TYPE_INT64);
+        mCppType2Enum.put("unsigned long", TYPE_INT64);
         mCppType2Enum.put("long long", TYPE_INT64);
+        mCppType2Enum.put("long", TYPE_INT64);
         mCppType2Enum.put("int64_t", TYPE_INT64);
         mCppType2Enum.put("uint64_t", TYPE_INT64);
 

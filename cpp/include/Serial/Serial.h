@@ -24,6 +24,7 @@ SOFTWARE.
 #ifndef _LANGUAGE_STACK_SERIAL_H_
 #define _LANGUAGE_STACK_SERIAL_H_
 
+#include "Reflect/MetaValue.h"
 #include "Serializion.h"
 #include "Deserializion.h"
 
@@ -34,11 +35,33 @@ template<class T> bool serial(T obj, std::ostream &os)
 {
     return Serializion<T>()(obj, os);
 }
+bool serial(const char *buf, int len, std::ostream &os)
+{
+    os << TAG_MEMORY << len << TAG_END;
+    os.write(buf, len);
+    return true;
+}
 
 ///\brief 反序列化函数
 template<class T> bool deserial(const char *buf, T &val)
 {
     return Deserializion<T>()(buf, val);
+}
+
+bool deserialMemory(const char *buf, MetaValue &val)
+{
+    if (*buf && *buf == TAG_MEMORY[0])
+    {
+        /// memory 使用tlv格式
+        int len = 0;
+        char* tag = strstr(buf, ":");
+        std::string length = std::string(buf + 1, tag);
+        sscanf(length.c_str(), "%d", &len);
+        val =  MetaValue(tag + 1, len);
+        return true;
+    }
+
+    return false;
 }
 
 }

@@ -40,17 +40,23 @@ enum MetaDataType
 {
     MetaDataTypeVoid,           ///< void类型，仅用于表示参数类型
 
+    MetaDataTypeChar,           ///< char
+    MetaDataTypeShort,          ///< short
     MetaDataTypeInt,            ///< int
     MetaDataTypeLonglong,       ///< long long
     MetaDataTypeDouble,         ///< double
     MetaDataTypeString,         ///< std::string
     MetaDataTypeClass,          ///< IReflection*
 
+    MetaDataTypeCharList,       ///< std::list<char>
+    MetaDataTypeShortList,      ///< std::list<short>
     MetaDataTypeIntList,        ///< std::list<int>
     MetaDataTypeLonglongList,   ///< std::list<long long>
     MetaDataTypeDoubleList,     ///< std::list<double>
     MetaDataTypeStringList,     ///< std::list<std::string>
     MetaDataTypeClassList,      ///< std::list<IReflection*>
+
+    MetaDataTypeMemory,         ///< const char* + int len(对应的java byte[])
 
     MetaDataTypeUnkown,
 };
@@ -89,9 +95,29 @@ template <> struct Type2MetaDataType<std::string>
     MetaDataType operator()() const { return MetaDataTypeString; }
 };
 
+template <> struct Type2MetaDataType<const char *>
+{
+    MetaDataType operator()() const { return MetaDataTypeString; }
+};
+
+template <> struct Type2MetaDataType<char *>
+{
+    MetaDataType operator()() const { return MetaDataTypeString; }
+};
+
 template <> struct Type2MetaDataType<IReflection*>
 {
     MetaDataType operator()() const { return MetaDataTypeClass; }
+};
+
+template <> struct Type2MetaDataType<std::list<char> >
+{
+    MetaDataType operator()() const { return MetaDataTypeCharList; }
+};
+
+template <> struct Type2MetaDataType<std::list<short> >
+{
+    MetaDataType operator()() const { return MetaDataTypeShortList; }
 };
 
 template <> struct Type2MetaDataType<std::list<int> >
@@ -124,6 +150,14 @@ template<MetaDataType T> struct MetaType2RealType
 {
     typedef int real_type;
 };
+template <> struct MetaType2RealType<MetaDataTypeChar>
+{
+    typedef char real_type;
+};
+template <> struct MetaType2RealType<MetaDataTypeShort>
+{
+    typedef short real_type;
+};
 template <> struct MetaType2RealType<MetaDataTypeInt>
 {
     typedef int real_type;
@@ -143,6 +177,14 @@ template <> struct MetaType2RealType<MetaDataTypeString>
 template <> struct MetaType2RealType<MetaDataTypeClass>
 {
     typedef IReflection* real_type;
+};
+template <> struct MetaType2RealType<MetaDataTypeCharList>
+{
+    typedef std::list<char> real_type;
+};
+template <> struct MetaType2RealType<MetaDataTypeShortList>
+{
+    typedef std::list<short> real_type;
 };
 template <> struct MetaType2RealType<MetaDataTypeIntList>
 {
@@ -165,6 +207,7 @@ template <> struct MetaType2RealType<MetaDataTypeClassList>
     typedef std::list<IReflection*> real_type;
 };
 
+/// FIXME MetaDataTypeMemory没有对应的C++类型
 
 
 }

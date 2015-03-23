@@ -29,6 +29,17 @@ SOFTWARE.
 
 namespace ls {
 
+struct MetaValuesAutoRelease
+{
+    MetaValuesAutoRelease(std::vector<MetaValue> &param) : m_params(param) {}
+    ~MetaValuesAutoRelease() {
+        for (auto value : m_params) {
+            value.release();
+        }
+    }
+    std::vector<MetaValue> &m_params;
+};
+
 class ReflectMethodInvoker
 {
 public:
@@ -37,6 +48,7 @@ public:
     static R invoke(const MetaMethodData &method, RpcCallPtr &call)
     {
         std::vector<MetaValue> params;
+        MetaValuesAutoRelease mvar(params);
         for (uint32_t i = 1; i <= method.paramsCount; ++i)
         {
             params.push_back(getParams(method.params[i], call->m_values[i-1]));
@@ -59,8 +71,12 @@ private:
     {
         switch (type)
          {
-         case MetaDataTypeInt:
-             return MetaValue(Deserializion<int>()(value.c_str()));
+        case MetaDataTypeChar:
+            return MetaValue(Deserializion<char>()(value.c_str()));
+        case MetaDataTypeShort:
+            return MetaValue(Deserializion<short>()(value.c_str()));
+        case MetaDataTypeInt:
+            return MetaValue(Deserializion<int>()(value.c_str()));
          case MetaDataTypeLonglong:
              return MetaValue(Deserializion<long long>()(value.c_str()));
          case MetaDataTypeDouble:
@@ -73,6 +89,18 @@ private:
          }
          case MetaDataTypeClass:
              return MetaValue(Deserializion<IReflection*>()(value.c_str()));
+         case MetaDataTypeCharList:
+         {
+             std::list<int> *il = new std::list<int>();
+             Deserializion<std::list<char> >()(value.c_str(), *il);
+             return MetaValue(il);
+         }
+         case MetaDataTypeShortList:
+         {
+             std::list<int> *il = new std::list<int>();
+             Deserializion<std::list<short> >()(value.c_str(), *il);
+             return MetaValue(il);
+         }
          case MetaDataTypeIntList:
          {
              std::list<int> *il = new std::list<int>();
@@ -102,6 +130,12 @@ private:
              std::list<IReflection*> *cl = new std::list<IReflection*>();
              Deserializion<std::list<IReflection*> >()(value.c_str(), *cl);
              return MetaValue(cl);
+         }
+         case MetaDataTypeMemory:
+         {
+             MetaValue val;
+             deserialMemory(value.c_str(), val);
+             return val;
          }
          default:
              break;

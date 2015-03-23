@@ -28,20 +28,23 @@ SOFTWARE.
 
 namespace ls {
 
-extern LS_EXPORT const char TAG_INT[];									///< Int:
-extern LS_EXPORT const char TAG_LONGLONG[];								///< LLong:
-extern LS_EXPORT const char TAG_DOUBLE[];								///< Double:
-extern LS_EXPORT const char TAG_STRING[];								///< String:
-extern LS_EXPORT const char TAG_LIST[];									///< List:
-extern LS_EXPORT const char TAG_CLASS[];								///< Class
-extern LS_EXPORT const char TAG_END[];									///< :
-extern LS_EXPORT const char TAG_PARAM_SPLIT[];							///< &
-extern LS_EXPORT const char DETAIL_END[];                               ///< ;
+extern LS_EXPORT const char TAG_CHAR[];                         ///< I8:
+extern LS_EXPORT const char TAG_SHORT[];                        ///< I16:
+extern LS_EXPORT const char TAG_INT[];                          ///< I32:
+extern LS_EXPORT const char TAG_LONGLONG[];						///< I64:
+extern LS_EXPORT const char TAG_DOUBLE[];						///< D:
+extern LS_EXPORT const char TAG_STRING[];						///< S:
+extern LS_EXPORT const char TAG_LIST[];							///< L:
+extern LS_EXPORT const char TAG_MEMORY[];                       ///< M
+extern LS_EXPORT const char TAG_CLASS[];                        ///< C
+extern LS_EXPORT const char TAG_END[];							///< :
+extern LS_EXPORT const char TAG_PARAM_SPLIT[];					///< &
+extern LS_EXPORT const char DETAIL_END[];                       ///< ;
 
-extern LS_EXPORT const char TAG_EMPTY_CLASS[];                          ///< NULL
-extern LS_EXPORT const char TAG_EMPTY_LIST[];                           ///< 空List
+extern LS_EXPORT const char TAG_EMPTY_CLASS[];                  ///< L:E;
+extern LS_EXPORT const char TAG_EMPTY_LIST[];                   ///< C:E;
 
-extern LS_EXPORT const std::string META_TYPE_STRING[];		            ///< 元数据字符串描述
+extern LS_EXPORT const std::string META_TYPE_STRING[];		    ///< 元数据字符串描述
 
 }
 

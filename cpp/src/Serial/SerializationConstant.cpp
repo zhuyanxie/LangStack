@@ -24,22 +24,27 @@ SOFTWARE.
 
 namespace ls {
 
-const char TAG_INT[]                = "Int:";
-const char TAG_LONGLONG[]           = "LLong:";
-const char TAG_DOUBLE[]             = "Double:";
-const char TAG_STRING[]             = "String:";
-const char TAG_LIST[]               = "List:";
-const char TAG_CLASS[]              = "Class";
+const char TAG_CHAR[]               = "I8:";
+const char TAG_SHORT[]              = "I16:";
+const char TAG_INT[]                = "I32:";
+const char TAG_LONGLONG[]           = "I64:";
+const char TAG_DOUBLE[]             = "D:";
+const char TAG_STRING[]             = "S:";
+const char TAG_LIST[]               = "L:";
+const char TAG_MEMORY[]             = "M";
+const char TAG_CLASS[]              = "C";
 const char TAG_END[]                = ":";
 const char TAG_PARAM_SPLIT[]        = "&";
 const char DETAIL_END[]             = ";";
 
-extern const char TAG_EMPTY_CLASS[] = "Class:Empty;";
-extern const char TAG_EMPTY_LIST[]  = "List:Empty;";
+extern const char TAG_EMPTY_CLASS[] = "C:E;";
+extern const char TAG_EMPTY_LIST[]  = "L:E;";
 
 const std::string META_TYPE_STRING[] =
 {
     "void",
+    "Char",
+    "Short"
     "Int",
     "LLong",
     "Double",
@@ -51,6 +56,10 @@ const std::string META_TYPE_STRING[] =
     "List",
     "List",
     "List",
+    "List",
+    "List",
+
+    "Memory",
 };
 
 }

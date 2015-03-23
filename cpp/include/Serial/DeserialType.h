@@ -32,6 +32,10 @@ MetaDataType deserialMetaType(const char *buf)
 {
     if (deserialCStringMatch(buf, TAG_INT))
         return MetaDataTypeInt;
+    else if (deserialCStringMatch(buf, TAG_CHAR))
+        return MetaDataTypeChar;
+    else if (deserialCStringMatch(buf, TAG_SHORT))
+        return MetaDataTypeShort;
     else if (deserialCStringMatch(buf, TAG_LONGLONG))
         return MetaDataTypeLonglong;
     else if (deserialCStringMatch(buf, TAG_DOUBLE))
@@ -40,16 +44,22 @@ MetaDataType deserialMetaType(const char *buf)
         return MetaDataTypeString;
     else if (deserialCStringMatch(buf, TAG_CLASS))
         return MetaDataTypeClass;
-    else if (deserialCStringMatch(buf, "List:Int:"))
+    else if (deserialCStringMatch(buf, "L:I8:"))
+        return MetaDataTypeCharList;
+    else if (deserialCStringMatch(buf, "L:I16:"))
+        return MetaDataTypeShortList;
+    else if (deserialCStringMatch(buf, "L:I32:"))
         return MetaDataTypeIntList;
-    else if (deserialCStringMatch(buf, "List:LLong:"))
+    else if (deserialCStringMatch(buf, "L:I64:"))
         return MetaDataTypeLonglongList;
-    else if (deserialCStringMatch(buf, "List:Double:"))
+    else if (deserialCStringMatch(buf, "L:D:"))
         return MetaDataTypeDoubleList;
-    else if (deserialCStringMatch(buf, "List:String:"))
+    else if (deserialCStringMatch(buf, "L:S:"))
         return MetaDataTypeStringList;
-    else if (deserialCStringMatch(buf, "List:Class:"))
+    else if (deserialCStringMatch(buf, "L:C"))
         return MetaDataTypeClassList;
+    else if (deserialCStringMatch(buf, "M"))
+        return MetaDataTypeMemory;
     return MetaDataTypeUnkown;
 }
 
