@@ -1,6 +1,7 @@
 package com.LangStack.Serial;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public class Deserial {
@@ -17,16 +18,28 @@ public class Deserial {
             return null;
         }
 
-        if (str.startsWith(Serial.TAG_INT))
+        if (str.startsWith(Serial.TAG_CHAR))
+        {
+            int val = Integer.parseInt(str.substring(Serial.TAG_CHAR.length(),
+                    str.length() - 1));
+            return (char) val;
+        }
+        else if (str.startsWith(Serial.TAG_SHORT))
+        {
+            int val =  Integer.parseInt(str.substring(Serial.TAG_SHORT.length(),
+                    str.length() - 1));
+            return (short) val;
+        }
+        else if (str.startsWith(Serial.TAG_INT))
         {
             return Integer.parseInt(str.substring(Serial.TAG_INT.length(),
                     str.length() - 1));
-        } 
+        }
         else if (str.startsWith(Serial.TAG_LONG))
         {
             return Long.parseLong(str.substring(Serial.TAG_LONG.length(),
                     str.length() - 1));
-        } 
+        }
         else if (str.startsWith(Serial.TAG_DOUBLE))
         {
             return Double.parseDouble(str.substring(Serial.TAG_DOUBLE.length(),
@@ -61,7 +74,15 @@ public class Deserial {
             return Object.class;
         }
 
-        if (str.startsWith(Serial.TAG_INT))
+        if (str.startsWith(Serial.TAG_CHAR))
+        {
+            return char.class;
+        } 
+        else if (str.startsWith(Serial.TAG_SHORT))
+        {
+            return short.class;
+        } 
+        else if (str.startsWith(Serial.TAG_INT))
         {
             return int.class;
         } 
@@ -80,6 +101,10 @@ public class Deserial {
         else if (str.startsWith(Serial.TAG_LIST))
         {
             return ArrayList.class;
+        }
+        else if (str.startsWith(Serial.TAG_MEMORY))
+        {
+            return byte[].class;
         }
 
         return Object.class;

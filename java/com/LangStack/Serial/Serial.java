@@ -2,29 +2,40 @@ package com.LangStack.Serial;
 
 import java.util.ArrayList;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 
 /**
  * 序列化 API
  */
 public class Serial {
-    
-    public static final String TAG_INT 		= "Int:";
-    public static final String TAG_LONG		= "LLong:";
-    public static final String TAG_DOUBLE	= "Double:";
-    public static final String TAG_STRING	= "String:";
-    public static final String TAG_LIST		= "List:";
-    public static final String TAG_CLASS	= "Class";
+
+    public static final String TAG_CHAR     = "I8:";
+    public static final String TAG_SHORT    = "I16:";
+    public static final String TAG_INT      = "I32:";
+    public static final String TAG_LONG		= "I64:";
+    public static final String TAG_DOUBLE	= "D:";
+    public static final String TAG_STRING	= "S:";
+    public static final String TAG_LIST		= "L:";
+    public static final String TAG_MEMORY   = "M";
+    public static final String TAG_CLASS    = "C";
     public static final String TAG_END		= ":";
     public static final String TAG_PARAM_SPLIT	= "&";
-    public static final String DETAIL_END	= ";";
+    public static final String DETAIL_END   = ";";
 
-    public static final String TAG_EMPTY_CLASS 	= "Class:Empty;";
-    public static final String TAG_EMPTY_LIST  	= "List:Empty;";
-    
+    public static final String TAG_EMPTY_CLASS 	= "C:E;";
+    public static final String TAG_EMPTY_LIST  	= "L:E;";
     
     public static String serial(Object obj)
     {
-        if (obj instanceof Integer)
+        if (obj instanceof Charset)
+        {
+            return serial((Charset)obj);
+        } 
+        else if(obj instanceof Short)
+        {
+            return serial((Short)obj);
+        } 
+        else if(obj instanceof Integer)
         {
             return serial((Integer)obj);
         } 
@@ -50,6 +61,22 @@ public class Serial {
         }  
     }
     
+    public static String serial(byte[] memory)
+    {
+        return TAG_MEMORY + memory.length + TAG_END +
+                memory.toString() + DETAIL_END;
+    }
+    
+    public static String serial(Charset o)
+    {
+        return TAG_CHAR + o + DETAIL_END;
+    }    
+    
+    public static String serial(Short o)
+    {
+        return TAG_SHORT + o + DETAIL_END;
+    }    
+    
     public static String serial(Integer o)
     {
         return TAG_INT + o + DETAIL_END;
@@ -67,6 +94,7 @@ public class Serial {
 
     public static String serial(String o)
     {
+        /// TODO String改成tlv模型
         if (null != o)
         {
             o = o.replaceAll("%", "%%");
@@ -118,30 +146,7 @@ public class Serial {
             String valueSerialString = null;
             try {
                 Object obj = fields[i].get(o);
-                if (obj instanceof Integer)
-                {
-                    valueSerialString = serial((Integer) obj);
-                } 
-                else if (obj instanceof Long)
-                {
-                    valueSerialString = serial((Long) obj);
-                } 
-                else if (obj instanceof Double)
-                {
-                    valueSerialString = serial((Double) obj);
-                } 
-                else if (obj instanceof String)
-                {
-                    valueSerialString = serial((String) obj);
-                } 
-                else if (obj instanceof ArrayList)
-                {
-                    valueSerialString = serial((ArrayList<?>) obj);
-                } 
-                else
-                {
-                    valueSerialString = serial(obj);
-                }
+                valueSerialString = serial(obj);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
