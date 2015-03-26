@@ -42,24 +42,24 @@ extern const char TAG_EMPTY_LIST[]  = "L:E;";
 
 const std::string META_TYPE_STRING[] =
 {
-    "void",
-    "Char",
-    "Short"
-    "Int",
-    "LLong",
-    "Double",
-    "String",
-    "Class",
+    "V",
+    "I8",
+    "I16",
+    "I32",
+    "I64",
+    "D",
+    "S",
+    "C",
 
-    "List",
-    "List",
-    "List",
-    "List",
-    "List",
-    "List",
-    "List",
+    "L",
+    "L",
+    "L",
+    "L",
+    "L",
+    "L",
+    "L",
 
-    "Memory",
+    "M",
 };
 
 }

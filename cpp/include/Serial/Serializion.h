@@ -47,8 +47,29 @@ public:
     ///\return          序列化成功/失败
     bool operator()(T obj, std::ostream &os)
     {
-//        DAHUA_STATIC_ASSERT(false && "Serializion NOT support type!");
         return false;
+    }
+};
+
+///\brief   char序列化
+template <> class Serializion<char>
+{
+public:
+    bool operator()(char obj, std::ostream &os)
+    {
+        os << TAG_CHAR << (int)(obj) << DETAIL_END;
+        return true;
+    }
+};
+
+///\brief   short序列化
+template <> class Serializion<short>
+{
+public:
+    bool operator()(short obj, std::ostream &os)
+    {
+        os << TAG_SHORT << obj << DETAIL_END;
+        return true;
     }
 };
 
@@ -179,6 +200,14 @@ public:
             os << data->getMetaName() << TAG_PARAM_SPLIT;
             switch(data->getMetaType())
             {
+            case MetaDataTypeChar:
+                ret &= Serializion<char>()(
+                        *(char*)data->getMetaData(obj), os);
+                break;
+            case MetaDataTypeShort:
+                ret &= Serializion<short>()(
+                        *(short*)data->getMetaData(obj), os);
+                break;
             case MetaDataTypeInt:
                 ret &= Serializion<int>()(
                         *(int*)data->getMetaData(obj), os);
@@ -198,6 +227,14 @@ public:
             case MetaDataTypeClass:
                 ret &= Serializion<IReflection*>()(
                         *(IReflection**)data->getMetaData(obj), os);
+                break;
+            case MetaDataTypeCharList:
+                ret &= Serializion<std::list<char> >()(
+                        *(std::list<char>*)data->getMetaData(obj), os);
+                break;
+            case MetaDataTypeShortList:
+                ret &= Serializion<std::list<short> >()(
+                        *(std::list<short>*)data->getMetaData(obj), os);
                 break;
             case MetaDataTypeIntList:
                 ret &= Serializion<std::list<int> >()(

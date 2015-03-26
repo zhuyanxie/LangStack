@@ -130,11 +130,13 @@
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaFactory.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaMethod.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Reflect\MetaTable.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\Reflect\MetaValue.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCore.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcCoreImpl.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcObjectPool.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcRequest.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Rpc\RpcResponse.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\Serial\Serial.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Serial\SerializationConstant.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Task\TaskThread.cpp" />
     <ClCompile Include="..\..\..\cpp\src\Task\TaskThreadPool.cpp" />

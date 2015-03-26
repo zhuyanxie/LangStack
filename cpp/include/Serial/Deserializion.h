@@ -30,6 +30,7 @@ SOFTWARE.
 #include <cstring>
 
 #include "Reflect/IReflection.h"
+#include "Log/Log.h"
 #include "Defs.h"
 
 namespace ls {
@@ -78,7 +79,7 @@ static size_t deserialGetDetailLength(const char *buf)
             {
                 /// memory 使用tlv模式
                 int len = 0;
-                char* tag = strstr(p + 1, ":");
+                const char* tag = strstr(p + 1, ":");
                 std::string length = std::string(p + 2, tag);
                 sscanf(length.c_str(), "%d", &len);
                 p = tag + len;
@@ -393,9 +394,12 @@ public:
                 continue;
             }
 
-            if (memberType.find(data->getMetaType()) != 0)
+            auto realType = data->getMetaTypeString();
+            if (memberType.find(realType) != 0)
             {
                 /// 成员类型改变
+                WARNF("LSCpp", "member type not same now[%s], real[%s]\n",
+                    memberType.c_str(), realType.c_str());
                 continue;
             }
 

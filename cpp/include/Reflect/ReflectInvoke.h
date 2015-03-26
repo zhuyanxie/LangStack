@@ -29,14 +29,17 @@ SOFTWARE.
 
 namespace ls {
 
-struct MetaValuesAutoRelease
+class MetaValuesAutoRelease
 {
+public:
     MetaValuesAutoRelease(std::vector<MetaValue> &param) : m_params(param) {}
     ~MetaValuesAutoRelease() {
         for (auto value : m_params) {
             value.release();
         }
     }
+
+private:
     std::vector<MetaValue> &m_params;
 };
 
@@ -91,13 +94,13 @@ private:
              return MetaValue(Deserializion<IReflection*>()(value.c_str()));
          case MetaDataTypeCharList:
          {
-             std::list<int> *il = new std::list<int>();
+             std::list<char> *il = new std::list<char>();
              Deserializion<std::list<char> >()(value.c_str(), *il);
              return MetaValue(il);
          }
          case MetaDataTypeShortList:
          {
-             std::list<int> *il = new std::list<int>();
+             std::list<short> *il = new std::list<short>();
              Deserializion<std::list<short> >()(value.c_str(), *il);
              return MetaValue(il);
          }

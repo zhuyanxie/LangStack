@@ -44,7 +44,7 @@ extern LS_EXPORT const char DETAIL_END[];                       ///< ;
 extern LS_EXPORT const char TAG_EMPTY_CLASS[];                  ///< L:E;
 extern LS_EXPORT const char TAG_EMPTY_LIST[];                   ///< C:E;
 
-extern LS_EXPORT const std::string META_TYPE_STRING[];		    ///< 元数据字符串描述
+extern LS_EXPORT const std::string META_TYPE_STRING[MetaDataTypeUnkown];///< 元数据字符串描述
 
 }
 

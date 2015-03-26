@@ -257,5 +257,11 @@
     <ClCompile Include="..\..\..\cpp\src\Transport\TcpConstant.cpp">
       <Filter>源文件\Transport</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\Reflect\MetaValue.cpp">
+      <Filter>源文件\Reflect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\cpp\src\Serial\Serial.cpp">
+      <Filter>源文件\Serial</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

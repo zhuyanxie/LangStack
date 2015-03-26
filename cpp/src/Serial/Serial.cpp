@@ -20,55 +20,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "TestSerial.h"
-
 #include "Serial/Serial.h"
-#include "Base/MemoryStream.h"
-#include "EasyTypeClass.h"
 
-TEST_F(CTestSerial, EasyClass)
+namespace ls {
+
+bool serial(const char *buf, int len, std::ostream &os)
 {
-    CEasyTypeClass easy;
-    easy.random();
-    std::ostringstream oss;
-    ls::serial((ls::IReflection*)&easy, oss);
-    std::string str = oss.str();
-
-    ls::IReflection* p = nullptr;
-    ls::deserial(str.c_str(), p);
-
-    ASSERT_TRUE(!!dynamic_cast<CEasyTypeClass*>(p));
-    CEasyTypeClass *easy2 = (CEasyTypeClass*)p;
-    ASSERT_TRUE(easy == *easy2);
+    os << TAG_MEMORY << len << TAG_END;
+    os.write(buf, len);
+    return true;
 }
 
-TEST_F(CTestSerial, Memory)
+bool deserialMemory(const char *buf, MetaValue &val)
 {
-    char buf[2048];
-    for (int i = 0; i < 2048; ++i) 
+    if (*buf && *buf == TAG_MEMORY[0])
     {
-        buf[i] = i % 256;
+        /// memory 使用tlv格式
+        int len = 0;
+        const char* tag = strstr(buf, ":");
+        std::string length = std::string(buf + 1, tag);
+        sscanf(length.c_str(), "%d", &len);
+        val =  MetaValue(tag + 1, len);
+        return true;
     }
-    std::string str(buf, 2048);
-    ASSERT_TRUE(str.size() == 2048);
-    ASSERT_TRUE(memcmp(str.c_str(), buf, 2048) == 0);
 
-    char buf2[4096];
-    ls::MemoryOutputStream mos(buf2, 4096);
-    ls::serial(str.c_str(), str.size(), mos);
-    std::string str1(buf2, mos.charsWritten());
-
-    ls::MetaValue val;
-    ls::deserialMemory(str1.c_str(), val);
-
-    std::string str2 = val;
-    int len(val);
-    ASSERT_TRUE(len == 2048);
-    ASSERT_TRUE(memcmp(str2.c_str(), buf, 2048) == 0);
+    return false;
 }
-
-TEST_F(CTestSerial, Dead)
-{
 
 }
 

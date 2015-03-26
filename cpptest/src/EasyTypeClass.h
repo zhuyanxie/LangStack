@@ -37,6 +37,9 @@ public:
     CEasyTypeClass();
     virtual ~CEasyTypeClass();
 
+    /// 随机内部值
+    void random();
+
     void dump();
     REFLECTION_METHOD_DECLEAR_ARGS0(void, dump)
     
@@ -46,6 +49,8 @@ public:
     bool operator==(const CEasyTypeClass &rhs) const;
 
 public:
+    char            m_char;
+    short           m_short;
     int             m_int;
     long long       m_longlong;
     double          m_double;
@@ -55,6 +60,8 @@ public:
 private:
     REFLECTION_CLASS_DECLEAR(CEasyTypeClass, "com.LangStackTest.EasyTypeClass");
 
+    REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, char,           m_char);
+    REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, short,          m_short);
     REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, int,            m_int);
     REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, long long,      m_longlong);
     REFLECTION_MEMBER_DECLEAR(CEasyTypeClass, double,         m_double);
@@ -65,6 +72,8 @@ private:
 /// class
 REFLECTION_CLASS_IMPLEMENT(CEasyTypeClass);
 /// member
+REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, char,           m_char);
+REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, short,          m_short);
 REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, int,            m_int);
 REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, long long,      m_longlong);
 REFLECTION_MEMBER_IMPLEMENT(CEasyTypeClass, double,         m_double);

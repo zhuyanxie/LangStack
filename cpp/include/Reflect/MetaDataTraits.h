@@ -75,6 +75,16 @@ template <> struct Type2MetaDataType<void>
     MetaDataType operator()() const { return MetaDataTypeVoid; }
 };
 
+template <> struct Type2MetaDataType<char>
+{
+    MetaDataType operator()() const { return MetaDataTypeChar; }
+};
+
+template <> struct Type2MetaDataType<short>
+{
+    MetaDataType operator()() const { return MetaDataTypeShort; }
+};
+
 template <> struct Type2MetaDataType<int>
 {
     MetaDataType operator()() const { return MetaDataTypeInt; }

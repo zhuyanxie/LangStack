@@ -43,6 +43,8 @@ struct MetaValue
         std::string*                stringv;
         IReflection*                classv;
 
+        std::list<char>*            charlist;
+        std::list<short>*           shortlist;
         std::list<int>*             intlist;
         std::list<long long>*       llonglist;
         std::list<double>*          doublelist;
@@ -103,8 +105,18 @@ struct MetaValue
     {
         value.classv = v;
     }
+    MetaValue(std::list<char>* v) :
+        type(MetaDataTypeCharList)
+    {
+        value.charlist = v;
+    }
+    MetaValue(std::list<short>* v) :
+        type(MetaDataTypeShortList)
+    {
+        value.shortlist = v;
+    }
     MetaValue(std::list<int>* v) :
-            type(MetaDataTypeIntList)
+        type(MetaDataTypeIntList)
     {
         value.intlist = v;
     }
@@ -134,13 +146,20 @@ struct MetaValue
 
     operator char() const                       {return value.charv;}
     operator short() const                      {return value.shortv;}
-    operator int() const                        {return value.intv;}
+    operator int() const
+    {
+        /// memory时候特殊处理
+        if (MetaDataTypeMemory == type) {
+            return (int)(*value.stringv).size();
+        }
+        return value.intv;
+    }
     operator long long() const                  {return value.llongv;}
     operator double() const                     {return value.doublev;}
     operator std::string() const                {return *value.stringv;}
-    operator char*() const                      {return (char *)(*value.stringv).c_str();}
-    operator const char*() const                {return (*value.stringv).c_str();}
     operator IReflection*() const               {return value.classv;}
+    operator std::list<char>() const            {return *value.charlist;}
+    operator std::list<short>() const           {return *value.shortlist;}
     operator std::list<int>() const             {return *value.intlist;}
     operator std::list<long long>() const       {return *value.llonglist;}
     operator std::list<double>() const          {return *value.doublelist;}
@@ -154,69 +173,8 @@ struct MetaValue
         return *this;
     }
 
-    ///\brief       LS内部回收内存用
-    void release()
-    {
-        switch(type)
-        {
-        case MetaDataTypeString:
-        case MetaDataTypeMemory:
-            if (nullptr != value.stringv)
-            {
-                delete value.stringv;
-                value.stringv = nullptr;
-            }
-            break;
-        case MetaDataTypeClass:
-            if (nullptr != value.classv)
-            {
-                delete value.classv;
-                value.classv = nullptr;
-            }
-            break;
-        case MetaDataTypeIntList:
-            if (nullptr != value.intlist)
-            {
-                delete value.intlist;
-                value.intlist = nullptr;
-            }
-            break;
-        case MetaDataTypeLonglongList:
-            if (nullptr != value.llonglist)
-            {
-                delete value.llonglist;
-                value.llonglist = nullptr;
-            }
-            break;
-        case MetaDataTypeDoubleList:
-            if (nullptr != value.doublelist)
-            {
-                delete value.doublelist;
-                value.doublelist = nullptr;
-            }
-            break;
-        case MetaDataTypeStringList:
-            if (nullptr != value.stringlist)
-            {
-                delete value.stringlist;
-                value.stringlist = nullptr;
-            }
-            break;
-        case MetaDataTypeClassList:
-            if (nullptr != value.classlist)
-            {
-                for (auto cls : *(value.classlist))
-                {
-                    delete cls;
-                }
-                delete value.classlist;
-                value.classlist = nullptr;
-            }
-            break;
-        default:
-            break;
-        }
-    }
+    ///\brief       回收内存用
+    void release();
 };
 
 }
