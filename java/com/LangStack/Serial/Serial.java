@@ -1,6 +1,7 @@
 package com.LangStack.Serial;
 
 import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 
@@ -9,7 +10,7 @@ import java.nio.charset.Charset;
  */
 public class Serial {
 
-    public static final String TAG_CHAR     = "I8:";
+    public static final String TAG_CHAR     = "I8:";    ///< TAG_CHAR代表byte
     public static final String TAG_SHORT    = "I16:";
     public static final String TAG_INT      = "I32:";
     public static final String TAG_LONG		= "I64:";
@@ -27,9 +28,9 @@ public class Serial {
     
     public static String serial(Object obj)
     {
-        if (obj instanceof Charset)
+        if (obj instanceof Byte)
         {
-            return serial((Charset)obj);
+            return serial((Byte)obj);
         } 
         else if(obj instanceof Short)
         {
@@ -55,6 +56,10 @@ public class Serial {
         {
             return serial((ArrayList<?>)obj);
         } 
+        else if (obj instanceof byte[])
+        {
+            return serial((byte[])obj);
+        } 
         else
         {
             return serialClass(obj);
@@ -63,11 +68,17 @@ public class Serial {
     
     public static String serial(byte[] memory)
     {
-        return TAG_MEMORY + memory.length + TAG_END +
-                memory.toString() + DETAIL_END;
+        try {
+            return TAG_MEMORY + memory.length + TAG_END + 
+                    new String(memory, "ISO-8859-1") + DETAIL_END;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        return "";
     }
     
-    public static String serial(Charset o)
+    public static String serial(Byte o)
     {
         return TAG_CHAR + o + DETAIL_END;
     }    

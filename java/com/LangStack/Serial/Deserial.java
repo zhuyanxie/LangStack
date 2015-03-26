@@ -1,5 +1,6 @@
 package com.LangStack.Serial;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Deserial {
         {
             int val = Integer.parseInt(str.substring(Serial.TAG_CHAR.length(),
                     str.length() - 1));
-            return (char) val;
+            return (byte) val;
         }
         else if (str.startsWith(Serial.TAG_SHORT))
         {
@@ -50,6 +51,10 @@ public class Deserial {
             return DecodeString(str.substring(Serial.TAG_STRING.length(),
                     str.length() - 1));
         } 
+        else if (str.startsWith(Serial.TAG_MEMORY))
+        {
+            return DecodeMemory(str);
+        } 
         else if (str.startsWith(Serial.TAG_LIST))
         {
             return deserialList(str);
@@ -62,6 +67,18 @@ public class Deserial {
         return null;
     }
     
+    private static byte[] DecodeMemory(String str) {
+        
+        String memory = str.substring(str.indexOf(":") + 1, str.length());
+        try {
+            return memory.getBytes("ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
     /**
      * @brief   获取反序列化类型
      * @param   str     输入的字符串
