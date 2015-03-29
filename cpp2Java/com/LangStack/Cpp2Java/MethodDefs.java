@@ -10,7 +10,11 @@ public class MethodDefs {
     public static final int CONSTRUCT   = 0;            ///< 构造
     public static final int DECONSTRUCT = 1;            ///< 析构
     public static final int METHOD      = 2;            ///< 一般方法、函数
+    public static final int ATTACH      = 3;            ///< 注册回调
+    public static final int DETACH      = 4;            ///< 注销回调
+    public static final int NAME_DEF    = 5;            ///< JAVA类名定义
     
+    private ClassDefs   mClass;                          ///< 所属的类
     private String      mCppClassName;                   ///< 类名
     private String      mMethodName;                     ///< 方法名
     private int         mMethodtype = METHOD;            ///< 方法类型
@@ -18,6 +22,7 @@ public class MethodDefs {
     private List<Param> mParams = new ArrayList<Param>();///< 首参返回值
     private TypeDefs    mTypes  = null;                  ///< 类型定义引用
     private String      mComment;                        ///< 方法注释
+    private String      mDetail;                         ///< 方法内容
     private String      mBlock;                          ///< 带解析字符串
     private String      mFile;                           ///< 来源文件
     private int         mLine;                           ///< 来源行
@@ -81,8 +86,35 @@ public class MethodDefs {
         int l   = mBlock.indexOf("(");
         int r   = mBlock.indexOf(")");
         String params = mBlock.substring(l + 1, r);
-        parseReturn(retVal);
-        parseParams(params);
+        parseMethodType();
+        if (mMethodtype == NAME_DEF) {
+            parseClassJavaName();
+        } else {
+            parseReturn(retVal);
+            parseParams(params);
+        }
+    }
+
+    private void parseClassJavaName() {
+        int returnIndex = mDetail.indexOf("return");
+        int l = mDetail.indexOf("\"", returnIndex);
+        int r = mDetail.indexOf("\"", l + 1);
+        String javaname = mDetail.substring(l, r);
+        mClass.setJavaClassName(javaname);
+    }
+
+    private void parseMethodType() {
+        if (mMethodName.equals("attach")) {
+            mMethodtype = ATTACH;
+        } else if (mMethodName.equals("detach")) {
+            mMethodtype = DETACH;
+        } else if (mMethodName.equals("getClassName")) {
+            mMethodtype = NAME_DEF;
+        } else if (mMethodName.contains("~")) {
+            mMethodtype = DECONSTRUCT;
+        } else {
+            mMethodtype = METHOD;
+        }
     }
 
     private void parseParams(String paramsBlock) {
@@ -103,7 +135,7 @@ public class MethodDefs {
                     type = type.substring(constIdx + "const".length(), 
                             type.length()).trim();
                 }
-                if (refIdx > idx)   idx = refIdx;
+                if (refIdx > idx) idx = refIdx;
                 String name = param.substring(idx + 1, param.length()).trim();
                 addParam(type, name);
             } else {
@@ -114,11 +146,9 @@ public class MethodDefs {
     }
 
     private void parseReturn(String retVal) {
-        if (retVal.isEmpty()) {
-            mMethodtype = mMethodName.contains("~") ? DECONSTRUCT : CONSTRUCT;
+        if (mMethodtype == METHOD && retVal.isEmpty()) {
+            mMethodtype = CONSTRUCT;
             return;
-        } else {
-            mMethodtype = METHOD;
         }
         
         int staticIndex = mBlock.indexOf("static");
@@ -240,5 +270,13 @@ public class MethodDefs {
 
     public void setTypes(TypeDefs types) {
         mTypes = types;
+    }
+
+    public void setDetail(String detail) {
+        mDetail = detail;
+    }
+
+    public void setClass(ClassDefs cls) {
+        mClass = cls;
     }
 }

@@ -304,7 +304,9 @@ public class Scanner {
     
     private boolean parseBrace(BlockPosition pos) {
         if (pos.lBraceCount == pos.rBraceCount) {
-            parseMethod(mCache.substring(0, pos.left).trim());
+            String define = mCache.substring(0, pos.left).trim();
+            String detail = mCache.substring(pos.left + 1, pos.right).trim();
+            parseMethod(define, detail);
             mCache = mCache.substring(pos.right + 1, mCache.length()).trim();
         } else {
             mCache = "";
@@ -381,9 +383,9 @@ public class Scanner {
      * @brief       解析方法
      * @param       block       方法字符串
      */
-    private void parseMethod(String block) {
-        int nameIndex = block.indexOf("(");
-        String name = block.substring(0, nameIndex).trim();
+    private void parseMethod(String define, String detail) {
+        int nameIndex = define.indexOf("(");
+        String name = define.substring(0, nameIndex).trim();
         int spaceIndex = name.lastIndexOf(" ", nameIndex);
         if (spaceIndex != -1) {
             name = name.substring(spaceIndex + 1, name.length());
@@ -393,8 +395,9 @@ public class Scanner {
         
         ClassDefs cls = mSymbols.getClassDef(getNamespace(), getCurrentClass());
         MethodDefs method = 
-                new MethodDefs(cls.getClassName(), name, block, mFile, mLine);
-        
+                new MethodDefs(cls.getClassName(), name, define, mFile, mLine);
+        method.setDetail(detail);
+        method.setClass(cls);
         cls.addMethod(method);
     }
 

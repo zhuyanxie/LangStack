@@ -1,5 +1,8 @@
 package com.LangStack.Cpp2Java;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,24 +85,40 @@ public class ClassDefs
 	 * @brief      解析java类
 	 */
 	public void parseJavaClass() {
+	    /// 先解析方法，方法中会带有javaname
+        parseMethod();
         parsePackage();
 	    parseDepend();
 	    parseMember();
-	    parseMethod();
 	}
 
     /**
-	 * @brief      生成java类
+	 * @throws FileNotFoundException 
+     * @brief      生成java类
 	 */
-	public void genJavaClass(PrintStream p) {
+	public void genJavaClass() throws FileNotFoundException {
+	    PrintStream p = makeJavaFile();
 	    genJavaPackage(p);
 	    genJavaDepend(p);
 	    genJavaMember(p);
 	    genJavaMethod(p);
+	    p.close();
 	}
 
     private void genJavaPackage(PrintStream p) {
         p.printf("package %s;\r\n\r\n", mJavaPackage);
+    }
+
+    private PrintStream makeJavaFile() throws FileNotFoundException {
+        String dirs = "./" + mJavaPackage.replaceAll("\\.", "/");
+        File f = new File(dirs);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+        String file = dirs + "/" + mCppClassName;
+        File javaFile = new File(file);
+        FileOutputStream fos = new FileOutputStream(javaFile);
+        return new PrintStream(fos);
     }
 
     private void genJavaDepend(PrintStream p) {
@@ -147,12 +166,7 @@ public class ClassDefs
                         pos + 1, getJavaClassName().length()));
             }
             else {
-                String pack = "com";
-                String []names = getNamespace().split(".");
-                for (String name : names) {
-                    pack = pack + "." + name;
-                }
-                setJavaPackage("pack");
+                setJavaPackage("com." + getNamespace());
             }
         } else {
             setJavaClassName(getClassName());
