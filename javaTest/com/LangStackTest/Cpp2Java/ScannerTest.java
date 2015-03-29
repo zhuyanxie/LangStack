@@ -11,10 +11,11 @@ public class ScannerTest {
 
     @Test
     public void testGetFilePaths() {
-        Symbols symbols = new Symbols();
-        Scanner scanner = new Scanner("./cpp/include", symbols);
+        Symbols symbols = new Symbols("./cpp2java_testcase");
+        Scanner scanner = new Scanner("./cpp2java_testcase", symbols);
         scanner.scan();
-        
+        symbols.parse();
+        symbols.genJavaCode();
     }
 
 }

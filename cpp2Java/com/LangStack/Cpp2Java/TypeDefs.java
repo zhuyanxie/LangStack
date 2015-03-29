@@ -110,6 +110,8 @@ public class TypeDefs {
         mCppType2Enum.put("std::string", TYPE_STRING);
         mCppType2Enum.put("const char *", TYPE_STRING);
         mCppType2Enum.put("char *", TYPE_STRING);
+        mCppType2Enum.put("const char*", TYPE_STRING);
+        mCppType2Enum.put("char*", TYPE_STRING);
         
         mCppType2Enum.put("std::list<int>", TYPE_LIST_INT32);
         mCppType2Enum.put("std::list<INT>", TYPE_LIST_INT32);

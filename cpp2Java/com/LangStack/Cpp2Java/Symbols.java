@@ -1,5 +1,6 @@
 package com.LangStack.Cpp2Java;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,15 +8,17 @@ public class Symbols {
 
     private Map<String, ClassDefs> mClasses = null;     ///< 类定义
     private TypeDefs               mTypes   = null;     ///< 类型定义
+    private String                 mGenPath = ".";      ///< 设置生成目录
 	
-	public Symbols() {
+	public Symbols(String genPath) {
 	    mClasses = new HashMap<String, ClassDefs>();
 	    mTypes   = new TypeDefs();
+	    mGenPath = genPath;
 	    
 	    mClasses.put("", new ClassDefs("", "", mTypes));
 	}
 
-	public ClassDefs getClassDef(String namespace, String className) {
+    public ClassDefs getClassDef(String namespace, String className) {
 	    /// TODO namespace 与  classname的关系
 		return mClasses.get(namespace + "::" + className);
 	}
@@ -27,6 +30,9 @@ public class Symbols {
 		classDefs.setNamespace(namespace);
 		mClasses.put(namespace + "::" + className, classDefs);
         mTypes.addTypeDefine(file, line, detail, "class", className);
+        mTypes.addTypeDefine(file, line, detail, "class", className + "*");
+        mTypes.addTypeDefine(file, line, detail, "class", className + " *");
+        mTypes.addTypeDefine(file, line, detail, "class", "const " + className + " *");
         
         if (namespace.isEmpty()) {
             return classDefs;
@@ -68,6 +74,17 @@ public class Symbols {
 	    for (ClassDefs cls : mClasses.values()) {
 	        cls.parseJavaClass();
 	    }
+	}
+	
+	public void genJavaCode() {
+	       /// 类解析
+        for (ClassDefs cls : mClasses.values()) {
+            try {
+                cls.genJavaClass(mGenPath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 	
 	public void genCppCode() {

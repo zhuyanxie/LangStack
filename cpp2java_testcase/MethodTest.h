@@ -24,6 +24,8 @@ SOFTWARE.
 #ifndef METHODTEST_H_
 #define METHODTEST_H_
 
+#include "CallBackTest.h"
+
 namespace ls {
 namespace test {
 

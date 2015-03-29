@@ -49,7 +49,7 @@ struct TypeTest
 
     TypeTest();
     TypeTest(int seed);
-    ~CTypeTest();
+    ~TypeTest();
 };
 
 }

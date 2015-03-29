@@ -19,6 +19,7 @@ public class MethodDefs {
     private String      mMethodName;                     ///< 方法名
     private int         mMethodtype = METHOD;            ///< 方法类型
     private boolean     mIsStatic = false;               ///< 静态方法标记
+    private boolean     mIsVirual = false;               ///< 虚方法标记
     private List<Param> mParams = new ArrayList<Param>();///< 首参返回值
     private TypeDefs    mTypes  = null;                  ///< 类型定义引用
     private String      mComment;                        ///< 方法注释
@@ -69,6 +70,19 @@ public class MethodDefs {
                         + "\t[%s:%d]\r\n[%s]\r\n",
                         method.mCppType, mFile, mLine, mBlock);
                 System.exit(-1);
+            }
+        }
+        
+        /// char* + int 被解析为memory
+        for (int i = 1; i < mParams.size(); ++i) {
+            Param method = mParams.get(i);
+            if (i + 1 < mParams.size()) {
+                Param methodNext = mParams.get(i + 1);
+                if (method.mCppType.indexOf("string") == -1 &&
+                        method.mEnumType == TypeDefs.TYPE_STRING && 
+                        methodNext.mEnumType == TypeDefs.TYPE_INT32) {
+                    method.mEnumType = TypeDefs.TYPE_MEMORY;
+                }
             }
         }
     }
@@ -150,16 +164,28 @@ public class MethodDefs {
             mMethodtype = CONSTRUCT;
             return;
         }
+        if (mMethodtype == DECONSTRUCT || 
+                mMethodtype == ATTACH ||
+                mMethodtype == DETACH) {
+            return;
+        }
         
+        int index = 0;
         int staticIndex = mBlock.indexOf("static");
         if (staticIndex != -1) {
             mIsStatic = true;
-            staticIndex = staticIndex + "static ".length();
+            index = staticIndex + "static".length(); 
+        } 
+        
+        int virtualIndex = mBlock.indexOf("virtual");
+        if (virtualIndex != -1) {
+            mIsVirual = true;
+            index = virtualIndex + "virtual".length(); 
         } else {
-            staticIndex = 0;
+            /// TODO 如果还有其他特殊标记需要处理
         }
         
-        addParam(retVal.substring(staticIndex, retVal.length()).trim(), "");
+        addParam(retVal.substring(index, retVal.length()).trim(), "");
     }
 
     /**
@@ -167,10 +193,12 @@ public class MethodDefs {
      * @param       p               输出流
      */
     public void genJava(PrintStream p) {
-        if (mMethodName.equals("attach")) {
+        if (mMethodtype == ATTACH) {
             genJavaAttach(p);
-        } else if (mMethodName.equals("detach")) {
+        } else if (mMethodtype == DETACH) {
             genJavaDetach(p);
+        } else if (mMethodtype == NAME_DEF) {
+            return;
         }
         p.println(mComment);
         

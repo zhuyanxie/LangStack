@@ -349,7 +349,7 @@ public class Scanner {
      */
     private void parseBlock(String block) {
         if (block.indexOf("(") != -1) {
-            parseMethod(block);
+            parseMethod(block, block);
         } else {
             parseMember(block);
         }

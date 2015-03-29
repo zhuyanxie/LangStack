@@ -96,8 +96,8 @@ public class ClassDefs
 	 * @throws FileNotFoundException 
      * @brief      生成java类
 	 */
-	public void genJavaClass() throws FileNotFoundException {
-	    PrintStream p = makeJavaFile();
+	public void genJavaClass(String path) throws FileNotFoundException {
+	    PrintStream p = makeJavaFile(path);
 	    genJavaPackage(p);
 	    genJavaDepend(p);
 	    genJavaMember(p);
@@ -109,8 +109,8 @@ public class ClassDefs
         p.printf("package %s;\r\n\r\n", mJavaPackage);
     }
 
-    private PrintStream makeJavaFile() throws FileNotFoundException {
-        String dirs = "./" + mJavaPackage.replaceAll("\\.", "/");
+    private PrintStream makeJavaFile(String path) throws FileNotFoundException {
+        String dirs = path + "/" + mJavaPackage.replaceAll("\\.", "/");
         File f = new File(dirs);
         if (!f.exists()) {
             f.mkdirs();
@@ -157,6 +157,9 @@ public class ClassDefs
 	    mDepends.add("java.util.*;");
 	}
 	
+	/**
+	 * @brief      生成java包名以及类名，全局默认为（Global）
+	 */
     private void parsePackage() {
         if (getJavaClassName() != null) {
             int pos = getJavaClassName().lastIndexOf(".");
@@ -166,10 +169,14 @@ public class ClassDefs
                         pos + 1, getJavaClassName().length()));
             }
             else {
-                setJavaPackage("com." + getNamespace());
+                setJavaPackage("com.Global");
             }
         } else {
-            setJavaClassName(getClassName());
+            setJavaPackage("com." + ((getNamespace().equals("")) ? 
+                    "Global" : getNamespace()));
+            
+            setJavaClassName(getClassName().equals("") ? 
+                    "Global" : getClassName());
         }
     }
 
