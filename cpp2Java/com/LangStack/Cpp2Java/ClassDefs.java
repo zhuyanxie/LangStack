@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.LangStack.Rpc.IRpcApi;
+
 public class ClassDefs 
 {
     private String                  mCppNamespace;          ///<  类命名空间
@@ -24,6 +26,7 @@ public class ClassDefs
     private Set<String>             mDepends       = null;  ///<  依赖包
 
     private TypeDefs                mTypes;                 ///<  类型定义引用
+    private boolean                 mCallback      = false; ///<  是否为回调类
 
 	/**
 	 * @brief 		构造类定义
@@ -100,10 +103,22 @@ public class ClassDefs
 	    PrintStream p = makeJavaFile(path);
 	    genJavaPackage(p);
 	    genJavaDepend(p);
+	    genJavaClassHeader(p);
+	    genJavaConstant(p);
 	    genJavaMember(p);
 	    genJavaMethod(p);
+	    genJavaClassTail(p);
 	    p.close();
 	}
+
+
+    private void genJavaClassTail(PrintStream p) {
+        p.printf("    protected void finalize()\r\n");
+        p.printf("    {\r\n");
+        p.printf("        call(\"delete\", this.getClass().getName(), this);\r\n");
+        p.printf("    }\r\n\r\n");
+        p.printf("}\r\n\r\n");
+    }
 
     private void genJavaPackage(PrintStream p) {
         p.printf("package %s;\r\n\r\n", mJavaPackage);
@@ -115,12 +130,31 @@ public class ClassDefs
         if (!f.exists()) {
             f.mkdirs();
         }
-        String file = dirs + "/" + mCppClassName;
+        String file = dirs + "/" + getJavaClassName() + ".java";
         File javaFile = new File(file);
         FileOutputStream fos = new FileOutputStream(javaFile);
         return new PrintStream(fos);
     }
 
+    private void genJavaConstant(PrintStream p) {
+        /// todo FIXME java 常量
+    }
+    
+    private void genJavaClassHeader(PrintStream p) {
+        p.print("\r\n");
+        p.printf("public class %s extends IRpcApi {\r\n\r\n", getJavaClassName());
+        
+        for (MethodDefs method : mMethods) {
+            if (method.getMethodType() == MethodDefs.CONSTRUCT) {
+                return;
+            }
+        }
+        p.printf("    public %s()\r\n", getJavaClassName());
+        p.printf("    {\r\n");
+        p.printf("        call(\"new\", this.getClass().getName(), this);\r\n");
+        p.printf("    }\r\n\r\n");
+    }
+    
     private void genJavaDepend(PrintStream p) {
         for (String d : mDepends) {
             p.printf("import %s;\r\n", d);
@@ -154,7 +188,8 @@ public class ClassDefs
     
 	private void parseDepend() {
 	    /// TODO 目前只使用java.util.*
-	    mDepends.add("java.util.*;");
+        mDepends.add("java.util.*");
+        mDepends.add("com.LangStack.Rpc.*");
 	}
 	
 	/**
@@ -226,6 +261,13 @@ public class ClassDefs
 
     public void setConsts(ContantDefs consts) {
         this.mConsts = consts;
+    }
+
+    public boolean isCallback() {
+        return mCallback;
+    }
+    public void setCallback(boolean b) {
+        mCallback = b;
     }
 
 }

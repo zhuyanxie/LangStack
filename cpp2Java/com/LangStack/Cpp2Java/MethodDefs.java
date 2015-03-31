@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.LangStack.Rpc.IRpcApi;
+import com.LangStackTest.RealCallback;
+
 public class MethodDefs {
     
     public static final int CONSTRUCT   = 0;            ///< 构造
@@ -15,9 +18,10 @@ public class MethodDefs {
     public static final int NAME_DEF    = 5;            ///< JAVA类名定义
     
     private ClassDefs   mClass;                          ///< 所属的类
+    private ClassDefs   mCallbackClass = null;           ///< 回调类
     private String      mCppClassName;                   ///< 类名
     private String      mMethodName;                     ///< 方法名
-    private int         mMethodtype = METHOD;            ///< 方法类型
+    private int         mMethodType = METHOD;            ///< 方法类型
     private boolean     mIsStatic = false;               ///< 静态方法标记
     private boolean     mIsVirual = false;               ///< 虚方法标记
     private List<Param> mParams = new ArrayList<Param>();///< 首参返回值
@@ -101,7 +105,7 @@ public class MethodDefs {
         int r   = mBlock.indexOf(")");
         String params = mBlock.substring(l + 1, r);
         parseMethodType();
-        if (mMethodtype == NAME_DEF) {
+        if (mMethodType == NAME_DEF) {
             parseClassJavaName();
         } else {
             parseReturn(retVal);
@@ -119,15 +123,15 @@ public class MethodDefs {
 
     private void parseMethodType() {
         if (mMethodName.equals("attach")) {
-            mMethodtype = ATTACH;
+            mMethodType = ATTACH;
         } else if (mMethodName.equals("detach")) {
-            mMethodtype = DETACH;
+            mMethodType = DETACH;
         } else if (mMethodName.equals("getClassName")) {
-            mMethodtype = NAME_DEF;
+            mMethodType = NAME_DEF;
         } else if (mMethodName.contains("~")) {
-            mMethodtype = DECONSTRUCT;
+            mMethodType = DECONSTRUCT;
         } else {
-            mMethodtype = METHOD;
+            mMethodType = METHOD;
         }
     }
 
@@ -135,7 +139,20 @@ public class MethodDefs {
         if (paramsBlock.isEmpty()) {
             return;
         }
-        String []params = paramsBlock.split(",");
+        
+        if (mMethodType == ATTACH ||
+                mMethodType == DETACH) {
+            parseCallBackParam(paramsBlock);
+            return;
+        }
+        
+        String []params = null;
+        if (paramsBlock.indexOf(",") != -1) {
+            params = paramsBlock.split(",");
+        } else {
+            params = new String[1];
+            params[0] = paramsBlock;
+        }
         
         for (String param : params) {
             int idx = param.lastIndexOf(" ");
@@ -159,14 +176,29 @@ public class MethodDefs {
         }
     }
 
+    private void parseCallBackParam(String paramsBlock) {
+        int idx = paramsBlock.lastIndexOf(" ");
+        int pidx = paramsBlock.lastIndexOf("*");
+        
+        if (pidx > idx) idx = pidx;
+        String paramName = paramsBlock.substring(0, idx).trim();
+        ClassDefs cls = mTypes.getClassDefs(paramName);
+        if (null == cls) {
+            Logger.e("find callback class : " + paramsBlock + " defs fail", 
+                    System.err, true, mFile, mLine, mBlock);
+        }
+        mCallbackClass = cls;
+        cls.setCallback(true);
+    }
+
     private void parseReturn(String retVal) {
-        if (mMethodtype == METHOD && retVal.isEmpty()) {
-            mMethodtype = CONSTRUCT;
+        if (mMethodType == METHOD && retVal.isEmpty()) {
+            mMethodType = CONSTRUCT;
             return;
         }
-        if (mMethodtype == DECONSTRUCT || 
-                mMethodtype == ATTACH ||
-                mMethodtype == DETACH) {
+        if (mMethodType == DECONSTRUCT || 
+                mMethodType == ATTACH ||
+                mMethodType == DETACH) {
             return;
         }
         
@@ -193,11 +225,17 @@ public class MethodDefs {
      * @param       p               输出流
      */
     public void genJava(PrintStream p) {
-        if (mMethodtype == ATTACH) {
+        if (mMethodType == ATTACH) {
             genJavaAttach(p);
-        } else if (mMethodtype == DETACH) {
+            return;
+        } else if (mMethodType == DETACH) {
             genJavaDetach(p);
-        } else if (mMethodtype == NAME_DEF) {
+            return;
+        } else if (mMethodType == NAME_DEF ||
+                mMethodType == DECONSTRUCT) {
+            return;
+        } else if (mMethodType == CONSTRUCT) {
+            genJavaConstruct(p);
             return;
         }
         p.println(mComment);
@@ -210,6 +248,10 @@ public class MethodDefs {
             if (i != 1) p.print(", ");
             p.print(mTypes.getJavaType(mParams.get(i).mEnumType) + " ");
             p.print(mParams.get(i).mName);
+
+            if (mParams.get(i).mEnumType == TypeDefs.TYPE_MEMORY) {
+                ++i;
+            }
         }
         p.println(") {");
 
@@ -222,15 +264,48 @@ public class MethodDefs {
             p.print(", " + mParams.get(i).mName);
         }
         p.println(");");
-        p.println("}");
+        p.println("}\r\n");
     }
     
+    private void genJavaConstruct(PrintStream p) {
+        p.printf("    public %s (", mClass.getJavaClassName());
+        for (int i = 0; i < mParams.size(); ++i) {
+            if (i != 0) p.print(", ");
+            p.print(mTypes.getJavaType(mParams.get(i).mEnumType) + " ");
+            p.print(mParams.get(i).mName);
+
+            if (mParams.get(i).mEnumType == TypeDefs.TYPE_MEMORY) {
+                ++i;
+            }
+        }
+        p.printf(")\r\n    {\r\n");        
+        p.printf("    {\r\n");
+        p.printf("        call(\"new\", this.getClass().getName(), this");
+        for (Param param : mParams) {
+            p.printf(", " + param.mName);
+        }
+        p.printf(");\r\n");
+        p.printf("    }\r\n\r\n");
+    }
+
     private void genJavaAttach(PrintStream p) {
-        /// TODO attach
+        p.printf("    @Override public void attach(IRpcApi o)\r\n");
+        p.printf("    {\r\n");
+        p.printf("        call(\"new\", %s, o);\r\n", 
+                mCallbackClass.getJavaClassName() + "proxy");
+        p.printf("        callbackSetting(\"attach\", "
+                + "this.getClass().getName(), this, o);\r\n");
+        p.printf("    }\r\n\r\n");
     }
     
     private void genJavaDetach(PrintStream p) {
-        /// TODO detach
+        p.printf("    @Override public void detach(IRpcApi o)\r\n");
+        p.printf("    {\r\n");
+        p.printf("        callbackSetting(\"detach\", "
+                + "this.getClass().getName(), this, o);\r\n");
+        p.printf("        call(\"delete\", %s, o);\r\n", 
+                mCallbackClass.getJavaClassName() + "proxy");
+        p.printf("    }\r\n\r\n");
     }
     
     public void genCppProxy(PrintStream p) {
@@ -306,5 +381,9 @@ public class MethodDefs {
 
     public void setClass(ClassDefs cls) {
         mClass = cls;
+    }
+
+    public int getMethodType() {
+        return mMethodType;
     }
 }

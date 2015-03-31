@@ -55,7 +55,9 @@ public class MemberDefs {
     }
     
     public void genJava(PrintStream p) {
-        if (mComment == null) {
+        /// 忽略非Public以及static的成员
+        if (!isPublic() || isStatic()) return;
+        if (mComment != null) {
             p.println("    ///< " + mComment);
         }
         p.print("    " + (isPublic() ? "public" : "private"));

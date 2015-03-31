@@ -36,6 +36,7 @@ public class TypeDefs {
     private Map<String, DefineSource> mCppTypes        = new HashMap<String, DefineSource>();
     private Map<String, Integer>      mCppType2Enum    = new HashMap<String, Integer>();
     private Map<Integer, String>      mEnum2JavaType   = new HashMap<Integer, String>();
+    private Map<String, ClassDefs>    mClassDefs       = new HashMap<String, ClassDefs>();
     
     class DefineSource
     {
@@ -149,6 +150,8 @@ public class TypeDefs {
         mCppType2Enum.put("class", TYPE_OBJECT);
 
 
+        mEnum2JavaType.put(TYPE_INT8, "Byte");
+        mEnum2JavaType.put(TYPE_INT16, "Short");
         mEnum2JavaType.put(TYPE_INT32, "Integer");
         mEnum2JavaType.put(TYPE_INT64, "Long");
         mEnum2JavaType.put(TYPE_DOUBLE, "Double");
@@ -162,6 +165,7 @@ public class TypeDefs {
         mEnum2JavaType.put(TYPE_OBJECT, "IRpcApi");
         mEnum2JavaType.put(TYPE_LIST_OBJECT, "ArrayList<IRpcApi>");
         mEnum2JavaType.put(TYPE_VOID, "void");
+        mEnum2JavaType.put(TYPE_MEMORY, "byte[]");
     }
     
     /**
@@ -177,6 +181,7 @@ public class TypeDefs {
         if (!mCppTypes.containsKey(newType)) {
             mCppTypes.put(newType, new DefineSource(type));
         }
+        
         mCppTypeSet.add(newType);
         mCppTypes.get(newType).addSouce(file, line, detail);
     }
@@ -252,6 +257,33 @@ public class TypeDefs {
      */
     public String getJavaType(int type) {
         return mEnum2JavaType.get(type);
+    }
+
+    public void addClassDefine(String file, int line, String detail,
+            ClassDefs cls, String classname) {
+        addTypeDefine(file, line, detail, cls, classname);
+        addTypeDefine(file, line, detail, cls, classname + "*");
+        addTypeDefine(file, line, detail, cls, classname + " *");
+        addTypeDefine(file, line, detail, cls, "const " + classname + " *");
+        addTypeDefine(file, line, detail, cls, "const " + classname + "*");
+    }
+
+    private void addTypeDefine(String file, int line, String detail,
+            ClassDefs cls, String classname) {
+        if (!mCppTypes.containsKey(classname)) {
+            mCppTypes.put(classname, new DefineSource("class"));
+        }
+        
+        mClassDefs.put(classname, cls);
+        mCppTypeSet.add(classname);
+        mCppTypes.get(classname).addSouce(file, line, detail);
+    }
+
+    public ClassDefs getClassDefs(String paramName) {
+        if (mClassDefs.containsKey(paramName)) {
+            return mClassDefs.get(paramName);
+        }
+        return null;
     }
     
 }

@@ -29,19 +29,16 @@ public class Symbols {
 		ClassDefs classDefs = new ClassDefs(namespace, className, mTypes);
 		classDefs.setNamespace(namespace);
 		mClasses.put(namespace + "::" + className, classDefs);
-        mTypes.addTypeDefine(file, line, detail, "class", className);
-        mTypes.addTypeDefine(file, line, detail, "class", className + "*");
-        mTypes.addTypeDefine(file, line, detail, "class", className + " *");
-        mTypes.addTypeDefine(file, line, detail, "class", "const " + className + " *");
+        mTypes.addClassDefine(file, line, detail, classDefs, 
+                classDefs.getClassName());
         
         if (namespace.isEmpty()) {
             return classDefs;
         }
         
         if (namespace.indexOf(".") == -1) {
-            mTypes.addTypeDefine(file, line, detail, "class", 
+            mTypes.addClassDefine(file, line, detail, classDefs, 
                     namespace.trim() + "::" + className);
-            
             return classDefs;
         }
 		
@@ -51,7 +48,8 @@ public class Symbols {
 		    for (int j = 0; j <= i; ++j) {
 		        name = name + names[j] + "::";
 		    }
-		    mTypes.addTypeDefine(file, line, detail, "class", name + className);
+            mTypes.addClassDefine(file, line, detail, classDefs, 
+                    name + className);
 		}
 		
 		/// TODO class也是一个类型
