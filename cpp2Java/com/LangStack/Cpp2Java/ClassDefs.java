@@ -137,12 +137,13 @@ public class ClassDefs
     }
 
     private void genJavaConstant(PrintStream p) {
-        /// todo FIXME java 常量
+        p.print("\r\n");
+        mConsts.genJava(p);
     }
     
     private void genJavaClassHeader(PrintStream p) {
         p.print("\r\n");
-        p.printf("public class %s extends IRpcApi {\r\n\r\n", getJavaClassName());
+        p.printf("public class %s extends IRpcApi {\r\n", getJavaClassName());
         
         for (MethodDefs method : mMethods) {
             if (method.getMethodType() == MethodDefs.CONSTRUCT) {
@@ -159,13 +160,15 @@ public class ClassDefs
         for (String d : mDepends) {
             p.printf("import %s;\r\n", d);
         }
-        p.print("\r\n");
+        p.printf("\r\n");
     }
 
     private void genJavaMember(PrintStream p) {
         for (MemberDefs member : mMembers.values()) {
             member.genJava(p);
         }
+        
+        p.printf("\r\n");
     }
 
     private void genJavaMethod(PrintStream p) {

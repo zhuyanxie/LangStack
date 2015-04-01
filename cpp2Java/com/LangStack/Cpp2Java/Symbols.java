@@ -79,6 +79,8 @@ public class Symbols {
         for (ClassDefs cls : mClasses.values()) {
             try {
                 cls.genJavaClass(mGenPath);
+                System.out.printf("gen java code:%s\r\n", 
+                        cls.getJavaPackage() + "." + cls.getJavaClassName());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

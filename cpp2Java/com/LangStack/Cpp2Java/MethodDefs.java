@@ -117,7 +117,7 @@ public class MethodDefs {
         int returnIndex = mDetail.indexOf("return");
         int l = mDetail.indexOf("\"", returnIndex);
         int r = mDetail.indexOf("\"", l + 1);
-        String javaname = mDetail.substring(l, r);
+        String javaname = mDetail.substring(l + 1, r);
         mClass.setJavaClassName(javaname);
     }
 
@@ -238,7 +238,10 @@ public class MethodDefs {
             genJavaConstruct(p);
             return;
         }
-        p.println(mComment);
+        if (mComment != null && !mComment.isEmpty())
+        {
+            p.println(mComment);
+        }
         
         p.print("    public");
         p.print(isStatic() ? " static " : " ");
@@ -253,7 +256,7 @@ public class MethodDefs {
                 ++i;
             }
         }
-        p.println(") {");
+        p.printf(")\r\n    {\r\n");
 
         p.print("        ");
         if (mParams.get(0).mEnumType != TypeDefs.TYPE_VOID) {
@@ -262,9 +265,12 @@ public class MethodDefs {
         p.print("call(\"" + mMethodName + "\", this.getClass().getName(), this");
         for (int i = 1; i < mParams.size(); ++i) {
             p.print(", " + mParams.get(i).mName);
+            if (mParams.get(i).mEnumType == TypeDefs.TYPE_MEMORY) {
+                ++i;
+            }
         }
         p.println(");");
-        p.println("}\r\n");
+        p.println("    }\r\n");
     }
     
     private void genJavaConstruct(PrintStream p) {
@@ -278,11 +284,13 @@ public class MethodDefs {
                 ++i;
             }
         }
-        p.printf(")\r\n    {\r\n");        
-        p.printf("    {\r\n");
+        p.printf(")\r\n    {\r\n");
         p.printf("        call(\"new\", this.getClass().getName(), this");
-        for (Param param : mParams) {
-            p.printf(", " + param.mName);
+        for (int i = 0; i < mParams.size(); ++i) {
+            p.print(", " + mParams.get(i).mName);
+            if (mParams.get(i).mEnumType == TypeDefs.TYPE_MEMORY) {
+                ++i;
+            }
         }
         p.printf(");\r\n");
         p.printf("    }\r\n\r\n");
@@ -291,8 +299,8 @@ public class MethodDefs {
     private void genJavaAttach(PrintStream p) {
         p.printf("    @Override public void attach(IRpcApi o)\r\n");
         p.printf("    {\r\n");
-        p.printf("        call(\"new\", %s, o);\r\n", 
-                mCallbackClass.getJavaClassName() + "proxy");
+        p.printf("        call(\"new\", \"%s\", o);\r\n", 
+                mCallbackClass.getJavaClassName() + "Proxy");
         p.printf("        callbackSetting(\"attach\", "
                 + "this.getClass().getName(), this, o);\r\n");
         p.printf("    }\r\n\r\n");
@@ -303,8 +311,8 @@ public class MethodDefs {
         p.printf("    {\r\n");
         p.printf("        callbackSetting(\"detach\", "
                 + "this.getClass().getName(), this, o);\r\n");
-        p.printf("        call(\"delete\", %s, o);\r\n", 
-                mCallbackClass.getJavaClassName() + "proxy");
+        p.printf("        call(\"delete\", \"%s\", o);\r\n", 
+                mCallbackClass.getJavaClassName() + "Proxy");
         p.printf("    }\r\n\r\n");
     }
     

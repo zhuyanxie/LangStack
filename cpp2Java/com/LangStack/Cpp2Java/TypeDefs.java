@@ -113,6 +113,24 @@ public class TypeDefs {
         mCppType2Enum.put("char *", TYPE_STRING);
         mCppType2Enum.put("const char*", TYPE_STRING);
         mCppType2Enum.put("char*", TYPE_STRING);
+
+        mCppType2Enum.put("std::list<char>", TYPE_LIST_INT8);
+        mCppType2Enum.put("std::list<unsigned char>", TYPE_LIST_INT8);
+        mCppType2Enum.put("std::list<int8_t>", TYPE_LIST_INT8);
+        mCppType2Enum.put("std::list<uint8_t>", TYPE_LIST_INT8);
+        mCppType2Enum.put("list<char>", TYPE_LIST_INT8);
+        mCppType2Enum.put("list<unsigned char>", TYPE_LIST_INT8);
+        mCppType2Enum.put("list<int8_t>", TYPE_LIST_INT8);
+        mCppType2Enum.put("list<uint8_t>", TYPE_LIST_INT8);
+
+        mCppType2Enum.put("std::list<short>", TYPE_LIST_INT16);
+        mCppType2Enum.put("std::list<unsigned short>", TYPE_LIST_INT16);
+        mCppType2Enum.put("std::list<int16_t>", TYPE_LIST_INT16);
+        mCppType2Enum.put("std::list<uint16_t>", TYPE_LIST_INT16);
+        mCppType2Enum.put("list<short>", TYPE_LIST_INT16);
+        mCppType2Enum.put("list<unsigned short>", TYPE_LIST_INT16);
+        mCppType2Enum.put("list<int16_t>", TYPE_LIST_INT16);
+        mCppType2Enum.put("list<uint16_t>", TYPE_LIST_INT16);
         
         mCppType2Enum.put("std::list<int>", TYPE_LIST_INT32);
         mCppType2Enum.put("std::list<INT>", TYPE_LIST_INT32);
@@ -156,7 +174,9 @@ public class TypeDefs {
         mEnum2JavaType.put(TYPE_INT64, "Long");
         mEnum2JavaType.put(TYPE_DOUBLE, "Double");
         mEnum2JavaType.put(TYPE_STRING, "String");
-        
+
+        mEnum2JavaType.put(TYPE_LIST_INT8, "ArrayList<Byte>");
+        mEnum2JavaType.put(TYPE_LIST_INT16, "ArrayList<Short>");
         mEnum2JavaType.put(TYPE_LIST_INT32, "ArrayList<Integer>");
         mEnum2JavaType.put(TYPE_LIST_INT64, "ArrayList<Long>");
         mEnum2JavaType.put(TYPE_LIST_DOUBLE, "ArrayList<Double>");
