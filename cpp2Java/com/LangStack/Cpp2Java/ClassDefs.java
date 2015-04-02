@@ -104,19 +104,31 @@ public class ClassDefs
 	    genJavaPackage(p);
 	    genJavaDepend(p);
 	    genJavaClassHeader(p);
-	    genJavaConstant(p);
-	    genJavaMember(p);
-	    genJavaMethod(p);
+	    if (!isCallback()) {
+	        genJavaConstant(p);
+	        genJavaMember(p);
+	        genJavaMethod(p);
+	    } else {
+	        genJavaAbstractMethod(p);
+	    }
 	    genJavaClassTail(p);
 	    p.close();
 	}
 
 
+    private void genJavaAbstractMethod(PrintStream p) {
+        for (MethodDefs method : mMethods) {
+            method.genJavaAbstract(p);
+        }
+    }
+
     private void genJavaClassTail(PrintStream p) {
-        p.printf("    protected void finalize()\r\n");
-        p.printf("    {\r\n");
-        p.printf("        call(\"delete\", this.getClass().getName(), this);\r\n");
-        p.printf("    }\r\n\r\n");
+        if (!isCallback()) {
+            p.printf("    protected void finalize()\r\n");
+            p.printf("    {\r\n");
+            p.printf("        call(\"delete\", this.getClass().getName(), this);\r\n");
+            p.printf("    }\r\n\r\n");
+        }
         p.printf("}\r\n\r\n");
     }
 
@@ -143,7 +155,10 @@ public class ClassDefs
     
     private void genJavaClassHeader(PrintStream p) {
         p.print("\r\n");
-        p.printf("public class %s extends IRpcApi {\r\n", getJavaClassName());
+        p.printf("public%sclass %s extends IRpcApi {\r\n", 
+                isCallback() ? " abstract " : " ", getJavaClassName());
+        
+        if (isCallback()) return;
         
         for (MethodDefs method : mMethods) {
             if (method.getMethodType() == MethodDefs.CONSTRUCT) {

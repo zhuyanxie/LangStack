@@ -219,6 +219,31 @@ public class MethodDefs {
         
         addParam(retVal.substring(index, retVal.length()).trim(), "");
     }
+    
+
+    public void genJavaAbstract(PrintStream p) {
+        if (mMethodType != METHOD) {
+            return;
+        }
+        
+        if (mComment != null && !mComment.isEmpty()) {
+            p.println(mComment);
+        }
+        
+        p.print("    public abstract ");
+        p.print(mTypes.getJavaType(mParams.get(0).mEnumType) + " ");
+        p.print(mMethodName + "(");
+        for (int i = 1; i < mParams.size(); ++i) {
+            if (i != 1) p.print(", ");
+            p.print(mTypes.getJavaType(mParams.get(i).mEnumType) + " ");
+            p.print(mParams.get(i).mName);
+
+            if (mParams.get(i).mEnumType == TypeDefs.TYPE_MEMORY) {
+                ++i;
+            }
+        }
+        p.printf(");\r\n");
+    }
 
     /**
      * @brief       生成java部分代码
@@ -394,4 +419,5 @@ public class MethodDefs {
     public int getMethodType() {
         return mMethodType;
     }
+
 }
